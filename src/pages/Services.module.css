@@ -1,0 +1,94 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.title {
+    font-size: 1.875rem;
+    font-weight: 700;
+}
+
+.subtitle {
+    color: var(--color-text-muted);
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th {
+    text-align: left;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--color-text-muted);
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+.table td {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.875rem;
+}
+
+.table tr:last-child td {
+    border-bottom: none;
+}
+
+.formatBadge {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+}
+
+.actionBtn {
+    padding: 0.5rem;
+    color: var(--color-text-muted);
+    transition: color 0.2s;
+}
+
+.actionBtn:hover {
+    color: var(--color-danger);
+}
+
+/* Modal Reuse */
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.modalContent {
+    width: 100%;
+    max-width: 600px;
+    /* Smaller for service form */
+    display: flex;
+    flex-direction: column;
+}
+
+.modalHeader {
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modalTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.modalBody {
+    padding: 1.5rem;
+}

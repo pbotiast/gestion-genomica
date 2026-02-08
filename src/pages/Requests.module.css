@@ -1,0 +1,132 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.title {
+    font-size: 1.875rem;
+    font-weight: 700;
+}
+
+.subtitle {
+    color: var(--color-text-muted);
+}
+
+.toolbar {
+    margin-bottom: 1.5rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.searchBox {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+}
+
+.searchBox svg {
+    position: absolute;
+    left: 1rem;
+    color: var(--color-text-muted);
+}
+
+.searchInput {
+    padding-left: 2.75rem !important;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th {
+    text-align: left;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--color-text-muted);
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+.table td {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.875rem;
+}
+
+.table tr:last-child td {
+    border-bottom: none;
+}
+
+.badge {
+    display: inline-flex;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.badgePending {
+    background: rgba(59, 130, 246, 0.2);
+    color: #93C5FD;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.badgeDone {
+    background: rgba(16, 185, 129, 0.2);
+    color: #6EE7B7;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.actionBtn {
+    padding: 0.5rem;
+    color: var(--color-text-muted);
+    transition: color 0.2s;
+}
+
+.actionBtn:hover {
+    color: var(--color-success);
+}
+
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.modalContent {
+    width: 100%;
+    max-width: 900px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.modalHeader {
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modalTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.modalBody {
+    padding: 1.5rem;
+    overflow-y: auto;
+}

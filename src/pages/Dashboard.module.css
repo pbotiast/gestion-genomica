@@ -1,0 +1,66 @@
+.title {
+    font-size: 1.875rem;
+    /* 3xl */
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+.card {
+    padding: 1.5rem;
+}
+
+.cardTitle {
+    font-size: 1.125rem;
+    /* lg */
+    font-weight: 600;
+    color: var(--color-text-muted);
+}
+
+.cardValue {
+    font-size: 2.25rem;
+    /* 4xl */
+    font-weight: 700;
+    margin-top: 0.5rem;
+}
+
+.valueIndigo {
+    color: var(--color-primary-light);
+}
+
+.valueCyan {
+    color: var(--color-secondary);
+}
+
+.valuePink {
+    color: var(--color-accent);
+}
+
+.activitySection {
+    margin-top: 2rem;
+    padding: 1.5rem;
+}
+
+.sectionTitle {
+    font-size: 1.25rem;
+    /* xl */
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--color-text-main);
+}
+
+.emptyState {
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+}

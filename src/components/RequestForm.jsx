@@ -1,0 +1,171 @@
+import React, { useState, useEffect } from 'react';
+import { Save } from 'lucide-react';
+import { useAppContext } from '../context/AppContext';
+import { cn } from '../lib/utils';
+import styles from './ServiceForm.module.css'; // Reusing similar styles
+
+const RequestForm = ({ onSubmit, onCancel }) => {
+    const { researchers, services, technicians, requests } = useAppContext();
+
+    // ID Generation Logic: YYYY-XXXXX
+    const generateId = () => {
+        const year = new Date().getFullYear();
+        // Filter requests for current year to count
+        const count = requests.filter(r => r.registrationNumber && r.registrationNumber.startsWith(`${year}-`)).length;
+        const nextNum = (count + 1).toString().padStart(5, '0');
+        return `${year}-${nextNum}`;
+    };
+
+    const [formData, setFormData] = useState({
+        registrationNumber: generateId(),
+        entryDate: new Date().toISOString().split('T')[0],
+        researcherId: '',
+        serviceId: '',
+        samplesCount: '',
+        format: '',
+        finalSamplesCount: '',
+        additionalInfo: '',
+        resultSentDate: '',
+        technician: '',
+        institution: '', // Auto-filled
+        tariff: '' // Auto-filled
+    });
+
+    // Auto-fill Institution and Tariff when Researcher changes
+    useEffect(() => {
+        if (formData.researcherId) {
+            const researcher = researchers.find(r => r.id === formData.researcherId);
+            if (researcher) {
+                setFormData(prev => ({
+                    ...prev,
+                    institution: researcher.institution,
+                    tariff: researcher.tariff || 'C' // Default to C if missing
+                }));
+            }
+        }
+    }, [formData.researcherId, researchers]);
+
+    // Auto-fill Format when Service changes
+    useEffect(() => {
+        if (formData.serviceId) {
+            const service = services.find(s => s.id === formData.serviceId);
+            if (service) {
+                setFormData(prev => ({
+                    ...prev,
+                    format: service.format || ''
+                }));
+            }
+        }
+    }, [formData.serviceId, services]);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // Find names for display (denormalization for simpler export/view if needed)
+        const researcher = researchers.find(r => r.id === formData.researcherId);
+        const service = services.find(s => s.id === formData.serviceId);
+
+        onSubmit({
+            ...formData,
+            researcherName: researcher?.fullName,
+            serviceName: service?.name,
+            // Store calculated price snapshot?
+            // Logic: Price per sample? User didn't specify calc, just "price associated".
+            // Usually total = price * samples.
+        });
+    };
+
+    return (
+        <form onSubmit={handleSubmit} className={styles.form}>
+            <div className={styles.section}>
+                <div className={styles.grid3}>
+                    <div className={styles.inputGroup}>
+                        <label>Nº Registro</label>
+                        <input readOnly name="registrationNumber" value={formData.registrationNumber} className="bg-slate-700/50 cursor-not-allowed" />
+                    </div>
+                    <div className={styles.inputGroup}>
+                        <label>Fecha Entrada</label>
+                        <input type="date" name="entryDate" value={formData.entryDate} onChange={handleChange} />
+                    </div>
+                    <div className={styles.inputGroup}>
+                        <label>Técnico Gestor</label>
+                        <select name="technician" value={formData.technician} onChange={handleChange} className={styles.select}>
+                            <option value="">Seleccionar...</option>
+                            {technicians.map(t => <option key={t} value={t}>{t}</option>)}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div className={styles.section}>
+                <h3 className={styles.sectionTitle}>Datos del Investigador</h3>
+                <div className={styles.inputGroup}>
+                    <label>Investigador</label>
+                    <select required name="researcherId" value={formData.researcherId} onChange={handleChange} className={styles.select}>
+                        <option value="">Seleccionar Investigador...</option>
+                        {researchers.map(r => (
+                            <option key={r.id} value={r.id}>{r.fullName} - {r.institution}</option>
+                        ))}
+                    </select>
+                </div>
+                <div className={styles.grid3}>
+                    <div className={styles.inputGroup}>
+                        <label>Institución</label>
+                        <input readOnly name="institution" value={formData.institution} className="bg-slate-700/50" />
+                    </div>
+                    <div className={styles.inputGroup}>
+                        <label>Tarifa Aplicable</label>
+                        <input readOnly name="tariff" value={formData.tariff} className="bg-slate-700/50 text-emerald-400 font-bold" />
+                    </div>
+                </div>
+            </div>
+
+            <div className={styles.section}>
+                <h3 className={styles.sectionTitle}>Datos del Servicio</h3>
+                <div className={styles.inputGroup}>
+                    <label>Servicio Solicitado</label>
+                    <select required name="serviceId" value={formData.serviceId} onChange={handleChange} className={styles.select}>
+                        <option value="">Seleccionar Servicio...</option>
+                        {services.map(s => (
+                            <option key={s.id} value={s.id}>{s.name} ({s.format})</option>
+                        ))}
+                    </select>
+                </div>
+                <div className={styles.grid3}>
+                    <div className={styles.inputGroup}>
+                        <label>Nº Muestras</label>
+                        <input required type="number" name="samplesCount" value={formData.samplesCount} onChange={handleChange} />
+                    </div>
+                    <div className={styles.inputGroup}>
+                        <label>Formato</label>
+                        <input name="format" value={formData.format} onChange={handleChange} placeholder="Tubo, Placa..." />
+                    </div>
+                    <div className={styles.inputGroup}>
+                        <label>Nº Muestras Finales</label>
+                        <input name="finalSamplesCount" value={formData.finalSamplesCount} onChange={handleChange} />
+                    </div>
+                </div>
+                <div className={styles.inputGroup}>
+                    <label>Información Adicional</label>
+                    <textarea name="additionalInfo" value={formData.additionalInfo} onChange={handleChange} className="min-h-[80px]" />
+                </div>
+            </div>
+
+            <div className={styles.actions}>
+                <button type="button" onClick={onCancel} className="btn-secondary">
+                    Cancelar
+                </button>
+                <button type="submit" className="btn-primary flex items-center gap-2">
+                    <Save size={18} />
+                    Registrar Solicitud
+                </button>
+            </div>
+        </form>
+    );
+};
+
+export default RequestForm;
