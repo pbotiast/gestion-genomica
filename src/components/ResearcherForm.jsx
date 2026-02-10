@@ -4,6 +4,7 @@ import { cn } from '../lib/utils';
 import styles from './ResearcherModal.module.css';
 
 const ResearcherForm = ({ onSubmit, onCancel, initialData }) => {
+    console.log("DEBUG: FILE LOADED");
     const [formData, setFormData] = useState({
         fullName: '',
         institution: '',
@@ -76,22 +77,22 @@ const ResearcherForm = ({ onSubmit, onCancel, initialData }) => {
                 <div className={styles.section}>
                     <h3 className={styles.sectionTitle}>Datos Personales</h3>
                     <div className={styles.inputGroup}>
-                        <label>Nombre y Apellidos</label>
-                        <input required name="fullName" value={formData.fullName} onChange={handleChange} placeholder="Ej: Juan Pérez" />
+                        <label htmlFor="researcher-fullName">Nombre y Apellidos</label>
+                        <input id="researcher-fullName" data-testid="researcher-fullName" required name="fullName" value={formData.fullName} onChange={handleChange} placeholder="Ej: Juan Pérez" />
                     </div>
                     <div className={styles.row}>
                         <div className={styles.inputGroup}>
-                            <label>Email</label>
-                            <input required type="email" name="email" value={formData.email} onChange={handleChange} />
+                            <label htmlFor="researcher-email">Email</label>
+                            <input id="researcher-email" required type="email" name="email" value={formData.email} onChange={handleChange} />
                         </div>
                         <div className={styles.inputGroup}>
-                            <label>Teléfono</label>
-                            <input required name="phone" value={formData.phone} onChange={handleChange} />
+                            <label htmlFor="researcher-phone">Teléfono</label>
+                            <input id="researcher-phone" required name="phone" value={formData.phone} onChange={handleChange} />
                         </div>
                     </div>
                     <div className={styles.inputGroup}>
-                        <label>CIF / NIF</label>
-                        <input required name="idNumber" value={formData.idNumber} onChange={handleChange} />
+                        <label htmlFor="researcher-idNumber">CIF / NIF</label>
+                        <input id="researcher-idNumber" required name="idNumber" value={formData.idNumber} onChange={handleChange} />
                     </div>
                 </div>
 
@@ -99,17 +100,17 @@ const ResearcherForm = ({ onSubmit, onCancel, initialData }) => {
                 <div className={styles.section}>
                     <h3 className={styles.sectionTitle}>Institución</h3>
                     <div className={styles.inputGroup}>
-                        <label>Institución</label>
-                        <input required name="institution" value={formData.institution} onChange={handleChange} placeholder="Ej: Universidad Complutense de Madrid" />
+                        <label htmlFor="researcher-institution">Institución</label>
+                        <input id="researcher-institution" required name="institution" value={formData.institution} onChange={handleChange} placeholder="Ej: Universidad Complutense de Madrid" />
                         <p className={styles.hint}>UCM: Tarifa A, Públicas/Fundaciones: B, Privadas: C</p>
                     </div>
                     <div className={styles.inputGroup}>
-                        <label>Centro de Investigación / Facultad</label>
-                        <input required name="center" value={formData.center} onChange={handleChange} />
+                        <label htmlFor="researcher-center">Centro de Investigación / Facultad</label>
+                        <input id="researcher-center" required name="center" value={formData.center} onChange={handleChange} />
                     </div>
                     <div className={styles.inputGroup}>
-                        <label>Tarifa Asignada</label>
-                        <select name="tariff" value={formData.tariff} onChange={handleChange} className={styles.select}>
+                        <label htmlFor="researcher-tariff">Tarifa Asignada</label>
+                        <select id="researcher-tariff" name="tariff" value={formData.tariff} onChange={handleChange} className={styles.select}>
                             <option value="">Seleccionar...</option>
                             <option value="A">Tarifa A (UCM)</option>
                             <option value="B">Tarifa B (Pública/Fundación)</option>
@@ -122,12 +123,12 @@ const ResearcherForm = ({ onSubmit, onCancel, initialData }) => {
                 <div className={styles.section}>
                     <h3 className={styles.sectionTitle}>Direcciones</h3>
                     <div className={styles.inputGroup}>
-                        <label>Dirección Fiscal</label>
-                        <input required name="fiscalAddress" value={formData.fiscalAddress} onChange={handleChange} />
+                        <label htmlFor="researcher-fiscalAddress">Dirección Fiscal</label>
+                        <input id="researcher-fiscalAddress" required name="fiscalAddress" value={formData.fiscalAddress} onChange={handleChange} />
                     </div>
                     <div className={styles.inputGroup}>
-                        <label>Dirección Envío Factura</label>
-                        <input required name="shippingAddress" value={formData.shippingAddress} onChange={handleChange} />
+                        <label htmlFor="researcher-shippingAddress">Dirección Envío Factura</label>
+                        <input id="researcher-shippingAddress" required name="shippingAddress" value={formData.shippingAddress} onChange={handleChange} />
                     </div>
                 </div>
 

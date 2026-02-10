@@ -1,10 +1,18 @@
-import React from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
-import { LayoutDashboard, Users, FileText, Settings, Database, TestTube } from 'lucide-react';
+import { useNavigate, NavLink, Outlet } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { LogOut, LayoutDashboard, Users, FileText, Settings, Database, TestTube, DollarSign } from 'lucide-react';
 import { cn } from '../lib/utils';
 import styles from './Layout.module.css';
 
 const Layout = () => {
+    const { user, logout } = useAuth();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        logout();
+        navigate('/login');
+    };
+
     return (
         <div className={styles.container}>
             {/* Sidebar */}
@@ -19,6 +27,7 @@ const Layout = () => {
                     <NavItem to="/solicitudes" icon={<FileText size={20} />} label="Solicitudes" />
                     <NavItem to="/investigadores" icon={<Users size={20} />} label="Investigadores" />
                     <NavItem to="/servicios" icon={<TestTube size={20} />} label="Catálogo Servicios" />
+                    <NavItem to="/facturacion" icon={<DollarSign size={20} />} label="Facturación" />
                     <div className={styles.navSectionTitle}>
                         Configuración
                     </div>
@@ -28,12 +37,19 @@ const Layout = () => {
                 <div className={styles.userProfile}>
                     <div className={styles.userProfileContent}>
                         <div className={styles.avatar}>
-                            AD
+                            {user?.username?.substring(0, 2).toUpperCase() || 'US'}
                         </div>
-                        <div>
-                            <p className={styles.userName}>Administrador</p>
-                            <p className={styles.userEmail}>admin@ucm.es</p>
+                        <div className="flex-1 min-w-0">
+                            <p className={styles.userName}>{user?.name || 'Usuario'}</p>
+                            <p className={styles.userEmail}>{user?.role === 'admin' ? 'Administrador' : 'Técnico'}</p>
                         </div>
+                        <button
+                            onClick={handleLogout}
+                            className="p-2 text-slate-400 hover:text-white hover:bg-slate-700/50 rounded-lg transition-colors"
+                            title="Cerrar Sesión"
+                        >
+                            <LogOut size={18} />
+                        </button>
                     </div>
                 </div>
             </aside>

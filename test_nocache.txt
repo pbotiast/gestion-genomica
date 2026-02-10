@@ -1,0 +1,1562 @@
+﻿
+[7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90mE:/gestion-genomica[39m
+
+ [33mÔØ»[39m gestion-genomica/src/components/ResearcherForm.test.jsx [2m ([22m[2m3 tests[22m [2m|[22m [31m3 failed[39m[2m)[22m[90m 59[2mms[22m[39m
+[31m   [33mÔØ»[31m gestion-genomica/src/components/ResearcherForm.test.jsx[2m > [22mResearcherForm[2m > [22mrenders correctly[39m
+[31m     ÔåÆ Found multiple elements with the text: /Instituci├│n/i
+
+Here are the matching elements:
+
+Ignored nodes: comments, script, style
+[36m<h3[31m
+  [33mclass[31m=[32m"_sectionTitle_d95ec8"[31m
+[36m>[31m
+  [0mInstituci├│n[0m
+[36m</h3>[31m
+
+Ignored nodes: comments, script, style
+[36m<label>[31m
+  [0mInstituci├│n[0m
+[36m</label>[31m
+
+(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<form[31m
+      [33mclass[31m=[32m"_form_d95ec8"[31m
+    [36m>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"_grid_d95ec8"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"_section_d95ec8"[31m
+        [36m>[31m
+          [36m<h3[31m
+            [33mclass[31m=[32m"_sectionTitle_d95ec8"[31m
+          [36m>[31m
+            [0mDatos Personales[0m
+          [36m</h3>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+          [36m>[31m
+            [36m<label>[31m
+              [0mNombre y Apellidos[0m
+            [36m</label>[31m
+            [36m<input[31m
+              [33mname[31m=[32m"fullName"[31m
+              [33mplaceholder[31m=[32m"Ej: Juan P├®rez"[31m
+              [33mrequired[31m=[32m""[31m
+              [33mvalue[31m=[32m""[31m
+            [36m/>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_row_d95ec8"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+            [36m>[31m
+              [36m<label>[31m
+                [0mEmail[0m
+              [36m</label>[31m
+              [36m<input[31m
+                [33mname[31m=[32m"email"[31m
+                [33mrequired[31m=[32m""[31m
+                [33mtype[31m=[32m"email"[31m
+                [33mvalue[31m=[32m""[31m
+              [36m/>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+            [36m>[31m
+              [36m<label>[31m
+                [0mTel├®fono[0m
+              [36m</label>[31m
+              [36m<input[31m
+                [33mname[31m=[32m"phone"[31m
+                [33mrequired[31m=[32m""[31m
+                [33mvalue[31m=[32m""[31m
+              [36m/>[31m
+            [36m</div>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+          [36m>[31m
+            [36m<label>[31m
+              [0mCIF / NIF[0m
+            [36m</label>[31m
+            [36m<input[31m
+              [33mname[31m=[32m"idNumber"[31m
+              [33mrequired[31m=[32m""[31m
+              [33mvalue[31m=[32m""[31m
+            [36m/>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"_section_d95ec8"[31m
+        [36m>[31m
+          [36m<h3[31m
+            [33mclass[31m=[32m"_sectionTitle_d95ec8"[31m
+          [36m>[31m
+            [0mInstituci├│n[0m
+          [36m</h3>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+          [36m>[31m
+            [36m<label>[31m
+              [0mInstituci├│n[0m
+            [36m</label>[31m
+            [36m<input[31m
+              [33mname[31m=[32m"institution"[31m
+              [33mplaceholder[31m=[32m"Ej: Universidad Complutense de Madrid"[31m
+              [33mrequired[31m=[32m""[31m
+              [33mvalue[31m=[32m""[31m
+            [36m/>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"_hint_d95ec8"[31m
+            [36m>[31m
+              [0mUCM: Tarifa A, P├║blicas/Fundaciones: B, Privadas: C[0m
+            [36m</p>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+          [36m>[31m
+            [36m<label>[31m
+              [0mCentro de Investigaci├│n / Facultad[0m
+            [36m</label>[31m
+            [36m<input[31m
+              [33mname[31m=[32m"center"[31m
+              [33mrequired[31m=[32m""[31m
+              [33mvalue[31m=[32m""[31m
+            [36m/>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+          [36m>[31m
+            [36m<label>[31m
+              [0mTarifa Asignada[0m
+            [36m</label>[31m
+            [36m<select[31m
+              [33mclass[31m=[32m"_select_d95ec8"[31m
+              [33mname[31m=[32m"tariff"[31m
+            [36m>[31m
+              [36m<option[31m
+                [33mvalue[31m=[32m""[31m
+              [36m>[31m
+                [0mSeleccionar...[0m
+              [36m</option>[31m
+              [36m<option[31m
+                [33mvalue[31m=[32m"A"[31m
+              [36m>[31m
+                [0mTarifa A (UCM)[0m
+              [36m</option>[31m
+              [36m<option[31m
+                [33mvalue[31m=[32m"B"[31m
+              [36m>[31m
+                [0mTarifa B (P├║blica/Fundaci├│n)[0m
+              [36m</option>[31m
+              [36m<option[31m
+                [33mvalue[31m=[32m"C"[31m
+              [36m>[31m
+                [0mTarifa C (Privada)[0m
+              [36m</option>[31m
+            [36m</select>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"_section_d95ec8"[31m
+        [36m>[31m
+          [36m<h3[31m
+            [33mclass[31m=[32m"_sectionTitle_d95ec8"[31m
+          [36m>[31m
+            [0mDirecciones[0m
+          [36m</h3>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+          [36m>[31m
+            [36m<label>[31m
+              [0mDirecci├│n Fiscal[0m
+            [36m</label>[31m
+            [36m<input[31m
+              [33mname[31m=[32m"fiscalAddress"[31m
+              [33mrequired[31m=[32m""[31m
+              [33mvalue[31m=[32m""[31m
+            [36m/>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+          [36m>[31m
+            [36m<label>[31m
+              [0mDirecci├│n Env├¡o Factura[0m
+            [36m</label>[31m
+            [36m<input[31m
+              [33mname[31m=[32m"shippingAddress"[31m
+              [33mrequired[31m=[32m""[31m
+              [33mvalue[31m=[32m""[31m
+            [36m/>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"_section_d95ec8"[31m
+        [36m>[31m
+          [36m<h3[31m
+            [33mclass[31m=[32m"_sectionTitle_d95ec8"[31m
+          [36m>[31m
+            [0mFacturaci├│n Electr├│nica[0m
+          [36m</h3>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_grid2_d95ec8"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+            [36m>[31m
+              [36m<label>[31m
+                [0mOficina Contable[0m
+              [36m</label>[31m
+              [36m<input[31m
+                [33mname[31m=[32m"billing.accountingOffice"[31m
+                [33mvalue[31m=[32m""[31m
+              [36m/>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+            [36m>[31m
+              [36m<label>[31m
+                [0m├ôrgano Gestor[0m
+              [36m</label>[31m
+              [36m<input[31m
+                [33mname[31m=[32m"billing.managementBody"[31m
+                [33mvalue[31m=[32m""[31m
+              [36m/>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+            [36m>[31m
+              [36m<label>[31m
+                [0mUnidad Tramitadora[0m
+              [36m</label>[31m
+              [36m<input[31m
+                [33mname[31m=[32m"billing.processingUnit"[31m
+                [33mvalue[31m=[32m""[31m
+              [36m/>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+            [36m>[31m
+              [36m<label>[31m
+                [0m├ôrgano Proponente[0m
+              [36m</label>[31m
+              [36m<input[31m
+                [33mname[31m=[32m"billing.proposingBody"[31m
+                [33mvalue[31m=[32m""[31m
+              [36m/>[31m
+            [36m</div>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"_section_d95ec8 _fullWidth_d95ec8"[31m
+        [36m>[31m
+          [36m<h3[31m
+            [33mclass[31m=[32m"_sectionTitle_d95ec8"[31m
+          [36m>[31m
+            [0mUsuarios Autorizados[0m
+          [36m</h3>[31m
+          [36m<textarea[31m
+            [33mclass[31m=[32m"_textarea_d95ec8"[31m
+            [33mname[31m=[32m"authorizedUsers"[31m
+            [33mplaceholder[31m=[32m"Nombres separados por comas"[31m
+          [36m/>[31m
+        [36m</div>[31m
+      [36m</div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"_actions_d95ec8"[31m
+      [36m>[31m
+        [36m<button[31m
+          [33mclass[31m=[32m"btn-secondary"[31m
+          [33mtype[31m=[32m"button"[31m
+        [36m>[31m
+          [0mCancelar[0m
+        [36m</button>[31m
+        [36m<button[31m
+          [33mclass[31m=[32m"btn-primary flex items-center gap-2"[31m
+          [33mtype[31m=[32m"submit"[31m
+        [36m>[31m
+          [36m<svg[31m
+            [33maria-hidden[31m=[32m"true"[31m
+            [33mclass[31m=[32m"lucide lucide-save"[31m
+            [33mfill[31m=[32m"none"[31m
+            [33mheight[31m=[32m"18"[31m
+            [33mstroke[31m=[32m"currentColor"[31m
+            [33mstroke-linecap[31m=[32m"round"[31m
+            [33mstroke-linejoin[31m=[32m"round"[31m
+            [33mstroke-width[31m=[32m"2"[31m
+            [33mviewBox[31m=[32m"0 0 24 24"[31m
+            [33mwidth[31m=[32m"18"[31m
+            [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+          [36m>[31m
+            [36m<path[31m
+              [33md[31m=[32m"M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"[31m
+            [36m/>[31m
+            [36m<path[31m
+              [33md[31m=[32m"M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"[31m
+            [36m/>[31m
+            [36m<path[31m
+              [33md[31m=[32m"M7 3v4a1 1 0 0 0 1 1h7"[31m
+            [36m/>[31m
+          [36m</svg>[31m
+          [0mGuardar Investigador[0m
+        [36m</button>[31m
+      [36m</div>[31m
+    [36m</form>[31m
+  [36m</div>[31m
+[36m</body>[31m[39m
+[31m   [33mÔØ»[31m gestion-genomica/src/components/ResearcherForm.test.jsx[2m > [22mResearcherForm[2m > [22mupdates tariff automatically based on institution[39m
+[31m     ÔåÆ Found a label with the text of: /^Instituci├│n$/i, however no form control was found associated to that label. Make sure you're using the "for" attribute or "aria-labelledby" attribute correctly.
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<form[31m
+      [33mclass[31m=[32m"_form_d95ec8"[31m
+    [36m>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"_grid_d95ec8"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"_section_d95ec8"[31m
+        [36m>[31m
+          [36m<h3[31m
+            [33mclass[31m=[32m"_sectionTitle_d95ec8"[31m
+          [36m>[31m
+            [0mDatos Personales[0m
+          [36m</h3>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+          [36m>[31m
+            [36m<label>[31m
+              [0mNombre y Apellidos[0m
+            [36m</label>[31m
+            [36m<input[31m
+              [33mname[31m=[32m"fullName"[31m
+              [33mplaceholder[31m=[32m"Ej: Juan P├®rez"[31m
+              [33mrequired[31m=[32m""[31m
+              [33mvalue[31m=[32m""[31m
+            [36m/>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_row_d95ec8"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+            [36m>[31m
+              [36m<label>[31m
+                [0mEmail[0m
+              [36m</label>[31m
+              [36m<input[31m
+                [33mname[31m=[32m"email"[31m
+                [33mrequired[31m=[32m""[31m
+                [33mtype[31m=[32m"email"[31m
+                [33mvalue[31m=[32m""[31m
+              [36m/>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+            [36m>[31m
+              [36m<label>[31m
+                [0mTel├®fono[0m
+              [36m</label>[31m
+              [36m<input[31m
+                [33mname[31m=[32m"phone"[31m
+                [33mrequired[31m=[32m""[31m
+                [33mvalue[31m=[32m""[31m
+              [36m/>[31m
+            [36m</div>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+          [36m>[31m
+            [36m<label>[31m
+              [0mCIF / NIF[0m
+            [36m</label>[31m
+            [36m<input[31m
+              [33mname[31m=[32m"idNumber"[31m
+              [33mrequired[31m=[32m""[31m
+              [33mvalue[31m=[32m""[31m
+            [36m/>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"_section_d95ec8"[31m
+        [36m>[31m
+          [36m<h3[31m
+            [33mclass[31m=[32m"_sectionTitle_d95ec8"[31m
+          [36m>[31m
+            [0mInstituci├│n[0m
+          [36m</h3>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+          [36m>[31m
+            [36m<label>[31m
+              [0mInstituci├│n[0m
+            [36m</label>[31m
+            [36m<input[31m
+              [33mname[31m=[32m"institution"[31m
+              [33mplaceholder[31m=[32m"Ej: Universidad Complutense de Madrid"[31m
+              [33mrequired[31m=[32m""[31m
+              [33mvalue[31m=[32m""[31m
+            [36m/>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"_hint_d95ec8"[31m
+            [36m>[31m
+              [0mUCM: Tarifa A, P├║blicas/Fundaciones: B, Privadas: C[0m
+            [36m</p>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+          [36m>[31m
+            [36m<label>[31m
+              [0mCentro de Investigaci├│n / Facultad[0m
+            [36m</label>[31m
+            [36m<input[31m
+              [33mname[31m=[32m"center"[31m
+              [33mrequired[31m=[32m""[31m
+              [33mvalue[31m=[32m""[31m
+            [36m/>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+          [36m>[31m
+            [36m<label>[31m
+              [0mTarifa Asignada[0m
+            [36m</label>[31m
+            [36m<select[31m
+              [33mclass[31m=[32m"_select_d95ec8"[31m
+              [33mname[31m=[32m"tariff"[31m
+            [36m>[31m
+              [36m<option[31m
+                [33mvalue[31m=[32m""[31m
+              [36m>[31m
+                [0mSeleccionar...[0m
+              [36m</option>[31m
+              [36m<option[31m
+                [33mvalue[31m=[32m"A"[31m
+              [36m>[31m
+                [0mTarifa A (UCM)[0m
+              [36m</option>[31m
+              [36m<option[31m
+                [33mvalue[31m=[32m"B"[31m
+              [36m>[31m
+                [0mTarifa B (P├║blica/Fundaci├│n)[0m
+              [36m</option>[31m
+              [36m<option[31m
+                [33mvalue[31m=[32m"C"[31m
+              [36m>[31m
+                [0mTarifa C (Privada)[0m
+              [36m</option>[31m
+            [36m</select>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"_section_d95ec8"[31m
+        [36m>[31m
+          [36m<h3[31m
+            [33mclass[31m=[32m"_sectionTitle_d95ec8"[31m
+          [36m>[31m
+            [0mDirecciones[0m
+          [36m</h3>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+          [36m>[31m
+            [36m<label>[31m
+              [0mDirecci├│n Fiscal[0m
+            [36m</label>[31m
+            [36m<input[31m
+              [33mname[31m=[32m"fiscalAddress"[31m
+              [33mrequired[31m=[32m""[31m
+              [33mvalue[31m=[32m""[31m
+            [36m/>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+          [36m>[31m
+            [36m<label>[31m
+              [0mDirecci├│n Env├¡o Factura[0m
+            [36m</label>[31m
+            [36m<input[31m
+              [33mname[31m=[32m"shippingAddress"[31m
+              [33mrequired[31m=[32m""[31m
+              [33mvalue[31m=[32m""[31m
+            [36m/>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"_section_d95ec8"[31m
+        [36m>[31m
+          [36m<h3[31m
+            [33mclass[31m=[32m"_sectionTitle_d95ec8"[31m
+          [36m>[31m
+            [0mFacturaci├│n Electr├│nica[0m
+          [36m</h3>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_grid2_d95ec8"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+            [36m>[31m
+              [36m<label>[31m
+                [0mOficina Contable[0m
+              [36m</label>[31m
+              [36m<input[31m
+                [33mname[31m=[32m"billing.accountingOffice"[31m
+                [33mvalue[31m=[32m""[31m
+              [36m/>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+            [36m>[31m
+              [36m<label>[31m
+                [0m├ôrgano Gestor[0m
+              [36m</label>[31m
+              [36m<input[31m
+                [33mname[31m=[32m"billing.managementBody"[31m
+                [33mvalue[31m=[32m""[31m
+              [36m/>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+            [36m>[31m
+              [36m<label>[31m
+                [0mUnidad Tramitadora[0m
+              [36m</label>[31m
+              [36m<input[31m
+                [33mname[31m=[32m"billing.processingUnit"[31m
+                [33mvalue[31m=[32m""[31m
+              [36m/>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+            [36m>[31m
+              [36m<label>[31m
+                [0m├ôrgano Proponente[0m
+              [36m</label>[31m
+              [36m<input[31m
+                [33mname[31m=[32m"billing.proposingBody"[31m
+                [33mvalue[31m=[32m""[31m
+              [36m/>[31m
+            [36m</div>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"_section_d95ec8 _fullWidth_d95ec8"[31m
+        [36m>[31m
+          [36m<h3[31m
+            [33mclass[31m=[32m"_sectionTitle_d95ec8"[31m
+          [36m>[31m
+            [0mUsuarios Autorizados[0m
+          [36m</h3>[31m
+          [36m<textarea[31m
+            [33mclass[31m=[32m"_textarea_d95ec8"[31m
+            [33mname[31m=[32m"authorizedUsers"[31m
+            [33mplaceholder[31m=[32m"Nombres separados por comas"[31m
+          [36m/>[31m
+        [36m</div>[31m
+      [36m</div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"_actions_d95ec8"[31m
+      [36m>[31m
+        [36m<button[31m
+          [33mclass[31m=[32m"btn-secondary"[31m
+          [33mtype[31m=[32m"button"[31m
+        [36m>[31m
+          [0mCancelar[0m
+        [36m</button>[31m
+        [36m<button[31m
+          [33mclass[31m=[32m"btn-primary flex items-center gap-2"[31m
+          [33mtype[31m=[32m"submit"[31m
+        [36m>[31m
+          [36m<svg[31m
+            [33maria-hidden[31m=[32m"true"[31m
+            [33mclass[31m=[32m"lucide lucide-save"[31m
+            [33mfill[31m=[32m"none"[31m
+            [33mheight[31m=[32m"18"[31m
+            [33mstroke[31m=[32m"currentColor"[31m
+            [33mstroke-linecap[31m=[32m"round"[31m
+            [33mstroke-linejoin[31m=[32m"round"[31m
+            [33mstroke-width[31m=[32m"2"[31m
+            [33mviewBox[31m=[32m"0 0 24 24"[31m
+            [33mwidth[31m=[32m"18"[31m
+            [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+          [36m>[31m
+            [36m<path[31m
+              [33md[31m=[32m"M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"[31m
+            [36m/>[31m
+            [36m<path[31m
+              [33md[31m=[32m"M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"[31m
+            [36m/>[31m
+            [36m<path[31m
+              [33md[31m=[32m"M7 3v4a1 1 0 0 0 1 1h7"[31m
+            [36m/>[31m
+          [36m</svg>[31m
+          [0mGuardar Investigador[0m
+        [36m</button>[31m
+      [36m</div>[31m
+    [36m</form>[31m
+  [36m</div>[31m
+[36m</body>[31m[39m
+[31m   [33mÔØ»[31m gestion-genomica/src/components/ResearcherForm.test.jsx[2m > [22mResearcherForm[2m > [22msubmits form data[39m
+[31m     ÔåÆ Found a label with the text of: /Nombre y Apellidos/i, however no form control was found associated to that label. Make sure you're using the "for" attribute or "aria-labelledby" attribute correctly.
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<form[31m
+      [33mclass[31m=[32m"_form_d95ec8"[31m
+    [36m>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"_grid_d95ec8"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"_section_d95ec8"[31m
+        [36m>[31m
+          [36m<h3[31m
+            [33mclass[31m=[32m"_sectionTitle_d95ec8"[31m
+          [36m>[31m
+            [0mDatos Personales[0m
+          [36m</h3>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+          [36m>[31m
+            [36m<label>[31m
+              [0mNombre y Apellidos[0m
+            [36m</label>[31m
+            [36m<input[31m
+              [33mname[31m=[32m"fullName"[31m
+              [33mplaceholder[31m=[32m"Ej: Juan P├®rez"[31m
+              [33mrequired[31m=[32m""[31m
+              [33mvalue[31m=[32m""[31m
+            [36m/>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_row_d95ec8"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+            [36m>[31m
+              [36m<label>[31m
+                [0mEmail[0m
+              [36m</label>[31m
+              [36m<input[31m
+                [33mname[31m=[32m"email"[31m
+                [33mrequired[31m=[32m""[31m
+                [33mtype[31m=[32m"email"[31m
+                [33mvalue[31m=[32m""[31m
+              [36m/>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+            [36m>[31m
+              [36m<label>[31m
+                [0mTel├®fono[0m
+              [36m</label>[31m
+              [36m<input[31m
+                [33mname[31m=[32m"phone"[31m
+                [33mrequired[31m=[32m""[31m
+                [33mvalue[31m=[32m""[31m
+              [36m/>[31m
+            [36m</div>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+          [36m>[31m
+            [36m<label>[31m
+              [0mCIF / NIF[0m
+            [36m</label>[31m
+            [36m<input[31m
+              [33mname[31m=[32m"idNumber"[31m
+              [33mrequired[31m=[32m""[31m
+              [33mvalue[31m=[32m""[31m
+            [36m/>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"_section_d95ec8"[31m
+        [36m>[31m
+          [36m<h3[31m
+            [33mclass[31m=[32m"_sectionTitle_d95ec8"[31m
+          [36m>[31m
+            [0mInstituci├│n[0m
+          [36m</h3>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+          [36m>[31m
+            [36m<label>[31m
+              [0mInstituci├│n[0m
+            [36m</label>[31m
+            [36m<input[31m
+              [33mname[31m=[32m"institution"[31m
+              [33mplaceholder[31m=[32m"Ej: Universidad Complutense de Madrid"[31m
+              [33mrequired[31m=[32m""[31m
+              [33mvalue[31m=[32m""[31m
+            [36m/>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"_hint_d95ec8"[31m
+            [36m>[31m
+              [0mUCM: Tarifa A, P├║blicas/Fundaciones: B, Privadas: C[0m
+            [36m</p>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+          [36m>[31m
+            [36m<label>[31m
+              [0mCentro de Investigaci├│n / Facultad[0m
+            [36m</label>[31m
+            [36m<input[31m
+              [33mname[31m=[32m"center"[31m
+              [33mrequired[31m=[32m""[31m
+              [33mvalue[31m=[32m""[31m
+            [36m/>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+          [36m>[31m
+            [36m<label>[31m
+              [0mTarifa Asignada[0m
+            [36m</label>[31m
+            [36m<select[31m
+              [33mclass[31m=[32m"_select_d95ec8"[31m
+              [33mname[31m=[32m"tariff"[31m
+            [36m>[31m
+              [36m<option[31m
+                [33mvalue[31m=[32m""[31m
+              [36m>[31m
+                [0mSeleccionar...[0m
+              [36m</option>[31m
+              [36m<option[31m
+                [33mvalue[31m=[32m"A"[31m
+              [36m>[31m
+                [0mTarifa A (UCM)[0m
+              [36m</option>[31m
+              [36m<option[31m
+                [33mvalue[31m=[32m"B"[31m
+              [36m>[31m
+                [0mTarifa B (P├║blica/Fundaci├│n)[0m
+              [36m</option>[31m
+              [36m<option[31m
+                [33mvalue[31m=[32m"C"[31m
+              [36m>[31m
+                [0mTarifa C (Privada)[0m
+              [36m</option>[31m
+            [36m</select>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"_section_d95ec8"[31m
+        [36m>[31m
+          [36m<h3[31m
+            [33mclass[31m=[32m"_sectionTitle_d95ec8"[31m
+          [36m>[31m
+            [0mDirecciones[0m
+          [36m</h3>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+          [36m>[31m
+            [36m<label>[31m
+              [0mDirecci├│n Fiscal[0m
+            [36m</label>[31m
+            [36m<input[31m
+              [33mname[31m=[32m"fiscalAddress"[31m
+              [33mrequired[31m=[32m""[31m
+              [33mvalue[31m=[32m""[31m
+            [36m/>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+          [36m>[31m
+            [36m<label>[31m
+              [0mDirecci├│n Env├¡o Factura[0m
+            [36m</label>[31m
+            [36m<input[31m
+              [33mname[31m=[32m"shippingAddress"[31m
+              [33mrequired[31m=[32m""[31m
+              [33mvalue[31m=[32m""[31m
+            [36m/>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"_section_d95ec8"[31m
+        [36m>[31m
+          [36m<h3[31m
+            [33mclass[31m=[32m"_sectionTitle_d95ec8"[31m
+          [36m>[31m
+            [0mFacturaci├│n Electr├│nica[0m
+          [36m</h3>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_grid2_d95ec8"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+            [36m>[31m
+              [36m<label>[31m
+                [0mOficina Contable[0m
+              [36m</label>[31m
+              [36m<input[31m
+                [33mname[31m=[32m"billing.accountingOffice"[31m
+                [33mvalue[31m=[32m""[31m
+              [36m/>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+            [36m>[31m
+              [36m<label>[31m
+                [0m├ôrgano Gestor[0m
+              [36m</label>[31m
+              [36m<input[31m
+                [33mname[31m=[32m"billing.managementBody"[31m
+                [33mvalue[31m=[32m""[31m
+              [36m/>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+            [36m>[31m
+              [36m<label>[31m
+                [0mUnidad Tramitadora[0m
+              [36m</label>[31m
+              [36m<input[31m
+                [33mname[31m=[32m"billing.processingUnit"[31m
+                [33mvalue[31m=[32m""[31m
+              [36m/>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"_inputGroup_d95ec8"[31m
+            [36m>[31m
+              [36m<label>[31m
+                [0m├ôrgano Proponente[0m
+              [36m</label>[31m
+              [36m<input[31m
+                [33mname[31m=[32m"billing.proposingBody"[31m
+                [33mvalue[31m=[32m""[31m
+              [36m/>[31m
+            [36m</div>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"_section_d95ec8 _fullWidth_d95ec8"[31m
+        [36m>[31m
+          [36m<h3[31m
+            [33mclass[31m=[32m"_sectionTitle_d95ec8"[31m
+          [36m>[31m
+            [0mUsuarios Autorizados[0m
+          [36m</h3>[31m
+          [36m<textarea[31m
+            [33mclass[31m=[32m"_textarea_d95ec8"[31m
+            [33mname[31m=[32m"authorizedUsers"[31m
+            [33mplaceholder[31m=[32m"Nombres separados por comas"[31m
+          [36m/>[31m
+        [36m</div>[31m
+      [36m</div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"_actions_d95ec8"[31m
+      [36m>[31m
+        [36m<button[31m
+          [33mclass[31m=[32m"btn-secondary"[31m
+          [33mtype[31m=[32m"button"[31m
+        [36m>[31m
+          [0mCancelar[0m
+        [36m</button>[31m
+        [36m<button[31m
+          [33mclass[31m=[32m"btn-primary flex items-center gap-2"[31m
+          [33mtype[31m=[32m"submit"[31m
+        [36m>[31m
+          [36m<svg[31m
+            [33maria-hidden[31m=[32m"true"[31m
+            [33mclass[31m=[32m"lucide lucide-save"[31m
+            [33mfill[31m=[32m"none"[31m
+            [33mheight[31m=[32m"18"[31m
+            [33mstroke[31m=[32m"currentColor"[31m
+            [33mstroke-linecap[31m=[32m"round"[31m
+            [33mstroke-linejoin[31m=[32m"round"[31m
+            [33mstroke-width[31m=[32m"2"[31m
+            [33mviewBox[31m=[32m"0 0 24 24"[31m
+            [33mwidth[31m=[32m"18"[31m
+            [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+          [36m>[31m
+            [36m<path[31m
+              [33md[31m=[32m"M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"[31m
+            [36m/>[31m
+            [36m<path[31m
+              [33md[31m=[32m"M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"[31m
+            [36m/>[31m
+            [36m<path[31m
+              [33md[31m=[32m"M7 3v4a1 1 0 0 0 1 1h7"[31m
+            [36m/>[31m
+          [36m</svg>[31m
+          [0mGuardar Investigador[0m
+        [36m</button>[31m
+      [36m</div>[31m
+    [36m</form>[31m
+  [36m</div>[31m
+[36m</body>[31m[39m
+[90mstdout[2m | src/components/ResearcherForm.test.jsx[2m > [22m[2mResearcherForm[2m > [22m[2msubmits form data[22m[39m
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<form[39m
+      [33mclass[39m=[32m"_form_e33fe8"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"_grid_e33fe8"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"_section_e33fe8"[39m
+        [36m>[39m
+          [36m<h3[39m
+            [33mclass[39m=[32m"_sectionTitle_e33fe8"[39m
+          [36m>[39m
+            [0mDatos Personales[0m
+          [36m</h3>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"_inputGroup_e33fe8"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mfor[39m=[32m"researcher-fullName"[39m
+            [36m>[39m
+              [0mNombre y Apellidos[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mid[39m=[32m"researcher-fullName"[39m
+              [33mname[39m=[32m"fullName"[39m
+              [33mplaceholder[39m=[32m"Ej: Juan P├®rez"[39m
+              [33mrequired[39m=[32m""[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"_row_e33fe8"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"_inputGroup_e33fe8"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mfor[39m=[32m"researcher-email"[39m
+              [36m>[39m
+                [0mEmail[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33mid[39m=[32m"researcher-email"[39m
+                [33mname[39m=[32m"email"[39m
+                [33mrequired[39m=[32m""[39m
+                [33mtype[39m=[32m"email"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"_inputGroup_e33fe8"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mfor[39m=[32m"researcher-phone"[39m
+              [36m>[39m
+                [0mTel├®fono[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33mid[39m=[32m"researcher-phone"[39m
+                [33mname[39m=[32m"phone"[39m
+                [33mrequired[39m=[32m""[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"_inputGroup_e33fe8"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mfor[39m=[32m"researcher-idNumber"[39m
+            [36m>[39m
+              [0mCIF / NIF[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mid[39m=[32m"researcher-idNumber"[39m
+              [33mname[39m=[32m"idNumber"[39m
+              [33mrequired[39m=[32m""[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"_section_e33fe8"[39m
+        [36m>[39m
+          [36m<h3[39m
+            [33mclass[39m=[32m"_sectionTitle_e33fe8"[39m
+          [36m>[39m
+            [0mInstituci├│n[0m
+          [36m</h3>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"_inputGroup_e33fe8"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mfor[39m=[32m"researcher-institution"[39m
+            [36m>[39m
+              [0mInstituci├│n[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mid[39m=[32m"researcher-institution"[39m
+              [33mname[39m=[32m"institution"[39m
+              [33mplaceholder[39m=[32m"Ej: Universidad Complutense de Madrid"[39m
+              [33mrequired[39m=[32m""[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"_hint_e33fe8"[39m
+            [36m>[39m
+              [0mUCM: Tarifa A, P├║blicas/Fundaciones: B, Privadas: C[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"_inputGroup_e33fe8"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mfor[39m=[32m"researcher-center"[39m
+            [36m>[39m
+              [0mCentro de Investigaci├│n / Facultad[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mid[39m=[32m"researcher-center"[39m
+              [33mname[39m=[32m"center"[39m
+              [33mrequired[39m=[32m""[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"_inputGroup_e33fe8"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mfor[39m=[32m"researcher-tariff"[39m
+            [36m>[39m
+              [0mTarifa Asignada[0m
+            [36m</label>[39m
+            [36m<select[39m
+              [33mclass[39m=[32m"_select_e33fe8"[39m
+              [33mid[39m=[32m"researcher-tariff"[39m
+              [33mname[39m=[32m"tariff"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m""[39m
+              [36m>[39m
+                [0mSeleccionar...[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"A"[39m
+              [36m>[39m
+                [0mTarifa A (UCM)[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"B"[39m
+              [36m>[39m
+                [0mTarifa B (P├║blica/Fundaci├│n)[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"C"[39m
+              [36m>[39m
+                [0mTarifa C (Privada)[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"_section_e33fe8"[39m
+        [36m>[39m
+          [36m<h3[39m
+            [33mclass[39m=[32m"_sectionTitle_e33fe8"[39m
+          [36m>[39m
+            [0mDirecciones[0m
+          [36m</h3>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"_inputGroup_e33fe8"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mfor[39m=[32m"researcher-fiscalAddress"[39m
+            [36m>[39m
+              [0mDirecci├│n Fiscal[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mid[39m=[32m"researcher-fiscalAddress"[39m
+              [33mname[39m=[32m"fiscalAddress"[39m
+              [33mrequired[39m=[32m""[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"_inputGroup_e33fe8"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mfor[39m=[32m"researcher-shippingAddress"[39m
+            [36m>[39m
+              [0mDirecci├│n Env├¡o Factura[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mid[39m=[32m"researcher-shippingAddress"[39m
+              [33mname[39m=[32m"shippingAddress"[39m
+              [33mrequired[39m=[32m""[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"_section_e33fe8"[39m
+        [36m>[39m
+          [36m<h3[39m
+            [33mclass[39m=[32m"_sectionTitle_e33fe8"[39m
+          [36m>[39m
+            [0mFacturaci├│n Electr├│nica[0m
+          [36m</h3>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"_grid2_e33fe8"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"_inputGroup_e33fe8"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [0mOficina Contable[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33mname[39m=[32m"billing.accountingOffice"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"_inputGroup_e33fe8"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [0m├ôrgano Gestor[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33mname[39m=[32m"billing.managementBody"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"_inputGroup_e33fe8"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [0mUnidad Tramitadora[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33mname[39m=[32m"billing.processingUnit"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"_inputGroup_e33fe8"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [0m├ôrgano Proponente[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33mname[39m=[32m"billing.proposingBody"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"_section_e33fe8 _fullWidth_e33fe8"[39m
+        [36m>[39m
+          [36m<h3[39m
+            [33mclass[39m=[32m"_sectionTitle_e33fe8"[39m
+          [36m>[39m
+            [0mUsuarios Autorizados[0m
+          [36m</h3>[39m
+          [36m<textarea[39m
+            [33mclass[39m=[32m"_textarea_e33fe8"[39m
+            [33mname[39m=[32m"authorizedUsers"[39m
+            [33mplaceholder[39m=[32m"Nombres separados por comas"[39m
+          [36m/>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"_actions_e33fe8"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"btn-secondary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mCancelar[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"btn-primary flex items-center gap-2"[39m
+          [33mtype[39m=[32m"submit"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"lucide lucide-save"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"18"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"18"[39m
+            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+          [36m>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"[39m
+            [36m/>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"[39m
+            [36m/>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M7 3v4a1 1 0 0 0 1 1h7"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mGuardar Investigador[0m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</form>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+ [33mÔØ»[39m src/components/ResearcherForm.test.jsx [2m ([22m[2m3 tests[22m [2m|[22m [31m1 failed[39m[2m)[22m[90m 125[2mms[22m[39m
+[31m   [33mÔØ»[31m src/components/ResearcherForm.test.jsx[2m > [22mResearcherForm[2m > [22mrenders correctly[39m
+[31m     ÔåÆ Found multiple elements with the text: /Instituci├│n/i
+
+Here are the matching elements:
+
+Ignored nodes: comments, script, style
+[36m<h3[31m
+  [33mclass[31m=[32m"_sectionTitle_e33fe8"[31m
+[36m>[31m
+  [0mInstituci├│n[0m
+[36m</h3>[31m
+
+Ignored nodes: comments, script, style
+[36m<label[31m
+  [33mfor[31m=[32m"researcher-institution"[31m
+[36m>[31m
+  [0mInstituci├│n[0m
+[36m</label>[31m
+
+(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<form[31m
+      [33mclass[31m=[32m"_form_e33fe8"[31m
+    [36m>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"_grid_e33fe8"[31m
+      [36m>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"_section_e33fe8"[31m
+        [36m>[31m
+          [36m<h3[31m
+            [33mclass[31m=[32m"_sectionTitle_e33fe8"[31m
+          [36m>[31m
+            [0mDatos Personales[0m
+          [36m</h3>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_inputGroup_e33fe8"[31m
+          [36m>[31m
+            [36m<label[31m
+              [33mfor[31m=[32m"researcher-fullName"[31m
+            [36m>[31m
+              [0mNombre y Apellidos[0m
+            [36m</label>[31m
+            [36m<input[31m
+              [33mid[31m=[32m"researcher-fullName"[31m
+              [33mname[31m=[32m"fullName"[31m
+              [33mplaceholder[31m=[32m"Ej: Juan P├®rez"[31m
+              [33mrequired[31m=[32m""[31m
+              [33mvalue[31m=[32m""[31m
+            [36m/>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_row_e33fe8"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"_inputGroup_e33fe8"[31m
+            [36m>[31m
+              [36m<label[31m
+                [33mfor[31m=[32m"researcher-email"[31m
+              [36m>[31m
+                [0mEmail[0m
+              [36m</label>[31m
+              [36m<input[31m
+                [33mid[31m=[32m"researcher-email"[31m
+                [33mname[31m=[32m"email"[31m
+                [33mrequired[31m=[32m""[31m
+                [33mtype[31m=[32m"email"[31m
+                [33mvalue[31m=[32m""[31m
+              [36m/>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"_inputGroup_e33fe8"[31m
+            [36m>[31m
+              [36m<label[31m
+                [33mfor[31m=[32m"researcher-phone"[31m
+              [36m>[31m
+                [0mTel├®fono[0m
+              [36m</label>[31m
+              [36m<input[31m
+                [33mid[31m=[32m"researcher-phone"[31m
+                [33mname[31m=[32m"phone"[31m
+                [33mrequired[31m=[32m""[31m
+                [33mvalue[31m=[32m""[31m
+              [36m/>[31m
+            [36m</div>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_inputGroup_e33fe8"[31m
+          [36m>[31m
+            [36m<label[31m
+              [33mfor[31m=[32m"researcher-idNumber"[31m
+            [36m>[31m
+              [0mCIF / NIF[0m
+            [36m</label>[31m
+            [36m<input[31m
+              [33mid[31m=[32m"researcher-idNumber"[31m
+              [33mname[31m=[32m"idNumber"[31m
+              [33mrequired[31m=[32m""[31m
+              [33mvalue[31m=[32m""[31m
+            [36m/>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"_section_e33fe8"[31m
+        [36m>[31m
+          [36m<h3[31m
+            [33mclass[31m=[32m"_sectionTitle_e33fe8"[31m
+          [36m>[31m
+            [0mInstituci├│n[0m
+          [36m</h3>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_inputGroup_e33fe8"[31m
+          [36m>[31m
+            [36m<label[31m
+              [33mfor[31m=[32m"researcher-institution"[31m
+            [36m>[31m
+              [0mInstituci├│n[0m
+            [36m</label>[31m
+            [36m<input[31m
+              [33mid[31m=[32m"researcher-institution"[31m
+              [33mname[31m=[32m"institution"[31m
+              [33mplaceholder[31m=[32m"Ej: Universidad Complutense de Madrid"[31m
+              [33mrequired[31m=[32m""[31m
+              [33mvalue[31m=[32m""[31m
+            [36m/>[31m
+            [36m<p[31m
+              [33mclass[31m=[32m"_hint_e33fe8"[31m
+            [36m>[31m
+              [0mUCM: Tarifa A, P├║blicas/Fundaciones: B, Privadas: C[0m
+            [36m</p>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_inputGroup_e33fe8"[31m
+          [36m>[31m
+            [36m<label[31m
+              [33mfor[31m=[32m"researcher-center"[31m
+            [36m>[31m
+              [0mCentro de Investigaci├│n / Facultad[0m
+            [36m</label>[31m
+            [36m<input[31m
+              [33mid[31m=[32m"researcher-center"[31m
+              [33mname[31m=[32m"center"[31m
+              [33mrequired[31m=[32m""[31m
+              [33mvalue[31m=[32m""[31m
+            [36m/>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_inputGroup_e33fe8"[31m
+          [36m>[31m
+            [36m<label[31m
+              [33mfor[31m=[32m"researcher-tariff"[31m
+            [36m>[31m
+              [0mTarifa Asignada[0m
+            [36m</label>[31m
+            [36m<select[31m
+              [33mclass[31m=[32m"_select_e33fe8"[31m
+              [33mid[31m=[32m"researcher-tariff"[31m
+              [33mname[31m=[32m"tariff"[31m
+            [36m>[31m
+              [36m<option[31m
+                [33mvalue[31m=[32m""[31m
+              [36m>[31m
+                [0mSeleccionar...[0m
+              [36m</option>[31m
+              [36m<option[31m
+                [33mvalue[31m=[32m"A"[31m
+              [36m>[31m
+                [0mTarifa A (UCM)[0m
+              [36m</option>[31m
+              [36m<option[31m
+                [33mvalue[31m=[32m"B"[31m
+              [36m>[31m
+                [0mTarifa B (P├║blica/Fundaci├│n)[0m
+              [36m</option>[31m
+              [36m<option[31m
+                [33mvalue[31m=[32m"C"[31m
+              [36m>[31m
+                [0mTarifa C (Privada)[0m
+              [36m</option>[31m
+            [36m</select>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"_section_e33fe8"[31m
+        [36m>[31m
+          [36m<h3[31m
+            [33mclass[31m=[32m"_sectionTitle_e33fe8"[31m
+          [36m>[31m
+            [0mDirecciones[0m
+          [36m</h3>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_inputGroup_e33fe8"[31m
+          [36m>[31m
+            [36m<label[31m
+              [33mfor[31m=[32m"researcher-fiscalAddress"[31m
+            [36m>[31m
+              [0mDirecci├│n Fiscal[0m
+            [36m</label>[31m
+            [36m<input[31m
+              [33mid[31m=[32m"researcher-fiscalAddress"[31m
+              [33mname[31m=[32m"fiscalAddress"[31m
+              [33mrequired[31m=[32m""[31m
+              [33mvalue[31m=[32m""[31m
+            [36m/>[31m
+          [36m</div>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_inputGroup_e33fe8"[31m
+          [36m>[31m
+            [36m<label[31m
+              [33mfor[31m=[32m"researcher-shippingAddress"[31m
+            [36m>[31m
+              [0mDirecci├│n Env├¡o Factura[0m
+            [36m</label>[31m
+            [36m<input[31m
+              [33mid[31m=[32m"researcher-shippingAddress"[31m
+              [33mname[31m=[32m"shippingAddress"[31m
+              [33mrequired[31m=[32m""[31m
+              [33mvalue[31m=[32m""[31m
+            [36m/>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"_section_e33fe8"[31m
+        [36m>[31m
+          [36m<h3[31m
+            [33mclass[31m=[32m"_sectionTitle_e33fe8"[31m
+          [36m>[31m
+            [0mFacturaci├│n Electr├│nica[0m
+          [36m</h3>[31m
+          [36m<div[31m
+            [33mclass[31m=[32m"_grid2_e33fe8"[31m
+          [36m>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"_inputGroup_e33fe8"[31m
+            [36m>[31m
+              [36m<label>[31m
+                [0mOficina Contable[0m
+              [36m</label>[31m
+              [36m<input[31m
+                [33mname[31m=[32m"billing.accountingOffice"[31m
+                [33mvalue[31m=[32m""[31m
+              [36m/>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"_inputGroup_e33fe8"[31m
+            [36m>[31m
+              [36m<label>[31m
+                [0m├ôrgano Gestor[0m
+              [36m</label>[31m
+              [36m<input[31m
+                [33mname[31m=[32m"billing.managementBody"[31m
+                [33mvalue[31m=[32m""[31m
+              [36m/>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"_inputGroup_e33fe8"[31m
+            [36m>[31m
+              [36m<label>[31m
+                [0mUnidad Tramitadora[0m
+              [36m</label>[31m
+              [36m<input[31m
+                [33mname[31m=[32m"billing.processingUnit"[31m
+                [33mvalue[31m=[32m""[31m
+              [36m/>[31m
+            [36m</div>[31m
+            [36m<div[31m
+              [33mclass[31m=[32m"_inputGroup_e33fe8"[31m
+            [36m>[31m
+              [36m<label>[31m
+                [0m├ôrgano Proponente[0m
+              [36m</label>[31m
+              [36m<input[31m
+                [33mname[31m=[32m"billing.proposingBody"[31m
+                [33mvalue[31m=[32m""[31m
+              [36m/>[31m
+            [36m</div>[31m
+          [36m</div>[31m
+        [36m</div>[31m
+        [36m<div[31m
+          [33mclass[31m=[32m"_section_e33fe8 _fullWidth_e33fe8"[31m
+        [36m>[31m
+          [36m<h3[31m
+            [33mclass[31m=[32m"_sectionTitle_e33fe8"[31m
+          [36m>[31m
+            [0mUsuarios Autorizados[0m
+          [36m</h3>[31m
+          [36m<textarea[31m
+            [33mclass[31m=[32m"_textarea_e33fe8"[31m
+            [33mname[31m=[32m"authorizedUsers"[31m
+            [33mplaceholder[31m=[32m"Nombres separados por comas"[31m
+          [36m/>[31m
+        [36m</div>[31m
+      [36m</div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"_actions_e33fe8"[31m
+      [36m>[31m
+        [36m<button[31m
+          [33mclass[31m=[32m"btn-secondary"[31m
+          [33mtype[31m=[32m"button"[31m
+        [36m>[31m
+          [0mCancelar[0m
+        [36m</button>[31m
+        [36m<button[31m
+          [33mclass[31m=[32m"btn-primary flex items-center gap-2"[31m
+          [33mtype[31m=[32m"submit"[31m
+        [36m>[31m
+          [36m<svg[31m
+            [33maria-hidden[31m=[32m"true"[31m
+            [33mclass[31m=[32m"lucide lucide-save"[31m
+            [33mfill[31m=[32m"none"[31m
+            [33mheight[31m=[32m"18"[31m
+            [33mstroke[31m=[32m"currentColor"[31m
+            [33mstroke-linecap[31m=[32m"round"[31m
+            [33mstroke-linejoin[31m=[32m"round"[31m
+            [33mstroke-width[31m=[32m"2"[31m
+            [33mviewBox[31m=[32m"0 0 24 24"[31m
+            [33mwidth[31m=[32m"18"[31m
+            [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+          [36m>[31m
+            [36m<path[31m
+              [33md[31m=[32m"M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"[31m
+            [36m/>[31m
+            [36m<path[31m
+              [33md[31m=[32m"M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"[31m
+            [36m/>[31m
+            [36m<path[31m
+              [33md[31m=[32m"M7 3v4a1 1 0 0 0 1 1h7"[31m
+            [36m/>[31m
+          [36m</svg>[31m
+          [0mGuardar Investigador[0m
+        [36m</button>[31m
+      [36m</div>[31m
+    [36m</form>[31m
+  [36m</div>[31m
+[36m</body>[31m[39m
+
+[2m Test Files [22m [1m[31m2 failed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[31m4 failed[39m[22m[2m | [22m[1m[32m2 passed[39m[22m[90m (6)[39m
+[2m   Start at [22m 17:01:18
+[2m   Duration [22m 1.62s[2m (transform 168ms, setup 212ms, collect 796ms, tests 184ms, environment 1.14s, prepare 325ms)[22m
+

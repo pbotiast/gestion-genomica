@@ -1,10 +1,14 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+import Login from './pages/Login';
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import Researchers from './pages/Researchers';
 import Services from './pages/Services';
 import Requests from './pages/Requests';
+import Billing from './pages/Billing';
 import Config from './pages/Config';
 
 // Placeholders for other pages
@@ -19,16 +23,25 @@ const PlaceholderPage = ({ title }) => (
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route index element={<Dashboard />} />
-        <Route path="solicitudes" element={<Requests />} />
-        <Route path="investigadores" element={<Researchers />} />
-        <Route path="servicios" element={<Services />} />
-        <Route path="configuracion" element={<Config />} />
-        <Route path="*" element={<PlaceholderPage title="Página no encontrada" />} />
-      </Route>
-    </Routes>
+    <AuthProvider>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+
+        <Route path="/" element={
+          <ProtectedRoute>
+            <Layout />
+          </ProtectedRoute>
+        }>
+          <Route index element={<Dashboard />} />
+          <Route path="solicitudes" element={<Requests />} />
+          <Route path="investigadores" element={<Researchers />} />
+          <Route path="servicios" element={<Services />} />
+          <Route path="facturacion" element={<Billing />} />
+          <Route path="configuracion" element={<Config />} />
+          <Route path="*" element={<PlaceholderPage title="Página no encontrada" />} />
+        </Route>
+      </Routes>
+    </AuthProvider>
   );
 }
 

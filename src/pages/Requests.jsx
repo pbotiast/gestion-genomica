@@ -24,7 +24,7 @@ const Requests = () => {
     const handleCloseRequest = (id) => {
         // Logic to set resultSentDate?
         const date = new Date().toISOString().split('T')[0];
-        setRequests(prev => prev.map(r => r.registrationNumber === id ? { ...r, resultSentDate: date } : r));
+        setRequests(prev => prev.map(r => r.registrationNumber === id ? { ...r, resultSentDate: date, status: 'processed' } : r));
     };
 
     return (

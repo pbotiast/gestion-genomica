@@ -65,6 +65,10 @@ export const AppProvider = ({ children }) => {
         setResearchers(prev => prev.filter(r => r.id !== id));
     };
 
+    const updateRequestStatus = (id, status) => {
+        setRequests(prev => prev.map(r => r.id === id ? { ...r, status } : r));
+    };
+
     const addService = (service) => {
         if (Array.isArray(service)) {
             const newServices = service.map(s => ({ ...s, id: crypto.randomUUID() }));
@@ -106,6 +110,7 @@ export const AppProvider = ({ children }) => {
             setServices,
             requests,
             setRequests,
+            updateRequestStatus,
             formats,
             addFormat,
             deleteFormat,
