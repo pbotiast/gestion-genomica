@@ -10,21 +10,26 @@ export const AuthProvider = ({ children }) => {
         return savedUser ? JSON.parse(savedUser) : null;
     });
 
-    const login = (username, password) => {
-        // Simulación de autenticación
-        // En un futuro, esto se conectaría a un backend
-        if (username === 'admin' && password === 'admin123') {
-            const userData = { username, role: 'admin', name: 'Administrador' };
-            setUser(userData);
-            localStorage.setItem('user', JSON.stringify(userData));
-            return { success: true };
-        } else if (username === 'tecnico' && password === 'tecnico123') {
-            const userData = { username, role: 'technician', name: 'Técnico de Laboratorio' };
-            setUser(userData);
-            localStorage.setItem('user', JSON.stringify(userData));
-            return { success: true };
-        } else {
-            return { success: false, message: 'Credenciales incorrectas' };
+    const login = async (username, password) => {
+        try {
+            const response = await fetch('http://localhost:3000/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                setUser(data.user);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                return { success: true };
+            } else {
+                return { success: false, message: data.message || 'Error de autenticación' };
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            return { success: false, message: 'Error de conexión con el servidor' };
         }
     };
 

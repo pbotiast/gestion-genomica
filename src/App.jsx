@@ -9,7 +9,7 @@ import Researchers from './pages/Researchers';
 import Services from './pages/Services';
 import Requests from './pages/Requests';
 import Billing from './pages/Billing';
-import Config from './pages/Config';
+import Config from './pages/Configuration'; // Using new file
 
 // Placeholders for other pages
 const PlaceholderPage = ({ title }) => (

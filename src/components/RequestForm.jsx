@@ -25,13 +25,14 @@ const RequestForm = ({ onSubmit, onCancel }) => {
         format: '',
         finalSamplesCount: '',
         additionalInfo: '',
+        requestedBy: '', // New field
         resultSentDate: '',
         technician: '',
         institution: '', // Auto-filled
         tariff: '' // Auto-filled
     });
 
-    // Auto-fill Institution and Tariff when Researcher changes
+    // Auto-fill Institution, Tariff, and RequestedBy when Researcher changes
     useEffect(() => {
         if (formData.researcherId) {
             const researcher = researchers.find(r => r.id === formData.researcherId);
@@ -39,7 +40,10 @@ const RequestForm = ({ onSubmit, onCancel }) => {
                 setFormData(prev => ({
                     ...prev,
                     institution: researcher.institution,
-                    tariff: researcher.tariff || 'C' // Default to C if missing
+                    tariff: researcher.tariff || 'C',
+                    // Default requestedBy to researcher name if empty, or keep user input?
+                    // Let's set it to researcher name as default, user can change.
+                    requestedBy: prev.requestedBy || researcher.fullName
                 }));
             }
         }
@@ -111,6 +115,18 @@ const RequestForm = ({ onSubmit, onCancel }) => {
                             <option key={r.id} value={r.id}>{r.fullName} - {r.institution}</option>
                         ))}
                     </select>
+                </div>
+                <div className={styles.inputGroup}>
+                    <label>Solicitado por (Usuario Autorizado)</label>
+                    <input
+                        name="requestedBy"
+                        value={formData.requestedBy}
+                        onChange={handleChange}
+                        placeholder="Nombre de quien solicita el servicio"
+                        list="associates-list" // Future-proofing for datalist if we fetch associates
+                    />
+                    {/* Placeholder for datalist if we implement associates fetching */}
+                    {/* <datalist id="associates-list">...</datalist> */}
                 </div>
                 <div className={styles.grid3}>
                     <div className={styles.inputGroup}>

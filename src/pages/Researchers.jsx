@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Plus, Search, Edit, Trash2, X } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 import ResearcherForm from '../components/ResearcherForm';
+import ExcelImporter from '../components/ExcelImporter';
 import { cn } from '../lib/utils';
 import styles from './Researchers.module.css';
 
@@ -34,13 +35,38 @@ const Researchers = () => {
             </div>
 
             <div className={styles.toolbar}>
-                <div className={styles.searchBox}>
-                    <Search size={18} className="text-slate-400" />
-                    <input
-                        placeholder="Buscar por nombre o institución..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className={styles.searchInput}
+                <div className="flex gap-4">
+                    <div className={styles.searchBox}>
+                        <Search size={18} className="text-slate-400" />
+                        <input
+                            placeholder="Buscar por nombre o institución..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className={styles.searchInput}
+                        />
+                    </div>
+                </div>
+                <div className="mt-4">
+                    <ExcelImporter
+                        type="Investigadores"
+                        templateHeaders={['Nombre', 'Institución', 'Centro', 'Email', 'NIF', 'Dirección', 'Tarifa']}
+                        onImport={async (data) => {
+                            // Map Excel columns to API fields
+                            // Assuming Excel has headers: Nombre, Institución, Centro, Email, NIF, Dirección, Tarifa
+                            const mapped = data.map(row => ({
+                                fullName: row['Nombre'] || row['nombre'],
+                                institution: row['Institución'] || row['institucion'],
+                                center: row['Centro'] || row['centro'],
+                                email: row['Email'] || row['email'],
+                                idNumber: row['NIF'] || row['nif'],
+                                fiscalAddress: row['Dirección'] || row['direccion'],
+                                tariff: row['Tarifa'] || row['tarifa'] || 'C'
+                            })).filter(r => r.fullName); // Simple validation
+
+                            for (const r of mapped) {
+                                await addResearcher(r);
+                            }
+                        }}
                     />
                 </div>
             </div>
