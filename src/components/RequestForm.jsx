@@ -4,19 +4,18 @@ import { useAppContext } from '../context/AppContext';
 import { cn } from '../lib/utils';
 import styles from './ServiceForm.module.css'; // Reusing similar styles
 
-const RequestForm = ({ onSubmit, onCancel }) => {
+const RequestForm = ({ onSubmit, onCancel, initialData }) => {
     const { researchers, services, technicians, requests } = useAppContext();
 
-    // ID Generation Logic: YYYY-XXXXX
+    // ID Generation Logic: YYYY-XXXXX (Only if not editing)
     const generateId = () => {
         const year = new Date().getFullYear();
-        // Filter requests for current year to count
         const count = requests.filter(r => r.registrationNumber && r.registrationNumber.startsWith(`${year}-`)).length;
         const nextNum = (count + 1).toString().padStart(5, '0');
         return `${year}-${nextNum}`;
     };
 
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState(initialData || {
         registrationNumber: generateId(),
         entryDate: new Date().toISOString().split('T')[0],
         researcherId: '',
@@ -32,10 +31,21 @@ const RequestForm = ({ onSubmit, onCancel }) => {
         tariff: '' // Auto-filled
     });
 
+    const [associates, setAssociates] = useState([]);
+
+    // Fetch associates for autocomplete/lookup
+    useEffect(() => {
+        fetch('http://localhost:3000/api/associates')
+            .then(res => res.json())
+            .then(data => setAssociates(data))
+            .catch(err => console.error("Error loading associates:", err));
+    }, []);
+
     // Auto-fill Institution, Tariff, and RequestedBy when Researcher changes
     useEffect(() => {
         if (formData.researcherId) {
-            const researcher = researchers.find(r => r.id === formData.researcherId);
+            // Loose equality to handle string/number mismatch from select input
+            const researcher = researchers.find(r => r.id == formData.researcherId);
             if (researcher) {
                 setFormData(prev => ({
                     ...prev,
@@ -52,7 +62,7 @@ const RequestForm = ({ onSubmit, onCancel }) => {
     // Auto-fill Format when Service changes
     useEffect(() => {
         if (formData.serviceId) {
-            const service = services.find(s => s.id === formData.serviceId);
+            const service = services.find(s => s.id == formData.serviceId);
             if (service) {
                 setFormData(prev => ({
                     ...prev,
@@ -67,11 +77,40 @@ const RequestForm = ({ onSubmit, onCancel }) => {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
+    // Filter researchers based on selected associate
+    const matchingAssociates = formData.requestedBy ? associates.filter(a => a.name.toLowerCase() === formData.requestedBy.toLowerCase()) : [];
+    const filteredResearchers = matchingAssociates.length > 0
+        ? researchers.filter(r => matchingAssociates.some(a => a.researcherId === r.id))
+        : researchers;
+
+    const handleAssociateChange = (e) => {
+        const value = e.target.value;
+        const matches = associates.filter(a => a.name === value);
+
+        setFormData(prev => {
+            const newData = { ...prev, requestedBy: value };
+
+            if (matches.length === 1) {
+                // Exact unique match - auto select
+                newData.researcherId = matches[0].researcherId;
+            } else if (matches.length > 1) {
+                // Multiple matches - clear researcher to force selection from filtered list
+                // Unless current researcher is one of the matches?
+                const currentIsOneOfMatches = matches.some(m => m.researcherId === prev.researcherId);
+                if (!currentIsOneOfMatches) {
+                    newData.researcherId = '';
+                }
+            }
+            return newData;
+        });
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Find names for display (denormalization for simpler export/view if needed)
-        const researcher = researchers.find(r => r.id === formData.researcherId);
-        const service = services.find(s => s.id === formData.serviceId);
+        // Find names for display
+        // Use loose equality for safety
+        const researcher = researchers.find(r => r.id == formData.researcherId);
+        const service = services.find(s => s.id == formData.serviceId);
 
         onSubmit({
             ...formData,
@@ -107,27 +146,45 @@ const RequestForm = ({ onSubmit, onCancel }) => {
 
             <div className={styles.section}>
                 <h3 className={styles.sectionTitle}>Datos del Investigador</h3>
+
                 <div className={styles.inputGroup}>
-                    <label>Investigador</label>
+                    <label>Solicitado por (Usuario Autorizado)</label>
+                    <input
+                        list="associates-list"
+                        name="requestedBy"
+                        value={formData.requestedBy}
+                        onChange={handleAssociateChange}
+                        placeholder="Empezar a escribir nombre..."
+                    />
+                    <datalist id="associates-list">
+                        {/* Show unique names only in datalist */}
+                        {[...new Set(associates.map(a => a.name))].map(name => (
+                            <option key={name} value={name} />
+                        ))}
+                    </datalist>
+                    {/* Helper text */}
+                    {matchingAssociates.length === 1 && (
+                        <p className="text-xs text-emerald-400 mt-1">
+                            Vinculado a: {researchers.find(r => r.id === matchingAssociates[0].researcherId)?.fullName}
+                        </p>
+                    )}
+                    {matchingAssociates.length > 1 && (
+                        <p className="text-xs text-amber-400 mt-1">
+                            Usuario vinculado a múltiples investigadores. Por favor seleccione uno abajo.
+                        </p>
+                    )}
+                </div>
+
+                <div className={styles.inputGroup}>
+                    <label>Investigador Principal</label>
                     <select required name="researcherId" value={formData.researcherId} onChange={handleChange} className={styles.select}>
                         <option value="">Seleccionar Investigador...</option>
-                        {researchers.map(r => (
+                        {filteredResearchers.map(r => (
                             <option key={r.id} value={r.id}>{r.fullName} - {r.institution}</option>
                         ))}
                     </select>
                 </div>
-                <div className={styles.inputGroup}>
-                    <label>Solicitado por (Usuario Autorizado)</label>
-                    <input
-                        name="requestedBy"
-                        value={formData.requestedBy}
-                        onChange={handleChange}
-                        placeholder="Nombre de quien solicita el servicio"
-                        list="associates-list" // Future-proofing for datalist if we fetch associates
-                    />
-                    {/* Placeholder for datalist if we implement associates fetching */}
-                    {/* <datalist id="associates-list">...</datalist> */}
-                </div>
+
                 <div className={styles.grid3}>
                     <div className={styles.inputGroup}>
                         <label>Institución</label>

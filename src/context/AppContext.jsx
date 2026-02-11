@@ -138,6 +138,22 @@ export const AppProvider = ({ children }) => {
         }
     };
 
+    const updateRequest = async (id, updates) => {
+        try {
+            const response = await fetch(`http://localhost:3000/api/requests/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updates)
+            });
+            if (response.ok) {
+                setRequests(prev => prev.map(r => r.id === id ? { ...r, ...updates } : r));
+            }
+        } catch (error) {
+            console.error("Error updating request:", error);
+            throw error;
+        }
+    };
+
     const addFormat = (format) => {
         if (!formats.includes(format)) setFormats(prev => [...prev, format]);
     };
@@ -177,7 +193,9 @@ export const AppProvider = ({ children }) => {
             setServices,
             requests,
             setRequests,
+            setRequests,
             updateRequestStatus,
+            updateRequest, // New exposed function
             createRequest, // New exposed function
             formats,
             addFormat,

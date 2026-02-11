@@ -5,7 +5,7 @@ import ExcelImporter from '../components/ExcelImporter';
 import { Settings as SettingsIcon, Database, Users, Building } from 'lucide-react';
 
 const Configuration = () => {
-    const { addTechnician } = useAppContext();
+    const { addTechnician, technicians } = useAppContext();
     const [status, setStatus] = useState('');
 
     const addInstitution = async (name) => {
@@ -42,14 +42,55 @@ const Configuration = () => {
                     <p className="text-slate-400 mb-4 text-sm">
                         Importar lista de técnicos habilitados.
                     </p>
+                    <div className="mb-4 flex gap-2">
+                        <input
+                            placeholder="Nombre del técnico"
+                            className="input flex-1"
+                            onKeyDown={async (e) => {
+                                if (e.key === 'Enter' && e.target.value) {
+                                    await addTechnician(e.target.value);
+                                    e.target.value = '';
+                                }
+                            }}
+                        />
+                        <button
+                            className="btn-primary"
+                            onClick={async (e) => {
+                                const input = e.target.previousElementSibling;
+                                if (input.value) {
+                                    await addTechnician(input.value);
+                                    input.value = '';
+                                }
+                            }}
+                        >
+                            Añadir
+                        </button>
+                    </div>
+                    <div className="mb-4">
+                        <h3 className="text-sm font-semibold text-slate-300 mb-2">Lista Actual:</h3>
+                        <div className="flex flex-wrap gap-2 max-h-40 overflow-y-auto">
+                            {technicians.map((tech, i) => (
+                                <span key={i} className="px-2 py-1 bg-slate-700/50 rounded text-xs text-slate-300 border border-slate-600">
+                                    {tech}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+
+                    <p className="text-slate-400 mb-4 text-sm border-t border-slate-700 pt-4">
+                        O importar lista de técnicos habilitados (Excel):
+                    </p>
                     <ExcelImporter
                         type="Técnicos"
                         templateHeaders={['Nombre']}
                         onImport={async (data) => {
                             const mapped = data.map(row => row['Nombre'] || row['nombre']).filter(n => n);
+                            let count = 0;
                             for (const name of mapped) {
                                 await addTechnician(name);
+                                count++;
                             }
+                            console.log(`Imported ${count} technicians`);
                         }}
                     />
                 </div>
@@ -74,6 +115,7 @@ const Configuration = () => {
                         }}
                     />
                 </div>
+
             </div>
         </div>
     );

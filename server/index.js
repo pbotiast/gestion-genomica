@@ -31,12 +31,29 @@ app.get('/api/researchers', (req, res) => {
 });
 
 app.post('/api/researchers', (req, res) => {
-    const { fullName, institution, email, center, fiscalAddress, idNumber, tariff } = req.body;
-    const stmt = db.prepare("INSERT INTO researchers (fullName, institution, email, center, fiscalAddress, idNumber, tariff) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    stmt.run(fullName, institution, email, center, fiscalAddress, idNumber, tariff, function (err) {
-        if (err) return res.status(500).json({ error: err.message });
-        res.json({ id: this.lastID, ...req.body });
-    });
+    const {
+        fullName, institution, department, faculty, city, phone, fax,
+        email, center, fiscalAddress, invoiceAddress, idNumber, tariff,
+        accountingOffice, managementBody, processingUnit, proposingBody
+    } = req.body;
+
+    const stmt = db.prepare(`
+        INSERT INTO researchers (
+            fullName, institution, department, faculty, city, phone, fax,
+            email, center, fiscalAddress, invoiceAddress, idNumber, tariff,
+            accountingOffice, managementBody, processingUnit, proposingBody
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `);
+
+    stmt.run(
+        fullName, institution, department, faculty, city, phone, fax,
+        email, center, fiscalAddress, invoiceAddress, idNumber, tariff,
+        accountingOffice, managementBody, processingUnit, proposingBody,
+        function (err) {
+            if (err) return res.status(500).json({ error: err.message });
+            res.json({ id: this.lastID, ...req.body });
+        }
+    );
     stmt.finalize();
 });
 
@@ -101,6 +118,53 @@ app.post('/api/technicians', (req, res) => {
 });
 
 // --- Researcher Associates Routes ---
+app.get('/api/researchers/:id/associates', (req, res) => {
+    const { id } = req.params;
+    db.all("SELECT * FROM researcher_associates WHERE researcherId = ?", [id], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows);
+    });
+});
+
+app.post('/api/researchers/:id/associates', (req, res) => {
+    const { id } = req.params;
+    const { name, email } = req.body;
+    const stmt = db.prepare("INSERT INTO researcher_associates (researcherId, name, email) VALUES (?, ?, ?)");
+    stmt.run(id, name, email, function (err) {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ id: this.lastID, researcherId: id, name, email });
+    });
+    stmt.finalize();
+});
+
+app.put('/api/researchers/:id', (req, res) => {
+    const { id } = req.params;
+    const updates = req.body;
+
+    // Filter out fields that shouldn't be updated or strictly control them if needed
+    // For now, allow dynamic update of all provided fields matches columns
+    const keys = Object.keys(updates).filter(k => k !== 'id');
+    const values = keys.map(k => updates[k]);
+    const placeholders = keys.map(k => `${k} = ?`).join(', ');
+
+    if (keys.length === 0) return res.status(400).json({ error: "No fields to update" });
+
+    db.run(`UPDATE researchers SET ${placeholders} WHERE id = ?`, [...values, id], function (err) {
+        if (err) return res.status(500).json({ error: err.message });
+        if (this.changes === 0) return res.status(404).json({ error: "Researcher not found" });
+        res.json({ success: true, updated: this.changes });
+    });
+});
+
+// --- Researcher Associates Routes ---
+app.get('/api/associates', (req, res) => {
+    // Get ALL associates (for autocomplete/search across all researchers)
+    db.all("SELECT * FROM researcher_associates", [], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows);
+    });
+});
+
 app.get('/api/researchers/:id/associates', (req, res) => {
     const { id } = req.params;
     db.all("SELECT * FROM researcher_associates WHERE researcherId = ?", [id], (err, rows) => {

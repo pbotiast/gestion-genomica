@@ -13,13 +13,13 @@ const Login = () => {
 
     const from = location.state?.from?.pathname || '/';
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const result = login(username, password);
-        if (result.success) {
+        const result = await login(username, password);
+        if (result && result.success) {
             navigate(from, { replace: true });
         } else {
-            setError(result.message);
+            setError(result?.message || 'Error al iniciar sesión');
         }
     };
 

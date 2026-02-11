@@ -26,6 +26,7 @@ const Layout = () => {
                     <NavItem to="/" icon={<LayoutDashboard size={20} />} label="Dashboard" />
                     <NavItem to="/solicitudes" icon={<FileText size={20} />} label="Solicitudes" />
                     <NavItem to="/investigadores" icon={<Users size={20} />} label="Investigadores" />
+                    <NavItem to="/usuarios" icon={<Users size={20} />} label="Usuarios Autorizados" />
                     <NavItem to="/servicios" icon={<TestTube size={20} />} label="Catálogo Servicios" />
                     <NavItem to="/facturacion" icon={<DollarSign size={20} />} label="Facturación" />
                     <div className={styles.navSectionTitle}>

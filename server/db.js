@@ -25,11 +25,21 @@ function initDb() {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             fullName TEXT,
             institution TEXT,
+            department TEXT,
+            faculty TEXT,
+            city TEXT,
+            phone TEXT,
+            fax TEXT,
             email TEXT,
             center TEXT,
             fiscalAddress TEXT,
+            invoiceAddress TEXT,
             idNumber TEXT,
-            tariff TEXT
+            tariff TEXT,
+            accountingOffice TEXT,
+            managementBody TEXT,
+            processingUnit TEXT,
+            proposingBody TEXT
         )`);
 
         // Services Table

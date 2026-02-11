@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { Plus, Search, CheckCircle, X } from 'lucide-react';
+import { Plus, Search, CheckCircle, X, FilePenLine, Send } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 import { cn } from '../lib/utils';
 import RequestForm from '../components/RequestForm';
-import styles from './Requests.module.css'; // Clone from Researchers or create new
+import styles from './Requests.module.css';
 
 const Requests = () => {
-    const { requests, updateRequestStatus, createRequest } = useAppContext();
+    const { requests, updateRequestStatus, createRequest, updateRequest } = useAppContext();
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isEditMode, setIsEditMode] = useState(false);
+    const [currentRequest, setCurrentRequest] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
 
     const filteredRequests = requests.filter(r =>
@@ -26,15 +28,35 @@ const Requests = () => {
         }
     };
 
-    const handleCloseRequest = async (id) => {
+    const handleUpdate = async (data) => {
         try {
-            // We are only updating status to processed/completed here.
-            // Ideally backend handles date update if logic is moved there, but for now we pass status.
-            // Previous logic set resultSentDate? The backend status update might need more info if we want to set date.
-            // For now, let's stick to status update.
-            // If we need to set date, we might need a separate API call or smarter updateRequestStatus.
-            // Let's assume 'processed' status implies completion for now.
+            if (currentRequest) {
+                await updateRequest(currentRequest.id, data);
+                setIsModalOpen(false);
+                setIsEditMode(false);
+                setCurrentRequest(null);
+            }
+        } catch (error) {
+            console.error("Error updating request:", error);
+            alert("Error al actualizar la solicitud");
+        }
+    };
 
+    const openCreateModal = () => {
+        setIsEditMode(false);
+        setCurrentRequest(null);
+        setIsModalOpen(true);
+    };
+
+    const openEditModal = (request) => {
+        setIsEditMode(true);
+        setCurrentRequest(request);
+        setIsModalOpen(true);
+    };
+
+    const handleFinalize = async (id) => {
+        if (!confirm('¿Está seguro de finalizar esta solicitud y enviarla a facturación?')) return;
+        try {
             await updateRequestStatus(id, 'processed');
         } catch (error) {
             console.error("Error updating request:", error);
@@ -48,7 +70,7 @@ const Requests = () => {
                     <h1 className={cn(styles.title, "text-gradient")}>Solicitudes</h1>
                     <p className={styles.subtitle}>Gestión de trabajo y seguimiento</p>
                 </div>
-                <button onClick={() => setIsModalOpen(true)} className="btn-primary flex items-center gap-2">
+                <button onClick={openCreateModal} className="btn-primary flex items-center gap-2">
                     <Plus size={20} />
                     Nueva Solicitud
                 </button>
@@ -103,17 +125,30 @@ const Requests = () => {
                                         <td>{req.serviceName}</td>
                                         <td>{req.samplesCount}</td>
                                         <td>
-                                            {req.resultSentDate ? (
-                                                <span className={cn(styles.badge, styles.badgeDone)}>Completado</span>
+                                            {req.status === 'processed' ? (
+                                                <span className={cn(styles.badge, styles.badgeDone)}>Facturación</span>
                                             ) : (
                                                 <span className={cn(styles.badge, styles.badgePending)}>En Proceso</span>
                                             )}
                                         </td>
                                         <td>
-                                            {!req.resultSentDate && (
-                                                <button onClick={() => handleCloseRequest(req.registrationNumber)} title="Marcar completado" className={styles.actionBtn}>
-                                                    <CheckCircle size={18} />
-                                                </button>
+                                            {req.status !== 'processed' && (
+                                                <div className="flex gap-2">
+                                                    <button
+                                                        onClick={() => openEditModal(req)}
+                                                        title="Editar Solicitud"
+                                                        className="text-blue-400 hover:text-blue-300 p-1"
+                                                    >
+                                                        <FilePenLine size={18} />
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleFinalize(req.id)}
+                                                        title="Finalizar y Enviar a Facturación"
+                                                        className="text-emerald-400 hover:text-emerald-300 p-1"
+                                                    >
+                                                        <Send size={18} />
+                                                    </button>
+                                                </div>
                                             )}
                                         </td>
                                     </tr>
@@ -128,13 +163,17 @@ const Requests = () => {
                 <div className={styles.modalOverlay}>
                     <div className={cn("glass-panel", styles.modalContent)}>
                         <div className={styles.modalHeader}>
-                            <h2 className={styles.modalTitle}>Registrar Solicitud</h2>
+                            <h2 className={styles.modalTitle}>{isEditMode ? 'Editar Solicitud' : 'Registrar Solicitud'}</h2>
                             <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-white">
                                 <X size={24} />
                             </button>
                         </div>
                         <div className={styles.modalBody}>
-                            <RequestForm onSubmit={handleCreate} onCancel={() => setIsModalOpen(false)} />
+                            <RequestForm
+                                onSubmit={isEditMode ? handleUpdate : handleCreate}
+                                onCancel={() => setIsModalOpen(false)}
+                                initialData={currentRequest}
+                            />
                         </div>
                     </div>
                 </div>

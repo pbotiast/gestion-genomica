@@ -9,7 +9,9 @@ import Researchers from './pages/Researchers';
 import Services from './pages/Services';
 import Requests from './pages/Requests';
 import Billing from './pages/Billing';
-import Config from './pages/Configuration'; // Using new file
+
+import Config from './pages/Configuration';
+import Associates from './pages/Associates'; // Import new page
 
 // Placeholders for other pages
 const PlaceholderPage = ({ title }) => (
@@ -35,6 +37,7 @@ function App() {
           <Route index element={<Dashboard />} />
           <Route path="solicitudes" element={<Requests />} />
           <Route path="investigadores" element={<Researchers />} />
+          <Route path="usuarios" element={<Associates />} />
           <Route path="servicios" element={<Services />} />
           <Route path="facturacion" element={<Billing />} />
           <Route path="configuracion" element={<Config />} />
