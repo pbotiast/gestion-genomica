@@ -43,10 +43,12 @@
     border-collapse: collapse;
 }
 
+
 .table th {
     text-align: left;
     padding: 1rem 1.5rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid #E2E8F0;
+    /* Slate 200 */
     color: var(--color-text-muted);
     font-weight: 500;
     font-size: 0.875rem;
@@ -54,7 +56,8 @@
 
 .table td {
     padding: 1rem 1.5rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid #F1F5F9;
+    /* Slate 100 */
     font-size: 0.875rem;
 }
 
@@ -71,15 +74,21 @@
 }
 
 .badgePending {
-    background: rgba(59, 130, 246, 0.2);
-    color: #93C5FD;
-    border: 1px solid rgba(59, 130, 246, 0.2);
+    background: #EFF6FF;
+    /* Blue 50 */
+    color: #2563EB;
+    /* Blue 600 */
+    border: 1px solid #DBEAFE;
+    /* Blue 100 */
 }
 
 .badgeDone {
-    background: rgba(16, 185, 129, 0.2);
-    color: #6EE7B7;
-    border: 1px solid rgba(16, 185, 129, 0.2);
+    background: #F0FDF4;
+    /* Green 50 */
+    color: #16A34A;
+    /* Green 600 */
+    border: 1px solid #DCFCE7;
+    /* Green 100 */
 }
 
 .actionBtn {
@@ -115,7 +124,8 @@
 
 .modalHeader {
     padding: 1.5rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid #E2E8F0;
+    /* Slate 200 */
     display: flex;
     justify-content: space-between;
     align-items: center;

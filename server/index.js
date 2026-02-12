@@ -239,6 +239,39 @@ app.put('/api/requests/:id', (req, res) => {
     });
 });
 
+// --- Dashboard Routes ---
+app.get('/api/dashboard/stats', (req, res) => {
+    const stats = {};
+
+    db.serialize(() => {
+        // Total Requests
+        db.get("SELECT count(*) as total FROM requests", (err, row) => {
+            if (err) return res.status(500).json({ error: err.message });
+            stats.totalRequests = row.total;
+
+            // Pending Requests (not processed/billed)
+            db.get("SELECT count(*) as pending FROM requests WHERE status != 'processed' AND status != 'billed'", (err, row) => {
+                if (err) return res.status(500).json({ error: err.message });
+                stats.pendingRequests = row.pending;
+
+                // Processed/Invoiced Requests
+                db.get("SELECT count(*) as invoiced FROM requests WHERE status = 'processed' OR status = 'billed'", (err, row) => {
+                    if (err) return res.status(500).json({ error: err.message });
+                    stats.invoicedRequests = row.invoiced;
+
+                    // Requests per Year
+                    db.all("SELECT strftime('%Y', entryDate) as year, count(*) as count FROM requests GROUP BY year ORDER BY year DESC", [], (err, rows) => {
+                        if (err) return res.status(500).json({ error: err.message });
+                        stats.requestsPerYear = rows;
+
+                        res.json(stats);
+                    });
+                });
+            });
+        });
+    });
+});
+
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });

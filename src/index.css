@@ -1,5 +1,5 @@
 :root {
-  /* Color Palette - Premium & Scientific */
+  /* Color Palette - Premium & Scientific (Light Mode) */
   --color-primary: #4F46E5;
   /* Indigo 600 */
   --color-primary-light: #818CF8;
@@ -9,16 +9,16 @@
   --color-accent: #EC4899;
   /* Pink 500 */
 
-  --color-background: #0F172A;
-  /* Slate 900 */
-  --color-surface: #1E293B;
-  /* Slate 800 */
-  --color-surface-translucent: rgba(30, 41, 59, 0.7);
-
-  --color-text-main: #F8FAFC;
+  --color-background: #F8FAFC;
   /* Slate 50 */
-  --color-text-muted: #94A3B8;
-  /* Slate 400 */
+  --color-surface: #FFFFFF;
+  /* White */
+  --color-surface-translucent: rgba(255, 255, 255, 0.8);
+
+  --color-text-main: #0F172A;
+  /* Slate 900 */
+  --color-text-muted: #475569;
+  /* Slate 600 */
 
   --color-success: #10B981;
   --color-warning: #F59E0B;
@@ -73,10 +73,12 @@ button {
 }
 
 /* Glassmorphism Utilities */
+/* Glassmorphism Utilities */
 .glass-panel {
   background: var(--color-surface-translucent);
   backdrop-filter: var(--backdrop-blur);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid #E2E8F0;
+  /* Slate 200 */
   box-shadow: var(--shadow-lg);
   border-radius: var(--radius-lg);
 }
@@ -139,8 +141,9 @@ button {
 input,
 select,
 textarea {
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  /* Slate 300 */
   color: var(--color-text-main);
   padding: 0.75rem 1rem;
   border-radius: var(--radius-md);

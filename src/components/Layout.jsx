@@ -23,7 +23,7 @@ const Layout = () => {
                 </div>
 
                 <nav className={styles.nav}>
-                    <NavItem to="/" icon={<LayoutDashboard size={20} />} label="Dashboard" />
+                    <NavItem to="/" icon={<LayoutDashboard size={20} />} label="Panel de Control" />
                     <NavItem to="/solicitudes" icon={<FileText size={20} />} label="Solicitudes" />
                     <NavItem to="/investigadores" icon={<Users size={20} />} label="Investigadores" />
                     <NavItem to="/usuarios" icon={<Users size={20} />} label="Usuarios Autorizados" />
@@ -46,7 +46,7 @@ const Layout = () => {
                         </div>
                         <button
                             onClick={handleLogout}
-                            className="p-2 text-slate-400 hover:text-white hover:bg-slate-700/50 rounded-lg transition-colors"
+                            className="p-2 text-slate-400 hover:text-red-600 hover:bg-slate-100 rounded-lg transition-colors"
                             title="Cerrar Sesión"
                         >
                             <LogOut size={18} />

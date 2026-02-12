@@ -42,9 +42,22 @@ export const generateBillingExcel = (groupedData, period) => {
 
                 rows.push(['Investigador:', researcher.fullName]);
                 rows.push(['Institución:', researcher.institution]);
+                rows.push(['Departamento:', researcher.department || '']);
+                rows.push(['Facultad:', researcher.faculty || '']);
                 rows.push(['Centro:', researcher.center || '']);
                 rows.push(['CIF/NIF:', researcher.idNumber || '']);
                 rows.push(['Dirección Fiscal:', researcher.fiscalAddress || '']);
+                rows.push(['Ciudad:', researcher.city || '']);
+                rows.push(['Email:', researcher.email || '']);
+
+                rows.push([]);
+                rows.push(['DATOS FACe (Si aplica):']);
+                rows.push(['Oficina Contable:', researcher.accountingOffice || '']);
+                rows.push(['Órgano Gestor:', researcher.managementBody || '']);
+                rows.push(['Unidad Tramitadora:', researcher.processingUnit || '']);
+                rows.push(['Órgano Proponente:', researcher.proposingBody || '']);
+
+                rows.push([]);
                 rows.push(['Periodo:', `${period.start} - ${period.end}`]);
                 rows.push([]);
 

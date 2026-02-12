@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Search, CheckCircle, X, FilePenLine, Send } from 'lucide-react';
+import { Plus, Search, CheckCircle, X, FilePenLine, Send, RotateCcw } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 import { cn } from '../lib/utils';
 import RequestForm from '../components/RequestForm';
@@ -63,6 +63,15 @@ const Requests = () => {
         }
     };
 
+    const handleRestore = async (id) => {
+        if (!confirm('¿Está seguro de restaurar esta solicitud? Volverá a estado pendiente.')) return;
+        try {
+            await updateRequestStatus(id, 'pending');
+        } catch (error) {
+            console.error("Error restoring request:", error);
+        }
+    };
+
     return (
         <div>
             <div className={styles.header}>
@@ -78,7 +87,7 @@ const Requests = () => {
 
             <div className={styles.toolbar}>
                 <div className={styles.searchBox}>
-                    <Search size={18} className="text-slate-400" />
+                    <Search size={18} className="text-slate-500" />
                     <input
                         placeholder="Buscar por registro, investigador..."
                         value={searchTerm}
@@ -113,17 +122,17 @@ const Requests = () => {
                             ) : (
                                 filteredRequests.map((req, idx) => (
                                     <tr key={idx}>
-                                        <td className="font-mono text-indigo-300">{req.registrationNumber}</td>
-                                        <td>{req.entryDate}</td>
+                                        <td className="font-mono text-indigo-700 font-bold">{req.registrationNumber}</td>
+                                        <td className="text-slate-700">{req.entryDate}</td>
                                         <td>
-                                            <div className="font-medium">{req.researcherName}</div>
+                                            <div className="font-medium text-slate-900">{req.researcherName}</div>
                                             <div className="text-xs text-slate-500">{req.institution}</div>
                                         </td>
                                         <td>
-                                            <span className="text-sm text-slate-300">{req.requestedBy || '-'}</span>
+                                            <span className="text-sm text-slate-600">{req.requestedBy || '-'}</span>
                                         </td>
-                                        <td>{req.serviceName}</td>
-                                        <td>{req.samplesCount}</td>
+                                        <td className="text-slate-700">{req.serviceName}</td>
+                                        <td className="text-slate-700">{req.samplesCount}</td>
                                         <td>
                                             {req.status === 'processed' ? (
                                                 <span className={cn(styles.badge, styles.badgeDone)}>Facturación</span>
@@ -132,24 +141,34 @@ const Requests = () => {
                                             )}
                                         </td>
                                         <td>
-                                            {req.status !== 'processed' && (
-                                                <div className="flex gap-2">
+                                            <div className="flex gap-2">
+                                                {req.status !== 'processed' ? (
+                                                    <>
+                                                        <button
+                                                            onClick={() => openEditModal(req)}
+                                                            title="Editar Solicitud"
+                                                            className="text-blue-600 hover:text-blue-800 p-1"
+                                                        >
+                                                            <FilePenLine size={18} />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleFinalize(req.id)}
+                                                            title="Finalizar y Enviar a Facturación"
+                                                            className="text-emerald-600 hover:text-emerald-800 p-1"
+                                                        >
+                                                            <Send size={18} />
+                                                        </button>
+                                                    </>
+                                                ) : (
                                                     <button
-                                                        onClick={() => openEditModal(req)}
-                                                        title="Editar Solicitud"
-                                                        className="text-blue-400 hover:text-blue-300 p-1"
+                                                        onClick={() => handleRestore(req.id)}
+                                                        title="Restaurar Solicitud"
+                                                        className="text-amber-600 hover:text-amber-800 p-1"
                                                     >
-                                                        <FilePenLine size={18} />
+                                                        <RotateCcw size={18} />
                                                     </button>
-                                                    <button
-                                                        onClick={() => handleFinalize(req.id)}
-                                                        title="Finalizar y Enviar a Facturación"
-                                                        className="text-emerald-400 hover:text-emerald-300 p-1"
-                                                    >
-                                                        <Send size={18} />
-                                                    </button>
-                                                </div>
-                                            )}
+                                                )}
+                                            </div>
                                         </td>
                                     </tr>
                                 ))
@@ -164,7 +183,7 @@ const Requests = () => {
                     <div className={cn("glass-panel", styles.modalContent)}>
                         <div className={styles.modalHeader}>
                             <h2 className={styles.modalTitle}>{isEditMode ? 'Editar Solicitud' : 'Registrar Solicitud'}</h2>
-                            <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-white">
+                            <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-700">
                                 <X size={24} />
                             </button>
                         </div>

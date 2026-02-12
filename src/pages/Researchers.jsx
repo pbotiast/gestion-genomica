@@ -47,7 +47,7 @@ const Researchers = () => {
 
             <div className={styles.toolbar}>
                 <div className={styles.searchBox}>
-                    <Search size={18} className="text-slate-400" />
+                    <Search size={18} className="text-slate-500" />
                     <input
                         placeholder="Buscar investigador..."
                         className={styles.searchInput}
@@ -146,7 +146,7 @@ const Researchers = () => {
                     <div className={cn("glass-panel", styles.modalContent)}>
                         <div className={styles.modalHeader}>
                             <h2 className={styles.modalTitle}>{selectedResearcher ? 'Editar Investigador' : 'Nuevo Investigador'}</h2>
-                            <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-white">
+                            <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-700">
                                 <X size={24} />
                             </button>
                         </div>

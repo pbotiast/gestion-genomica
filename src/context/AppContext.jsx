@@ -193,7 +193,6 @@ export const AppProvider = ({ children }) => {
             setServices,
             requests,
             setRequests,
-            setRequests,
             updateRequestStatus,
             updateRequest, // New exposed function
             createRequest, // New exposed function
