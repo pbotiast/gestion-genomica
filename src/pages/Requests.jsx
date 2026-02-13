@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Search, CheckCircle, X, FilePenLine, Send, RotateCcw, Trash2 } from 'lucide-react';
+import { Plus, Search, CheckCircle, X, FilePenLine, Send, RotateCcw, Trash2, DollarSign } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 import { cn } from '../lib/utils';
 import RequestForm from '../components/RequestForm';

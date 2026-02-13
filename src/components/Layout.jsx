@@ -1,6 +1,6 @@
 import { useNavigate, NavLink, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LogOut, LayoutDashboard, Users, FileText, Settings, Database, TestTube, DollarSign } from 'lucide-react';
+import { LogOut, LayoutDashboard, Users, FileText, Settings, Database, TestTube, DollarSign, ClipboardList } from 'lucide-react';
 import { cn } from '../lib/utils';
 import styles from './Layout.module.css';
 
@@ -33,6 +33,7 @@ const Layout = () => {
                         Configuración
                     </div>
                     <NavItem to="/configuracion" icon={<Settings size={20} />} label="Ajustes Generales" />
+                    <NavItem to="/auditoria" icon={<ClipboardList size={20} />} label="Auditoría" />
                 </nav>
 
                 <div className={styles.userProfile}>

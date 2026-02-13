@@ -8,6 +8,24 @@ const PORT = 3000;
 app.use(cors());
 app.use(express.json());
 
+// --- Helper for Audit Logs ---
+function logAudit(action, entity, entityId, details, user = 'system') {
+    const timestamp = new Date().toISOString();
+    const stmt = db.prepare("INSERT INTO audit_logs (action, entity, entityId, details, user, timestamp) VALUES (?, ?, ?, ?, ?, ?)");
+    stmt.run(action, entity, entityId, JSON.stringify(details), user, timestamp, (err) => {
+        if (err) console.error("Error logging audit:", err);
+    });
+    stmt.finalize();
+}
+
+// --- Audit Routes ---
+app.get('/api/audit', (req, res) => {
+    db.all("SELECT * FROM audit_logs ORDER BY timestamp DESC LIMIT 100", [], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows);
+    });
+});
+
 // --- Auth Routes ---
 app.post('/api/login', (req, res) => {
     const { username, password } = req.body;
@@ -51,6 +69,7 @@ app.post('/api/researchers', (req, res) => {
         accountingOffice, managementBody, processingUnit, proposingBody,
         function (err) {
             if (err) return res.status(500).json({ error: err.message });
+            logAudit('CREATE', 'RESEARCHER', this.lastID, req.body);
             res.json({ id: this.lastID, ...req.body });
         }
     );
@@ -152,6 +171,7 @@ app.put('/api/researchers/:id', (req, res) => {
     db.run(`UPDATE researchers SET ${placeholders} WHERE id = ?`, [...values, id], function (err) {
         if (err) return res.status(500).json({ error: err.message });
         if (this.changes === 0) return res.status(404).json({ error: "Researcher not found" });
+        logAudit('UPDATE', 'RESEARCHER', id, updates);
         res.json({ success: true, updated: this.changes });
     });
 });
@@ -248,6 +268,7 @@ app.post('/api/requests', (req, res) => {
         status, technician, resultSentDate, createdAt,
         function (err) {
             if (err) return res.status(500).json({ error: err.message });
+            logAudit('CREATE', 'REQUEST', this.lastID, { registrationNumber, researcherId });
             res.json({ id: this.lastID, ...req.body, createdAt });
         }
     );
@@ -288,6 +309,7 @@ app.put('/api/requests/:id', (req, res) => {
             return res.status(404).json({ error: "Request not found" });
         }
         console.log(`[PUT] Success. Updated ${this.changes} row(s).`);
+        logAudit('UPDATE', 'REQUEST', id, updates);
         res.json({ success: true, updated: this.changes });
     });
 });
@@ -359,7 +381,7 @@ app.post('/api/invoices', (req, res) => {
                     if (err) console.error("Error linking requests to invoice:", err);
                 });
             }
-
+            logAudit('CREATE', 'INVOICE', invoiceId, { invoiceNumber, amount, researcherId });
             res.json({ id: invoiceId, invoiceNumber, createdAt });
         });
         stmt.finalize();

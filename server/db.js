@@ -90,17 +90,11 @@ function initDb() {
             resultSentDate TEXT,
             technician TEXT,
             createdAt TEXT,
+            invoiceId INTEGER,
             FOREIGN KEY(researcherId) REFERENCES researchers(id),
-            FOREIGN KEY(researcherId) REFERENCES researchers(id),
-            FOREIGN KEY(serviceId) REFERENCES services(id)
+            FOREIGN KEY(serviceId) REFERENCES services(id),
+            FOREIGN KEY(invoiceId) REFERENCES invoices(id)
         )`);
-
-        // Check if invoiceId exists in requests (for migration)
-        db.all("PRAGMA table_info(requests)", (err, rows) => {
-            if (rows && !rows.some(r => r.name === 'invoiceId')) {
-                db.run("ALTER TABLE requests ADD COLUMN invoiceId INTEGER REFERENCES invoices(id)");
-            }
-        });
 
         // Invoices Table
         db.run(`CREATE TABLE IF NOT EXISTS invoices (
@@ -111,25 +105,17 @@ function initDb() {
             status TEXT, -- paid, pending
             createdAt TEXT,
             FOREIGN KEY(researcherId) REFERENCES researchers(id)
-            FOREIGN KEY(serviceId) REFERENCES services(id)
         )`);
 
-        // Check if invoiceId exists in requests (for migration)
-        db.all("PRAGMA table_info(requests)", (err, rows) => {
-            if (rows && !rows.some(r => r.name === 'invoiceId')) {
-                db.run("ALTER TABLE requests ADD COLUMN invoiceId INTEGER REFERENCES invoices(id)");
-            }
-        });
-
-        // Invoices Table
-        db.run(`CREATE TABLE IF NOT EXISTS invoices (
+        // Audit Logs Table
+        db.run(`CREATE TABLE IF NOT EXISTS audit_logs (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            invoiceNumber TEXT UNIQUE,
-            researcherId INTEGER,
-            amount REAL,
-            status TEXT, -- paid, pending
-            createdAt TEXT,
-            FOREIGN KEY(researcherId) REFERENCES researchers(id)
+            action TEXT, -- CREATE, UPDATE, DELETE
+            entity TEXT, -- REQUEST, RESEARCHER, SERVICE, etc.
+            entityId INTEGER,
+            details TEXT,
+            user TEXT, -- username if available, or 'system'
+            timestamp TEXT
         )`);
 
         // Seed Users if empty
@@ -147,8 +133,6 @@ function initDb() {
         db.get("SELECT count(*) as count FROM services", (err, row) => {
             if (row.count === 0) {
                 console.log("Seeding Services...");
-                // Basic seed, in real app app should import full list
-                // Using a few examples from previous context
                 const stmt = db.prepare("INSERT INTO services (name, categoryId, format, priceA, priceB, priceC) VALUES (?, ?, ?, ?, ?, ?)");
                 stmt.run("Extracción ADN", "DNA", "Tubo", 10.5, 15.0, 20.0);
                 stmt.run("PCR Convencional", "PCR", "Placa", 5.0, 7.5, 10.0);

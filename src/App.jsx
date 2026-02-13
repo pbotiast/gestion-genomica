@@ -11,7 +11,8 @@ import Requests from './pages/Requests';
 import Billing from './pages/Billing';
 
 import Config from './pages/Configuration';
-import Associates from './pages/Associates'; // Import new page
+import Associates from './pages/Associates';
+import Audit from './pages/Audit';
 
 // Placeholders for other pages
 const PlaceholderPage = ({ title }) => (
@@ -40,6 +41,7 @@ function App() {
           <Route path="usuarios" element={<Associates />} />
           <Route path="servicios" element={<Services />} />
           <Route path="facturacion" element={<Billing />} />
+          <Route path="auditoria" element={<Audit />} />
           <Route path="configuracion" element={<Config />} />
           <Route path="*" element={<PlaceholderPage title="Página no encontrada" />} />
         </Route>
