@@ -2,11 +2,16 @@ import React, { useState } from 'react';
 import { useAppContext } from '../context/AppContext';
 import { cn } from '../lib/utils';
 import ExcelImporter from '../components/ExcelImporter';
-import { Settings as SettingsIcon, Database, Users, Building } from 'lucide-react';
+import { Settings as SettingsIcon, Database, Users, Building, Trash2, FilePenLine, Plus, Save, X } from 'lucide-react';
 
 const Configuration = () => {
-    const { addTechnician, technicians } = useAppContext();
-    const [status, setStatus] = useState('');
+    const { addTechnician, technicians, deleteTechnician, updateTechnician, formats, addFormat, deleteFormat, updateFormat } = useAppContext();
+    const [editingTech, setEditingTech] = useState(null);
+    const [techNameEdit, setTechNameEdit] = useState('');
+
+    // Formats state
+    const [editingFormat, setEditingFormat] = useState(null);
+    const [formatNameEdit, setFormatNameEdit] = useState('');
 
     const addInstitution = async (name) => {
         // We'll need to expose this in AppContext later if we want full Institution management
@@ -68,11 +73,35 @@ const Configuration = () => {
                     </div>
                     <div className="mb-4">
                         <h3 className="text-sm font-semibold text-slate-300 mb-2">Lista Actual:</h3>
-                        <div className="flex flex-wrap gap-2 max-h-40 overflow-y-auto">
+                        <div className="space-y-2 max-h-60 overflow-y-auto pr-2">
                             {technicians.map((tech, i) => (
-                                <span key={i} className="px-2 py-1 bg-slate-700/50 rounded text-xs text-slate-300 border border-slate-600">
-                                    {tech}
-                                </span>
+                                <div key={i} className="flex items-center justify-between p-2 bg-slate-700/30 rounded border border-slate-700 group hover:border-slate-500 transition-colors">
+                                    {editingTech === tech ? (
+                                        <div className="flex gap-2 flex-1">
+                                            <input
+                                                value={techNameEdit}
+                                                onChange={(e) => setTechNameEdit(e.target.value)}
+                                                className="bg-slate-800 border border-slate-600 rounded px-2 py-1 text-sm text-white w-full"
+                                            />
+                                            <button onClick={() => {
+                                                if (techNameEdit && techNameEdit !== tech) updateTechnician(tech, techNameEdit);
+                                                setEditingTech(null);
+                                            }} className="text-emerald-400 hover:text-emerald-300"><Save size={16} /></button>
+                                            <button onClick={() => setEditingTech(null)} className="text-slate-400 hover:text-slate-300"><X size={16} /></button>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <span className="text-slate-200 text-sm font-medium">{tech}</span>
+                                            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <button onClick={() => {
+                                                    setEditingTech(tech);
+                                                    setTechNameEdit(tech);
+                                                }} className="p-1 text-blue-400 hover:bg-blue-500/10 rounded"><FilePenLine size={14} /></button>
+                                                <button onClick={() => deleteTechnician(tech)} className="p-1 text-rose-400 hover:bg-rose-500/10 rounded"><Trash2 size={14} /></button>
+                                            </div>
+                                        </>
+                                    )}
+                                </div>
                             ))}
                         </div>
                     </div>
@@ -93,6 +122,73 @@ const Configuration = () => {
                             console.log(`Imported ${count} technicians`);
                         }}
                     />
+                </div>
+
+                <div className="glass-panel p-6 pb-2">
+                    <h2 className="text-xl font-semibold text-slate-200 mb-4 flex items-center gap-2">
+                        <Database size={20} className="text-amber-400" />
+                        Formatos de Entrada
+                    </h2>
+                    <p className="text-slate-400 mb-4 text-sm">
+                        Gestionar formatos de muestras disponibles (Tubos, Placas, etc.)
+                    </p>
+
+                    <div className="mb-4 flex gap-2">
+                        <input
+                            placeholder="Nuevo formato (ej. Placa 384)"
+                            className="input flex-1"
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' && e.target.value) {
+                                    addFormat(e.target.value);
+                                    e.target.value = '';
+                                }
+                            }}
+                        />
+                        <button
+                            className="btn-primary"
+                            onClick={(e) => {
+                                const input = e.target.previousElementSibling;
+                                if (input.value) {
+                                    addFormat(input.value);
+                                    input.value = '';
+                                }
+                            }}
+                        >
+                            Añadir
+                        </button>
+                    </div>
+
+                    <div className="space-y-2 max-h-60 overflow-y-auto pr-2 mb-4">
+                        {formats.map((fmt, i) => (
+                            <div key={i} className="flex items-center justify-between p-2 bg-slate-700/30 rounded border border-slate-700 group hover:border-slate-500 transition-colors">
+                                {editingFormat === fmt ? (
+                                    <div className="flex gap-2 flex-1">
+                                        <input
+                                            value={formatNameEdit}
+                                            onChange={(e) => setFormatNameEdit(e.target.value)}
+                                            className="bg-slate-800 border border-slate-600 rounded px-2 py-1 text-sm text-white w-full"
+                                        />
+                                        <button onClick={() => {
+                                            if (formatNameEdit && formatNameEdit !== fmt) updateFormat(fmt, formatNameEdit);
+                                            setEditingFormat(null);
+                                        }} className="text-emerald-400 hover:text-emerald-300"><Save size={16} /></button>
+                                        <button onClick={() => setEditingFormat(null)} className="text-slate-400 hover:text-slate-300"><X size={16} /></button>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <span className="text-slate-200 text-sm font-medium">{fmt}</span>
+                                        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <button onClick={() => {
+                                                setEditingFormat(fmt);
+                                                setFormatNameEdit(fmt);
+                                            }} className="p-1 text-blue-400 hover:bg-blue-500/10 rounded"><FilePenLine size={14} /></button>
+                                            <button onClick={() => deleteFormat(fmt)} className="p-1 text-rose-400 hover:bg-rose-500/10 rounded"><Trash2 size={14} /></button>
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
                 {/* Institutions Import */}

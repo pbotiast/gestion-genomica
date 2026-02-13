@@ -160,28 +160,79 @@ textarea:focus {
 }
 
 /* Buttons */
+/* Buttons */
 .btn-primary {
   background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
   color: white;
   padding: 0.75rem 1.5rem;
   border-radius: var(--radius-md);
   font-weight: 500;
-  transition: transform 0.1s, box-shadow 0.2s;
+  transition: all 0.1s ease-in-out;
+  box-shadow: 0 4px 0 var(--color-primary-dark), 0 5px 10px rgba(0, 0, 0, 0.2);
+  transform: translateY(0);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
 .btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 var(--color-primary-dark), 0 8px 15px rgba(79, 70, 229, 0.4);
+  filter: brightness(1.1);
+}
+
+.btn-primary:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 var(--color-primary-dark), 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.1);
+  background: white;
   color: var(--color-text-main);
   padding: 0.75rem 1.5rem;
   border-radius: var(--radius-md);
-  transition: background 0.2s;
+  transition: all 0.1s ease-in-out;
+  border: 1px solid #CBD5E1;
+  /* Slate 300 */
+  box-shadow: 0 4px 0 #CBD5E1, 0 5px 10px rgba(0, 0, 0, 0.05);
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+  background: #F8FAFC;
+  box-shadow: 0 6px 0 #CBD5E1, 0 8px 15px rgba(0, 0, 0, 0.1);
+  color: var(--color-primary);
+}
+
+.btn-secondary:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #CBD5E1, 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Small variant for table actions if needed */
+.btn-icon-sm {
+  padding: 0.4rem;
+  border-radius: var(--radius-md);
+  transition: all 0.1s;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-icon-sm:hover {
+  background-color: #F1F5F9;
+  transform: scale(1.1);
+}
+
+.btn-icon-sm:active {
+  transform: scale(0.95);
 }

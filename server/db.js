@@ -91,7 +91,45 @@ function initDb() {
             technician TEXT,
             createdAt TEXT,
             FOREIGN KEY(researcherId) REFERENCES researchers(id),
+            FOREIGN KEY(researcherId) REFERENCES researchers(id),
             FOREIGN KEY(serviceId) REFERENCES services(id)
+        )`);
+
+        // Check if invoiceId exists in requests (for migration)
+        db.all("PRAGMA table_info(requests)", (err, rows) => {
+            if (rows && !rows.some(r => r.name === 'invoiceId')) {
+                db.run("ALTER TABLE requests ADD COLUMN invoiceId INTEGER REFERENCES invoices(id)");
+            }
+        });
+
+        // Invoices Table
+        db.run(`CREATE TABLE IF NOT EXISTS invoices (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            invoiceNumber TEXT UNIQUE,
+            researcherId INTEGER,
+            amount REAL,
+            status TEXT, -- paid, pending
+            createdAt TEXT,
+            FOREIGN KEY(researcherId) REFERENCES researchers(id)
+            FOREIGN KEY(serviceId) REFERENCES services(id)
+        )`);
+
+        // Check if invoiceId exists in requests (for migration)
+        db.all("PRAGMA table_info(requests)", (err, rows) => {
+            if (rows && !rows.some(r => r.name === 'invoiceId')) {
+                db.run("ALTER TABLE requests ADD COLUMN invoiceId INTEGER REFERENCES invoices(id)");
+            }
+        });
+
+        // Invoices Table
+        db.run(`CREATE TABLE IF NOT EXISTS invoices (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            invoiceNumber TEXT UNIQUE,
+            researcherId INTEGER,
+            amount REAL,
+            status TEXT, -- paid, pending
+            createdAt TEXT,
+            FOREIGN KEY(researcherId) REFERENCES researchers(id)
         )`);
 
         // Seed Users if empty

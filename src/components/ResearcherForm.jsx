@@ -141,9 +141,26 @@ const ResearcherForm = ({ onSubmit, onCancel, initialData }) => {
                     {/* Sección: Ubicación y Tarifa */}
                     <div className={styles.section}>
                         <h3 className={styles.sectionTitle}>Institución y Ubicación</h3>
+
+                        {/* Field 'institution' hidden/removed from UI, using 'center' as primary */}
+
                         <div className={styles.inputGroup}>
-                            <label htmlFor="researcher-institution">Institución</label>
-                            <input id="researcher-institution" required name="institution" value={formData.institution} onChange={handleChange} placeholder="Ej: Universidad Complutense" />
+                            <label htmlFor="researcher-center">Centro (Institución Principal)</label>
+                            <input
+                                id="researcher-center"
+                                required
+                                name="center"
+                                value={formData.center}
+                                onChange={(e) => {
+                                    // Sync institution with center for backend compatibility if needed
+                                    setFormData(prev => ({
+                                        ...prev,
+                                        center: e.target.value,
+                                        institution: e.target.value // Keep synced
+                                    }));
+                                }}
+                                placeholder="Ej: Centro Nacional de Biotecnología"
+                            />
                         </div>
                         <div className={styles.row}>
                             <div className={styles.inputGroup}>
@@ -156,10 +173,7 @@ const ResearcherForm = ({ onSubmit, onCancel, initialData }) => {
                             </div>
                         </div>
                         <div className={styles.row}>
-                            <div className={styles.inputGroup}>
-                                <label htmlFor="researcher-center">Centro</label>
-                                <input id="researcher-center" name="center" value={formData.center} onChange={handleChange} />
-                            </div>
+                            {/* Center moved up */}
                             <div className={styles.inputGroup}>
                                 <label htmlFor="researcher-city">Ciudad</label>
                                 <input id="researcher-city" name="city" value={formData.city} onChange={handleChange} />

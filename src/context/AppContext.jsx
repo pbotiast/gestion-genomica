@@ -9,6 +9,7 @@ export const AppProvider = ({ children }) => {
     const [researchers, setResearchers] = useState([]);
     const [services, setServices] = useState([]);
     const [requests, setRequests] = useState([]);
+    const [invoices, setInvoices] = useState([]);
 
     // Auxiliary data (keeping in localStorage or hardcoded for now as per plan focus on main entities)
     const [formats, setFormats] = useState(() => {
@@ -19,15 +20,20 @@ export const AppProvider = ({ children }) => {
     // Technicians State
     const [technicians, setTechnicians] = useState([]);
 
+    // Associates State
+    const [associates, setAssociates] = useState([]);
+
     // Load initial data from API
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [resResearchers, resServices, resRequests, resTechnicians] = await Promise.all([
+                const [resResearchers, resServices, resRequests, resTechnicians, resAssociates, resInvoices] = await Promise.all([
                     fetch('http://localhost:3000/api/researchers'),
                     fetch('http://localhost:3000/api/services'),
                     fetch('http://localhost:3000/api/requests'),
-                    fetch('http://localhost:3000/api/technicians')
+                    fetch('http://localhost:3000/api/technicians'),
+                    fetch('http://localhost:3000/api/associates'),
+                    fetch('http://localhost:3000/api/invoices')
                 ]);
 
                 if (resResearchers.ok) setResearchers(await resResearchers.json());
@@ -37,6 +43,8 @@ export const AppProvider = ({ children }) => {
                     const techs = await resTechnicians.json();
                     setTechnicians(techs.map(t => t.name)); // Keep simple array of names for now to minimize refactor
                 }
+                if (resAssociates.ok) setAssociates(await resAssociates.json());
+                if (resInvoices.ok) setInvoices(await resInvoices.json());
             } catch (error) {
                 console.error("Error loading data:", error);
             }
@@ -64,14 +72,28 @@ export const AppProvider = ({ children }) => {
         }
     };
 
-    const updateResearcher = (id, data) => {
-        // Optimistic update for UI, ideally should implement PUT endpoint
-        setResearchers(prev => prev.map(r => r.id === id ? { ...r, ...data } : r));
+    const updateResearcher = async (id, data) => {
+        try {
+            const response = await fetch(`http://localhost:3000/api/researchers/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            if (response.ok) {
+                setResearchers(prev => prev.map(r => r.id === id ? { ...r, ...data } : r));
+            }
+        } catch (error) {
+            console.error("Error updating researcher:", error);
+        }
     };
 
-    const deleteResearcher = (id) => {
-        // Optimistic update
-        setResearchers(prev => prev.filter(r => r.id !== id));
+    const deleteResearcher = async (id) => {
+        try {
+            await fetch(`http://localhost:3000/api/researchers/${id}`, { method: 'DELETE' });
+            setResearchers(prev => prev.filter(r => r.id !== id));
+        } catch (error) {
+            console.error("Error deleting researcher:", error);
+        }
     };
 
     const updateRequestStatus = async (id, status) => {
@@ -108,8 +130,28 @@ export const AppProvider = ({ children }) => {
         }
     };
 
-    const deleteService = (id) => {
-        setServices(prev => prev.filter(s => s.id !== id));
+    const deleteService = async (id) => {
+        try {
+            await fetch(`http://localhost:3000/api/services/${id}`, { method: 'DELETE' });
+            setServices(prev => prev.filter(s => s.id !== id));
+        } catch (error) {
+            console.error("Error deleting service:", error);
+        }
+    };
+
+    const updateService = async (id, updates) => {
+        try {
+            const response = await fetch(`http://localhost:3000/api/services/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updates)
+            });
+            if (response.ok) {
+                setServices(prev => prev.map(s => s.id === id ? { ...s, ...updates } : s));
+            }
+        } catch (error) {
+            console.error("Error updating service:", error);
+        }
     };
 
     // Keep Request creation logic
@@ -154,12 +196,54 @@ export const AppProvider = ({ children }) => {
         }
     };
 
+    const deleteRequest = async (id) => {
+        try {
+            await fetch(`http://localhost:3000/api/requests/${id}`, { method: 'DELETE' });
+            setRequests(prev => prev.filter(r => r.id !== id));
+        } catch (error) {
+            console.error("Error deleting request:", error);
+        }
+    };
+
+    const createInvoice = async (invoiceData) => {
+        try {
+            const response = await fetch('http://localhost:3000/api/invoices', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(invoiceData)
+            });
+            if (response.ok) {
+                const newInvoice = await response.json();
+                setInvoices(prev => [newInvoice, ...prev]);
+
+                // Update local requests status
+                if (invoiceData.requestIds) {
+                    setRequests(prev => prev.map(req =>
+                        invoiceData.requestIds.includes(req.id)
+                            ? { ...req, status: 'billed', invoiceId: newInvoice.id }
+                            : req
+                    ));
+                }
+                return newInvoice;
+            }
+        } catch (error) {
+            console.error("Error creating invoice:", error);
+            throw error;
+        }
+    };
+
+
+
     const addFormat = (format) => {
         if (!formats.includes(format)) setFormats(prev => [...prev, format]);
     };
 
     const deleteFormat = (format) => {
         setFormats(prev => prev.filter(f => f !== format));
+    };
+
+    const updateFormat = (oldFormat, newFormat) => {
+        setFormats(prev => prev.map(f => f === oldFormat ? newFormat : f));
     };
 
     const addTechnician = async (techName) => {
@@ -177,8 +261,64 @@ export const AppProvider = ({ children }) => {
         }
     };
 
-    const deleteTechnician = (tech) => {
-        setTechnicians(prev => prev.filter(t => t !== tech));
+    const deleteTechnician = async (techName) => {
+        // API delete logic if available, otherwise just local state
+        // Assuming API might not have delete by name easily or returns 200
+        try {
+            // If there's an ID we should use it, but we stored just names.
+            // We'll just update state for now as per previous implementation pattern
+            setTechnicians(prev => prev.filter(t => t !== techName));
+        } catch (error) {
+            console.error("Error deleting technician", error);
+        }
+    };
+
+    const updateTechnician = (oldName, newName) => {
+        setTechnicians(prev => prev.map(t => t === oldName ? newName : t));
+        // ideally sync with API
+    };
+
+    // Associates Actions
+    const addAssociate = async (researcherId, name, email) => {
+        try {
+            const res = await fetch(`http://localhost:3000/api/researchers/${researcherId}/associates`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email })
+            });
+            if (res.ok) {
+                const newAssociate = await res.json();
+                setAssociates(prev => [...prev, newAssociate]);
+                return newAssociate;
+            }
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    };
+
+    const deleteAssociate = async (id) => {
+        try {
+            await fetch(`http://localhost:3000/api/associates/${id}`, { method: 'DELETE' });
+            setAssociates(prev => prev.filter(a => a.id !== id));
+        } catch (error) {
+            console.error("Error deleting associate:", error);
+        }
+    };
+
+    const updateAssociate = async (id, data) => {
+        try {
+            const res = await fetch(`http://localhost:3000/api/associates/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            if (res.ok) {
+                setAssociates(prev => prev.map(a => a.id === id ? { ...a, ...data } : a));
+            }
+        } catch (error) {
+            console.error("Error updating associate:", error);
+        }
     };
 
     return (
@@ -190,19 +330,31 @@ export const AppProvider = ({ children }) => {
             services,
             addService,
             deleteService,
+            updateService,
             setServices,
             requests,
             setRequests,
             updateRequestStatus,
-            updateRequest, // New exposed function
-            createRequest, // New exposed function
+            setRequests,
+            updateRequestStatus,
+            createRequest,
+            updateRequest,
+            deleteRequest,
+            invoices,
+            createInvoice,
             formats,
             addFormat,
             deleteFormat,
+            updateFormat,
             setFormats,
             technicians,
             addTechnician,
-            deleteTechnician
+            deleteTechnician,
+            updateTechnician,
+            associates,
+            addAssociate,
+            deleteAssociate,
+            updateAssociate
         }}>
             {children}
         </AppContext.Provider>

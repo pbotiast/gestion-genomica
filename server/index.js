@@ -184,6 +184,39 @@ app.post('/api/researchers/:id/associates', (req, res) => {
     stmt.finalize();
 });
 
+// Delete Associate
+app.delete('/api/associates/:id', (req, res) => {
+    const { id } = req.params;
+    db.run("DELETE FROM researcher_associates WHERE id = ?", [id], function (err) {
+        if (err) return res.status(500).json({ error: err.message });
+        if (this.changes === 0) return res.status(404).json({ error: "Associate not found" });
+        res.json({ success: true, deleted: this.changes });
+    });
+});
+
+// Update Associate
+app.put('/api/associates/:id', (req, res) => {
+    const { id } = req.params;
+    const { name, email, researcherId } = req.body;
+
+    // Build dynamic update
+    const updates = [];
+    const values = [];
+    if (name) { updates.push("name = ?"); values.push(name); }
+    if (email !== undefined) { updates.push("email = ?"); values.push(email); }
+    if (researcherId) { updates.push("researcherId = ?"); values.push(researcherId); }
+
+    if (updates.length === 0) return res.status(400).json({ error: "No fields to update" });
+
+    values.push(id);
+
+    db.run(`UPDATE researcher_associates SET ${updates.join(", ")} WHERE id = ?`, values, function (err) {
+        if (err) return res.status(500).json({ error: err.message });
+        if (this.changes === 0) return res.status(404).json({ error: "Associate not found" });
+        res.json({ success: true, updated: this.changes });
+    });
+});
+
 // --- Requests Routes ---
 app.get('/api/requests', (req, res) => {
     db.all("SELECT * FROM requests", [], (err, rows) => {
@@ -225,16 +258,36 @@ app.put('/api/requests/:id', (req, res) => {
     const { id } = req.params;
     const updates = req.body;
 
-    // Dynamic Update Query
-    const keys = Object.keys(updates);
-    const values = Object.values(updates);
+    console.log(`[PUT] /api/requests/${id}`, updates);
+
+    // Dynamic Update Query with Allowed Fields whitelist
+    const allowedFields = [
+        'registrationNumber', 'entryDate', 'researcherId', 'serviceId',
+        'samplesCount', 'finalSamplesCount', 'format', 'additionalInfo',
+        'requestedBy', 'status', 'technician', 'resultSentDate'
+    ];
+
+    const keys = Object.keys(updates).filter(k => allowedFields.includes(k));
+    const values = keys.map(k => updates[k]);
     const placeholders = keys.map(k => `${k} = ?`).join(', ');
 
-    if (keys.length === 0) return res.status(400).json({ error: "No fields to update" });
+    if (keys.length === 0) {
+        console.warn(`[PUT] Request ${id}: No valid fields to update`);
+        return res.status(400).json({ error: "No fields to update" });
+    }
 
-    db.run(`UPDATE requests SET ${placeholders} WHERE id = ? OR registrationNumber = ?`, [...values, id, id], function (err) {
-        if (err) return res.status(500).json({ error: err.message });
-        if (this.changes === 0) return res.status(404).json({ error: "Request not found" });
+    console.log(`[PUT] Updating fields: ${keys.join(', ')}`);
+
+    db.run(`UPDATE requests SET ${placeholders} WHERE id = ?`, [...values, id], function (err) {
+        if (err) {
+            console.error(`[PUT] DB Error: ${err.message}`);
+            return res.status(500).json({ error: err.message });
+        }
+        if (this.changes === 0) {
+            console.warn(`[PUT] Request ${id} not found or not modified`);
+            return res.status(404).json({ error: "Request not found" });
+        }
+        console.log(`[PUT] Success. Updated ${this.changes} row(s).`);
         res.json({ success: true, updated: this.changes });
     });
 });
@@ -269,6 +322,47 @@ app.get('/api/dashboard/stats', (req, res) => {
                 });
             });
         });
+    });
+});
+
+// --- Invoices Routes ---
+app.get('/api/invoices', (req, res) => {
+    db.all("SELECT * FROM invoices ORDER BY createdAt DESC", [], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows);
+    });
+});
+
+app.post('/api/invoices', (req, res) => {
+    const { researcherId, amount, requestIds } = req.body;
+
+    // Generate Invoice Number: YYYY-001
+    const year = new Date().getFullYear();
+    db.get("SELECT count(*) as count FROM invoices WHERE invoiceNumber LIKE ?", [`${year}-%`], (err, row) => {
+        if (err) return res.status(500).json({ error: err.message });
+
+        const nextNum = (row.count + 1).toString().padStart(3, '0');
+        const invoiceNumber = `${year}-${nextNum}`;
+        const createdAt = new Date().toISOString();
+        const status = 'pending';
+
+        const stmt = db.prepare("INSERT INTO invoices (invoiceNumber, researcherId, amount, status, createdAt) VALUES (?, ?, ?, ?, ?)");
+        stmt.run(invoiceNumber, researcherId, amount, status, createdAt, function (err) {
+            if (err) return res.status(500).json({ error: err.message });
+
+            const invoiceId = this.lastID;
+
+            // Link requests to invoice
+            if (requestIds && requestIds.length > 0) {
+                const placeholders = requestIds.map(() => '?').join(',');
+                db.run(`UPDATE requests SET invoiceId = ?, status = 'billed' WHERE id IN (${placeholders})`, [invoiceId, ...requestIds], (err) => {
+                    if (err) console.error("Error linking requests to invoice:", err);
+                });
+            }
+
+            res.json({ id: invoiceId, invoiceNumber, createdAt });
+        });
+        stmt.finalize();
     });
 });
 

@@ -4,9 +4,9 @@ import { useAppContext } from '../context/AppContext';
 import { cn } from '../lib/utils';
 import styles from './ServiceForm.module.css';
 
-const ServiceForm = ({ onSubmit, onCancel }) => {
+const ServiceForm = ({ onSubmit, onCancel, initialData }) => {
     const { formats } = useAppContext();
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState(initialData || {
         name: '',
         format: '',
         priceA: '',
@@ -72,7 +72,7 @@ const ServiceForm = ({ onSubmit, onCancel }) => {
                 </button>
                 <button type="submit" className="btn-primary flex items-center gap-2">
                     <Save size={18} />
-                    Guardar Servicio
+                    {initialData ? 'Actualizar Servicio' : 'Guardar Servicio'}
                 </button>
             </div>
         </form>

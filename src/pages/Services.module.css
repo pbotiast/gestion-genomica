@@ -14,48 +14,128 @@
     color: var(--color-text-muted);
 }
 
+.toolbar {
+    margin-bottom: 1rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.searchBox {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+}
+
+.searchBox svg {
+    position: absolute;
+    left: 0.75rem;
+    color: var(--color-text-muted);
+}
+
+.searchInput {
+    padding-left: 2.25rem !important;
+    height: 36px;
+    font-size: 0.875rem;
+}
+
+/* Visibility Utilities */
+.desktopView {
+    display: none;
+}
+
+.mobileView {
+    display: block;
+}
+
+@media (min-width: 768px) {
+    .desktopView {
+        display: block;
+    }
+
+    .mobileView {
+        display: none;
+    }
+}
+
+/* Excel-like Grid Styles */
+.tableContainer {
+    overflow: auto;
+    max-height: 70vh;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    background: white;
+    box-shadow: inset 0 0 0 1px #e2e8f0;
+}
+
 .table {
     width: 100%;
+    border-collapse: separate;
     border-collapse: collapse;
+    font-size: 0.85rem;
+    color: #334155;
 }
 
 .table th {
+    background-color: #f8fafc;
+    color: #475569;
+    font-weight: 600;
     text-align: left;
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid #E2E8F0;
-    /* Slate 200 */
-    color: var(--color-text-muted);
-    font-weight: 500;
-    font-size: 0.875rem;
+    padding: 6px 8px;
+    border: 1px solid #cbd5e1;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.1s;
+}
+
+.table th:hover {
+    background-color: #e2e8f0;
+}
+
+.thContent {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
 }
 
 .table td {
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid #F1F5F9;
-    /* Slate 100 */
-    font-size: 0.875rem;
+    padding: 4px 8px;
+    border: 1px solid #e2e8f0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 300px;
 }
 
-.table tr:last-child td {
-    border-bottom: none;
+.table tr:nth-child(even) {
+    background-color: #f8fafc;
 }
 
-.formatBadge {
-    background: #F1F5F9;
-    /* Slate 100 */
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    font-size: 0.75rem;
+.table tr:hover {
+    background-color: #f1f5f9;
 }
 
-.actionBtn {
-    padding: 0.5rem;
-    color: var(--color-text-muted);
-    transition: color 0.2s;
+.colActions {
+    width: 80px;
+    text-align: center;
+    position: sticky;
+    right: 0;
+    background: white;
+    z-index: 5;
+    border-left: 2px solid #e2e8f0 !important;
 }
 
-.actionBtn:hover {
-    color: var(--color-danger);
+.colPrice {
+    font-family: monospace;
+    font-weight: 600;
+    text-align: right;
 }
 
 /* Modal Reuse */
@@ -74,25 +154,30 @@
 .modalContent {
     width: 100%;
     max-width: 600px;
-    /* Smaller for service form */
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 }
 
 .modalHeader {
-    padding: 1.5rem;
-    border-bottom: 1px solid #E2E8F0;
-    /* Slate 200 */
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background: #f8fafc;
 }
 
 .modalTitle {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     font-weight: 600;
+    color: #1e293b;
 }
 
 .modalBody {
     padding: 1.5rem;
+    overflow-y: auto;
 }

@@ -5,7 +5,7 @@ import { cn } from '../lib/utils';
 import styles from './ServiceForm.module.css'; // Reusing similar styles
 
 const RequestForm = ({ onSubmit, onCancel, initialData }) => {
-    const { researchers, services, technicians, requests } = useAppContext();
+    const { researchers, services, technicians, requests, associates, formats } = useAppContext();
 
     // ID Generation Logic: YYYY-XXXXX (Only if not editing)
     const generateId = () => {
@@ -31,15 +31,8 @@ const RequestForm = ({ onSubmit, onCancel, initialData }) => {
         tariff: '' // Auto-filled
     });
 
-    const [associates, setAssociates] = useState([]);
-
-    // Fetch associates for autocomplete/lookup
-    useEffect(() => {
-        fetch('http://localhost:3000/api/associates')
-            .then(res => res.json())
-            .then(data => setAssociates(data))
-            .catch(err => console.error("Error loading associates:", err));
-    }, []);
+    // Remove local associates state and useEffect fetch
+    // const [associates, setAssociates] = useState([]);...
 
     // Auto-fill Institution, Tariff, and RequestedBy when Researcher changes
     useEffect(() => {
@@ -49,7 +42,7 @@ const RequestForm = ({ onSubmit, onCancel, initialData }) => {
             if (researcher) {
                 setFormData(prev => ({
                     ...prev,
-                    institution: researcher.institution,
+                    institution: researcher.center || researcher.institution,
                     tariff: researcher.tariff || 'C',
                     // Default requestedBy to researcher name if empty, or keep user input?
                     // Let's set it to researcher name as default, user can change.
@@ -215,7 +208,12 @@ const RequestForm = ({ onSubmit, onCancel, initialData }) => {
                     </div>
                     <div className={styles.inputGroup}>
                         <label>Formato</label>
-                        <input name="format" value={formData.format} onChange={handleChange} placeholder="Tubo, Placa..." />
+                        <select name="format" value={formData.format} onChange={handleChange} className={styles.select}>
+                            <option value="">Seleccionar Formato...</option>
+                            {formats && formats.map(f => (
+                                <option key={f} value={f}>{f}</option>
+                            ))}
+                        </select>
                     </div>
                     <div className={styles.inputGroup}>
                         <label>Nº Muestras Finales</label>

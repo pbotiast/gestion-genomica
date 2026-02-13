@@ -14,31 +14,13 @@
     color: var(--color-text-muted);
 }
 
-.toolbar {
-    margin-bottom: 1rem;
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-}
-
-.searchBox {
-    position: relative;
-    display: flex;
-    align-items: center;
-    width: 100%;
-    max-width: 400px;
-}
-
-.searchBox svg {
-    position: absolute;
-    left: 0.75rem;
-    color: var(--color-text-muted);
-}
-
-.searchInput {
-    padding-left: 2.25rem !important;
-    height: 36px;
-    font-size: 0.875rem;
+.tableContainer {
+    overflow: auto;
+    max-height: 70vh;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    background: white;
+    box-shadow: inset 0 0 0 1px #e2e8f0;
 }
 
 /* Visibility Utilities */
@@ -60,19 +42,8 @@
     }
 }
 
-/* Excel-like Grid Styles */
-.tableContainer {
-    overflow: auto;
-    max-height: 70vh;
-    border: 1px solid #cbd5e1;
-    border-radius: 4px;
-    background: white;
-    box-shadow: inset 0 0 0 1px #e2e8f0;
-}
-
 .table {
     width: 100%;
-    border-collapse: separate;
     border-collapse: collapse;
     font-size: 0.85rem;
     color: #334155;
@@ -130,49 +101,4 @@
     background: white;
     z-index: 5;
     border-left: 2px solid #e2e8f0 !important;
-}
-
-/* Modal Reuse */
-.modalOverlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(4px);
-    z-index: 50;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-}
-
-.modalContent {
-    width: 100%;
-    max-width: 600px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    max-height: 90vh;
-}
-
-.modalHeader {
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid #e2e8f0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #f8fafc;
-}
-
-.modalTitle {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #1e293b;
-}
-
-.modalBody {
-    padding: 1.5rem;
-    overflow-y: auto;
 }

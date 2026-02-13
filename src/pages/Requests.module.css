@@ -15,7 +15,7 @@
 }
 
 .toolbar {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     display: flex;
     gap: 1rem;
 }
@@ -30,77 +30,175 @@
 
 .searchBox svg {
     position: absolute;
-    left: 1rem;
+    left: 0.75rem;
     color: var(--color-text-muted);
 }
 
 .searchInput {
-    padding-left: 2.75rem !important;
+    padding-left: 2.25rem !important;
+    height: 36px;
+    font-size: 0.875rem;
+}
+
+/* Visibility Utilities - FORCE HIDE/SHOW based on simple media query */
+.desktopView {
+    display: none;
+}
+
+.mobileView {
+    display: block;
+}
+
+@media (min-width: 768px) {
+    .desktopView {
+        display: block;
+    }
+
+    .mobileView {
+        display: none;
+    }
+}
+
+/* Excel-like Grid Styles */
+.tableContainer {
+    overflow: auto;
+    max-height: 70vh;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    background: white;
+    box-shadow: inset 0 0 0 1px #e2e8f0;
 }
 
 .table {
     width: 100%;
+    border-collapse: separate;
     border-collapse: collapse;
+    font-size: 0.85rem;
+    color: #334155;
 }
 
-
 .table th {
+    background-color: #f8fafc;
+    color: #475569;
+    font-weight: 600;
     text-align: left;
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid #E2E8F0;
-    /* Slate 200 */
-    color: var(--color-text-muted);
-    font-weight: 500;
-    font-size: 0.875rem;
+    padding: 6px 8px;
+    border: 1px solid #cbd5e1;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.1s;
+}
+
+.table th:hover {
+    background-color: #e2e8f0;
+}
+
+.thContent {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
 }
 
 .table td {
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid #F1F5F9;
-    /* Slate 100 */
-    font-size: 0.875rem;
+    padding: 4px 8px;
+    border: 1px solid #e2e8f0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 250px;
 }
 
-.table tr:last-child td {
-    border-bottom: none;
+.table tr:nth-child(even) {
+    background-color: #f8fafc;
 }
 
+.table tr:hover {
+    background-color: #f1f5f9;
+}
+
+.colId {
+    width: 100px;
+    text-align: center;
+}
+
+.colDate {
+    width: 100px;
+}
+
+.colStatus {
+    width: 120px;
+    text-align: center;
+}
+
+.colActions {
+    width: 100px;
+    text-align: center;
+    position: sticky;
+    right: 0;
+    background: white;
+    z-index: 5;
+    border-left: 2px solid #e2e8f0 !important;
+}
+
+/* Status Badges */
 .badge {
-    display: inline-flex;
-    padding: 0.25rem 0.75rem;
-    border-radius: 9999px;
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 3px;
     font-size: 0.75rem;
     font-weight: 600;
+    text-transform: uppercase;
 }
 
 .badgePending {
-    background: #EFF6FF;
-    /* Blue 50 */
-    color: #2563EB;
-    /* Blue 600 */
-    border: 1px solid #DBEAFE;
-    /* Blue 100 */
+    background: #f1f5f9;
+    color: #64748b;
+    border: 1px solid #cbd5e1;
+}
+
+.badgeReceived {
+    background: #fefce8;
+    color: #b45309;
+    border: 1px solid #fde047;
+}
+
+.badgeAnalysis {
+    background: #eff6ff;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+}
+
+.badgeValidation {
+    background: #faf5ff;
+    color: #9333ea;
+    border: 1px solid #e9d5ff;
+}
+
+.badgeCompleted {
+    background: #ecfdf5;
+    color: #059669;
+    border: 1px solid #a7f3d0;
 }
 
 .badgeDone {
-    background: #F0FDF4;
-    /* Green 50 */
-    color: #16A34A;
-    /* Green 600 */
-    border: 1px solid #DCFCE7;
-    /* Green 100 */
+    background: #fff1f2;
+    color: #e11d48;
+    border: 1px solid #fecdd3;
 }
 
-.actionBtn {
-    padding: 0.5rem;
-    color: var(--color-text-muted);
-    transition: color 0.2s;
+.badgeBilled {
+    background: #f8fafc;
+    color: #334155;
+    border: 1px solid #cbd5e1;
+    text-decoration: line-through;
 }
 
-.actionBtn:hover {
-    color: var(--color-success);
-}
-
+/* Modal Reuse */
 .modalOverlay {
     position: fixed;
     inset: 0;
@@ -120,20 +218,24 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
 .modalHeader {
-    padding: 1.5rem;
-    border-bottom: 1px solid #E2E8F0;
-    /* Slate 200 */
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background: #f8fafc;
 }
 
 .modalTitle {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     font-weight: 600;
+    color: #1e293b;
 }
 
 .modalBody {
