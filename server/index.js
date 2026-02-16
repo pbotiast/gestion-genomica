@@ -153,6 +153,109 @@ app.post('/api/researchers', authenticateToken, [
     stmt.finalize();
 });
 
+// --- Research Centers Routes ---
+app.get('/api/centers', authenticateToken, (req, res) => {
+    db.all("SELECT * FROM research_centers ORDER BY name ASC", [], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows);
+    });
+});
+
+app.post('/api/centers', authenticateToken, [
+    body('name').notEmpty().trim().escape(),
+    body('centerType').isIn(['UCM', 'PUBLICO', 'PRIVADO'])
+], (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    const {
+        name, centerType, address, postalCode, city, cif,
+        electronicBillingCode, electronicBillingOffice, electronicBillingAgency
+    } = req.body;
+
+    // Asignar tarifa automáticamente según tipo de centro
+    let tariff;
+    switch (centerType) {
+        case 'UCM': tariff = 'A'; break;
+        case 'PUBLICO': tariff = 'B'; break;
+        case 'PRIVADO': tariff = 'C'; break;
+    }
+
+    const stmt = db.prepare(`
+        INSERT INTO research_centers (
+            name, centerType, tariff, address, postalCode, city, cif,
+            electronicBillingCode, electronicBillingOffice, electronicBillingAgency
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `);
+
+    stmt.run(
+        name, centerType, tariff, address, postalCode, city, cif,
+        electronicBillingCode, electronicBillingOffice, electronicBillingAgency,
+        function (err) {
+            if (err) {
+                if (err.message.includes('UNIQUE')) {
+                    return res.status(400).json({ error: 'Centro ya existe' });
+                }
+                return res.status(500).json({ error: err.message });
+            }
+            logAudit('CREATE', 'CENTER', this.lastID, req.body, req.user.username);
+            res.json({ id: this.lastID, ...req.body, tariff });
+        }
+    );
+    stmt.finalize();
+});
+
+app.put('/api/centers/:id', authenticateToken, (req, res) => {
+    const { id } = req.params;
+    const updates = req.body;
+
+    // Si se actualiza centerType, recalcular tarifa
+    if (updates.centerType) {
+        switch (updates.centerType) {
+            case 'UCM': updates.tariff = 'A'; break;
+            case 'PUBLICO': updates.tariff = 'B'; break;
+            case 'PRIVADO': updates.tariff = 'C'; break;
+        }
+    }
+
+    const keys = Object.keys(updates).filter(k => k !== 'id' && k !== 'createdAt');
+    const values = keys.map(k => updates[k]);
+    const placeholders = keys.map(k => `${k} = ?`).join(', ');
+
+    if (keys.length === 0) return res.status(400).json({ error: "No fields to update" });
+
+    db.run(`UPDATE research_centers SET ${placeholders} WHERE id = ?`, [...values, id], function (err) {
+        if (err) return res.status(500).json({ error: err.message });
+        if (this.changes === 0) return res.status(404).json({ error: "Centro no encontrado" });
+        logAudit('UPDATE', 'CENTER', id, updates, req.user.username);
+        res.json({ success: true, updated: this.changes });
+    });
+});
+
+app.delete('/api/centers/:id', authenticateToken, (req, res) => {
+    const { id } = req.params;
+
+    // Verificar si hay investigadores asociados
+    db.get("SELECT COUNT(*) as count FROM researchers WHERE centerId = ?", [id], (err, row) => {
+        if (err) return res.status(500).json({ error: err.message });
+
+        if (row.count > 0) {
+            return res.status(400).json({
+                error: `No se puede eliminar. Hay ${row.count} investigador(es) asociado(s) a este centro.`
+            });
+        }
+
+        db.run("DELETE FROM research_centers WHERE id = ?", [id], function (err) {
+            if (err) return res.status(500).json({ error: err.message });
+            if (this.changes === 0) return res.status(404).json({ error: "Centro no encontrado" });
+            logAudit('DELETE', 'CENTER', id, {}, req.user.username);
+            res.json({ success: true, deleted: this.changes });
+        });
+    });
+});
+
 // --- Services Routes ---
 app.get('/api/services', authenticateToken, (req, res) => {
     db.all("SELECT * FROM services", [], (err, rows) => {
@@ -322,45 +425,135 @@ app.get('/api/requests', authenticateToken, (req, res) => {
     });
 });
 
+// Helper function: Generate automatic registrationNumber (YYYY-XXXX format)
+async function generateRegistrationNumber(db) {
+    return new Promise((resolve, reject) => {
+        const year = new Date().getFullYear();
+        const prefix = `${year}-`;
+
+        // Get last number of the year
+        db.get(
+            "SELECT registrationNumber FROM requests WHERE registrationNumber LIKE ? ORDER BY id DESC LIMIT 1",
+            [`${year}-%`],
+            (err, row) => {
+                if (err) return reject(err);
+
+                let nextNumber = 1;
+                if (row && row.registrationNumber) {
+                    const parts = row.registrationNumber.split('-');
+                    if (parts.length === 2) {
+                        const lastNum = parseInt(parts[1]);
+                        if (!isNaN(lastNum)) {
+                            nextNumber = lastNum + 1;
+                        }
+                    }
+                }
+
+                if (nextNumber > 10000) {
+                    return reject(new Error('Límite anual de solicitudes alcanzado (10,000)'));
+                }
+
+                // Format: 2026-0001
+                const registrationNumber = `${prefix}${String(nextNumber).padStart(4, '0')}`;
+                resolve(registrationNumber);
+            }
+        );
+    });
+}
+
 app.post('/api/requests', authenticateToken, [
-    body('registrationNumber').notEmpty().trim().escape(),
     body('researcherId').isInt(),
     body('serviceId').isInt(),
     body('samplesCount').isInt({ min: 1 }),
     body('status').isIn(['pending', 'received', 'analysis', 'validation', 'completed', 'processed', 'billed']).optional()
-], (req, res) => {
+], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
 
     const {
-        registrationNumber, entryDate, researcherId, serviceId,
+        entryDate, researcherId, serviceId, orderNumber,
         samplesCount, finalSamplesCount, format, additionalInfo, requestedBy,
         status = 'pending', technician, resultSentDate
     } = req.body;
 
-    const createdAt = new Date().toISOString();
+    try {
+        // 1. Generar registrationNumber automáticamente
+        const registrationNumber = await generateRegistrationNumber(db);
 
-    const stmt = db.prepare(`
-        INSERT INTO requests (
-            registrationNumber, entryDate, researcherId, serviceId, 
-            samplesCount, finalSamplesCount, format, additionalInfo, requestedBy,
-            status, technician, resultSentDate, createdAt
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `);
+        // 2. Obtener tarifa del investigador (vía centro)
+        const researcher = await new Promise((resolve, reject) => {
+            db.get(`
+                SELECT r.*, c.tariff 
+                FROM researchers r 
+                LEFT JOIN research_centers c ON r.centerId = c.id 
+                WHERE r.id = ?
+            `, [researcherId], (err, row) => {
+                if (err) reject(err);
+                else resolve(row);
+            });
+        });
 
-    stmt.run(
-        registrationNumber, entryDate, researcherId, serviceId,
-        samplesCount, finalSamplesCount, format, additionalInfo, requestedBy,
-        status, technician, resultSentDate, createdAt,
-        function (err) {
-            if (err) return res.status(500).json({ error: err.message });
-            logAudit('CREATE', 'REQUEST', this.lastID, { registrationNumber, researcherId }, req.user.username);
-            res.json({ id: this.lastID, ...req.body, createdAt });
+        if (!researcher) {
+            return res.status(404).json({ error: 'Investigador no encontrado' });
         }
-    );
-    stmt.finalize();
+
+        // 3. Obtener precio del servicio según tarifa
+        const service = await new Promise((resolve, reject) => {
+            db.get("SELECT * FROM services WHERE id = ?", [serviceId], (err, row) => {
+                if (err) reject(err);
+                else resolve(row);
+            });
+        });
+
+        if (!service) {
+            return res.status(404).json({ error: 'Servicio no encontrado' });
+        }
+
+        // Seleccionar precio según tarifa (o usar tarifa del investigador si no tiene centro)
+        const tariff = researcher.tariff || 'C'; // Default C si no tiene centro
+        let unitPrice;
+        switch (tariff) {
+            case 'A': unitPrice = service.priceA; break;
+            case 'B': unitPrice = service.priceB; break;
+            case 'C': unitPrice = service.priceC; break;
+            default: unitPrice = service.priceC;
+        }
+
+        const totalCost = unitPrice * samplesCount;
+        const createdAt = new Date().toISOString();
+
+        const stmt = db.prepare(`
+            INSERT INTO requests (
+                registrationNumber, orderNumber, entryDate, researcherId, serviceId, 
+                samplesCount, finalSamplesCount, format, additionalInfo, requestedBy,
+                status, technician, resultSentDate, createdAt
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `);
+
+        stmt.run(
+            registrationNumber, orderNumber, entryDate, researcherId, serviceId,
+            samplesCount, finalSamplesCount, format, additionalInfo, requestedBy,
+            status, technician, resultSentDate, createdAt,
+            function (err) {
+                if (err) return res.status(500).json({ error: err.message });
+                logAudit('CREATE', 'REQUEST', this.lastID, { registrationNumber, researcherId }, req.user.username);
+                res.json({
+                    id: this.lastID,
+                    registrationNumber,
+                    orderNumber,
+                    ...req.body,
+                    createdAt,
+                    calculatedPrice: { tariff, unitPrice, totalCost }
+                });
+            }
+        );
+        stmt.finalize();
+    } catch (error) {
+        console.error('Error creating request:', error);
+        res.status(500).json({ error: error.message });
+    }
 });
 
 app.put('/api/requests/:id', authenticateToken, (req, res) => {

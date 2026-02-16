@@ -20,6 +20,22 @@ function initDb() {
             name TEXT
         )`);
 
+        // Research Centers Table
+        db.run(`CREATE TABLE IF NOT EXISTS research_centers (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL UNIQUE,
+            centerType TEXT CHECK(centerType IN ('UCM', 'PUBLICO', 'PRIVADO')) NOT NULL,
+            tariff TEXT CHECK(tariff IN ('A', 'B', 'C')) NOT NULL,
+            address TEXT,
+            postalCode TEXT,
+            city TEXT,
+            cif TEXT,
+            electronicBillingCode TEXT,
+            electronicBillingOffice TEXT,
+            electronicBillingAgency TEXT,
+            createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
+        )`);
+
         // Researchers Table
         db.run(`CREATE TABLE IF NOT EXISTS researchers (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -39,7 +55,9 @@ function initDb() {
             accountingOffice TEXT,
             managementBody TEXT,
             processingUnit TEXT,
-            proposingBody TEXT
+            proposingBody TEXT,
+            centerId INTEGER,
+            FOREIGN KEY(centerId) REFERENCES research_centers(id)
         )`);
 
         // Services Table
@@ -78,6 +96,7 @@ function initDb() {
         db.run(`CREATE TABLE IF NOT EXISTS requests (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             registrationNumber TEXT UNIQUE,
+            orderNumber TEXT,
             entryDate TEXT,
             researcherId INTEGER,
             serviceId INTEGER,

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Save, X } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { useAppContext } from '../context/AppContext';
 import ExcelImporter from './ExcelImporter';
 import styles from './ResearcherModal.module.css';
 
@@ -17,6 +18,7 @@ const institutions = [
 ];
 
 const ResearcherForm = ({ onSubmit, onCancel, initialData }) => {
+    const { centers } = useAppContext(); // Get centers from context
     console.log("DEBUG: FILE LOADED");
     const [formData, setFormData] = useState({
         fullName: '',
@@ -37,7 +39,8 @@ const ResearcherForm = ({ onSubmit, onCancel, initialData }) => {
             processingUnit: '',
             proposingBody: ''
         },
-        tariff: ''
+        tariff: '',
+        centerId: null // New field for center relationship
     });
 
     // Authorized Users State
@@ -74,16 +77,23 @@ const ResearcherForm = ({ onSubmit, onCancel, initialData }) => {
         }
     }, [initialData]);
 
-    useEffect(() => {
-        const inst = (formData.institution || '').toLowerCase();
-        if (inst.includes('complutense') || inst.includes('ucm')) {
-            setFormData(prev => ({ ...prev, tariff: 'A' }));
-        } else if (inst.includes('hospital') || inst.includes('fundación') || inst.includes('csic') || inst.includes('cnb') || inst.includes('ciemat')) {
-            setFormData(prev => ({ ...prev, tariff: 'B' }));
-        } else if (inst.includes('privad') || inst.includes('s.l.') || inst.includes('s.a.') || inst.includes('pharma')) {
-            setFormData(prev => ({ ...prev, tariff: 'C' }));
+    // Auto-set tariff when center changes
+    const handleCenterChange = (e) => {
+        const centerId = parseInt(e.target.value);
+        const selectedCenter = centers.find(c => c.id === centerId);
+
+        if (selectedCenter) {
+            setFormData(prev => ({
+                ...prev,
+                centerId: centerId,
+                institution: selectedCenter.name, // Keep institution synced for compatibility
+                center: selectedCenter.name,
+                tariff: selectedCenter.tariff
+            }));
+        } else {
+            setFormData(prev => ({ ...prev, centerId: null, tariff: '' }));
         }
-    }, [formData.institution]);
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -166,23 +176,28 @@ const ResearcherForm = ({ onSubmit, onCancel, initialData }) => {
 
                         {/* Field 'institution' hidden/removed from UI, using 'center' as primary */}
 
+                        {/* Centro de Investigación */}
                         <div className={styles.inputGroup}>
-                            <label htmlFor="researcher-center">Centro (Institución Principal)</label>
-                            <input
+                            <label htmlFor="researcher-center">Centro de Investigación *</label>
+                            <select
                                 id="researcher-center"
                                 required
-                                name="center"
-                                value={formData.center}
-                                onChange={(e) => {
-                                    // Sync institution with center for backend compatibility if needed
-                                    setFormData(prev => ({
-                                        ...prev,
-                                        center: e.target.value,
-                                        institution: e.target.value // Keep synced
-                                    }));
-                                }}
-                                placeholder="Ej: Centro Nacional de Biotecnología"
-                            />
+                                value={formData.centerId || ''}
+                                onChange={handleCenterChange}
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            >
+                                <option value="">-- Seleccionar Centro --</option>
+                                {centers.map(center => (
+                                    <option key={center.id} value={center.id}>
+                                        {center.name} (Tarifa {center.tariff})
+                                    </option>
+                                ))}
+                            </select>
+                            {formData.centerId && formData.tariff && (
+                                <p className="text-sm text-gray-600 mt-1">
+                                    Tarifa asignada: <strong className="text-indigo-600">Tarifa {formData.tariff}</strong>
+                                </p>
+                            )}
                         </div>
                         <div className={styles.row}>
                             <div className={styles.inputGroup}>

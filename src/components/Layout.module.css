@@ -142,3 +142,94 @@
     border: 1px solid #E0E7FF;
     /* Indigo 100 */
 }
+
+/* Mobile Menu Toggle */
+.mobileMenuButton {
+    display: none;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1001;
+    background: white;
+    border: 1px solid #e2e8f0;
+    padding: 0.75rem;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.mobileMenuButton:hover {
+    background: #f8fafc;
+    transform: scale(1.05);
+}
+
+.mobileMenuButton:active {
+    transform: scale(0.95);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        height: 100vh;
+        z-index: 1000;
+        transition: left 0.3s ease-out;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .sidebarOpen {
+        left: 0;
+    }
+
+    .mobileMenuButton {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .main {
+        margin-left: 0;
+    }
+
+    .content {
+        padding: 5rem 1rem 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 80%;
+        max-width: 300px;
+    }
+
+    .header {
+        padding: 1rem;
+    }
+
+    .title {
+        font-size: 1.125rem;
+    }
+
+    .content {
+        padding: 5rem 1rem 1rem;
+    }
+}
+
+/* Overlay for mobile sidebar */
+.mobileOverlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(15, 23, 42, 0.5);
+    z-index: 999;
+    animation: fadeIn 0.2s ease-out;
+}
+
+@media (max-width: 1024px) {
+    .mobileOverlay {
+        display: block;
+    }
+}

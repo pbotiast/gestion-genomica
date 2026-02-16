@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { Plus, Trash2, X, FilePenLine, Search } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { Plus, Search, Edit, Trash2 } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 import { cn } from '../lib/utils';
+import DataTable from '../components/DataTable';
 import ExcelImporter from '../components/ExcelImporter';
 import ServiceForm from '../components/ServiceForm';
 import styles from './Services.module.css';
@@ -10,38 +11,83 @@ const Services = () => {
     const { services, addService, deleteService, updateService } = useAppContext();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingService, setEditingService] = useState(null);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'asc' });
+    const [globalFilter, setGlobalFilter] = useState('');
 
-    const filteredServices = services.filter(service =>
-        service.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    const handleSort = (key) => {
-        let direction = 'asc';
-        if (sortConfig.key === key && sortConfig.direction === 'asc') {
-            direction = 'desc';
-        }
-        setSortConfig({ key, direction });
-    };
-
-    const sortedServices = [...filteredServices].sort((a, b) => {
-        if (!sortConfig.key) return 0;
-        let aValue = a[sortConfig.key];
-        let bValue = b[sortConfig.key];
-
-        if (typeof aValue === 'string') aValue = aValue.toLowerCase();
-        if (typeof bValue === 'string') bValue = bValue.toLowerCase();
-
-        if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
-        if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
-        return 0;
-    });
-
-    const SortIcon = ({ columnKey }) => {
-        if (sortConfig.key !== columnKey) return <span className="text-slate-300 ml-1 text-[10px]">▼</span>;
-        return <span className="text-blue-600 ml-1 font-bold text-[10px]">{sortConfig.direction === 'asc' ? '▲' : '▼'}</span>;
-    };
+    // Define table columns
+    const columns = useMemo(() => [
+        {
+            accessorKey: 'name',
+            header: 'Servicio',
+            cell: ({ getValue }) => (
+                <span className="font-medium text-slate-900">{getValue()}</span>
+            ),
+        },
+        {
+            accessorKey: 'priceA',
+            header: 'Tarifa A',
+            cell: ({ getValue }) => (
+                <span className="text-emerald-600 font-mono font-bold">
+                    {Number(getValue() || 0).toFixed(2)} €
+                </span>
+            ),
+        },
+        {
+            accessorKey: 'priceB',
+            header: 'Tarifa B',
+            cell: ({ getValue }) => (
+                <span className="text-amber-600 font-mono font-bold">
+                    {Number(getValue() || 0).toFixed(2)} €
+                </span>
+            ),
+        },
+        {
+            accessorKey: 'priceC',
+            header: 'Tarifa C',
+            cell: ({ getValue }) => (
+                <span className="text-rose-600 font-mono font-bold">
+                    {Number(getValue() || 0).toFixed(2)} €
+                </span>
+            ),
+        },
+        {
+            accessorKey: 'format',
+            header: 'Formato',
+            cell: ({ getValue }) => (
+                <span className="text-gray-600">{getValue() || '-'}</span>
+            ),
+        },
+        {
+            id: 'actions',
+            header: 'Acciones',
+            cell: ({ row }) => {
+                const service = row.original;
+                return (
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                openEditModal(service);
+                            }}
+                            className="btn-icon-sm text-indigo-600 hover:text-indigo-800"
+                            title="Editar"
+                        >
+                            <Edit size={16} />
+                        </button>
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleDelete(service.id);
+                            }}
+                            className="btn-icon-sm text-red-600 hover:text-red-800"
+                            title="Eliminar"
+                        >
+                            <Trash2 size={16} />
+                        </button>
+                    </div>
+                );
+            },
+        },
+    ], []);
 
     const handleCreate = (data) => {
         addService(data);
@@ -66,9 +112,39 @@ const Services = () => {
         setIsModalOpen(true);
     };
 
+    const handleDelete = async (id) => {
+        if (!confirm('¿Eliminar este servicio?')) return;
+        await deleteService(id);
+    };
+
+    const handleImport = async (data) => {
+        for (const row of data) {
+            const name = row['servicio'] || row['Servicio'] || row['NAME'];
+            if (!name) continue;
+
+            // Parse prices, removing currency symbols and converting to number
+            const parsePrice = (value) => {
+                if (typeof value === 'number') return value;
+                if (typeof value === 'string') {
+                    return parseFloat(value.replace(/[€$,]/g, '').trim()) || 0;
+                }
+                return 0;
+            };
+
+            await addService({
+                name,
+                priceA: parsePrice(row['A']),
+                priceB: parsePrice(row['B']),
+                priceC: parsePrice(row['C']),
+                format: row['formato'] || row['Formato'] || ''
+            });
+        }
+    };
+
     return (
-        <div>
-            <div className={styles.header}>
+        <div className="space-y-6 fade-in">
+            {/* Header */}
+            <div className="flex justify-between items-center">
                 <div>
                     <h1 className={cn(styles.title, "text-gradient")}>Catálogo de Servicios</h1>
                     <p className={styles.subtitle}>Gestión de servicios y precios</p>
@@ -79,140 +155,52 @@ const Services = () => {
                 </button>
             </div>
 
-            <div className={styles.toolbar}>
-                <div className={styles.searchBox}>
-                    <Search size={18} className="text-slate-500" />
-                    <input
-                        placeholder="Buscar servicio..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className={styles.searchInput}
-                    />
+            {/* Toolbar: Search + Import */}
+            <div className="flex gap-4">
+                <div className="flex-1 glass-panel p-4">
+                    <div className="relative">
+                        <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                        <input
+                            type="text"
+                            placeholder="Buscar servicio por nombre..."
+                            value={globalFilter}
+                            onChange={(e) => setGlobalFilter(e.target.value)}
+                            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        />
+                    </div>
                 </div>
-                <div className="flex-1"></div>
                 <ExcelImporter
                     type="Servicios"
                     templateHeaders={['servicio', 'A', 'B', 'C']}
-                    onImport={async (data) => {
-                        // Importer logic handled by component prop but mostly managed inside component or parent usually?
-                        // The existing logic was in the previous file but I cannot see it fully in the snippets I read. 
-                        // I will assume standard import usage or re-implement basic loop if needed.
-                        // Wait, in previous view_file (Step 648), the onImport was:
-                        /*
-                        onImport={async (data) => {
-                            // ... existing logic ...
-                        }}
-                        */
-                        // I need to implement the import logic here properly because I am overwriting the file.
-                        // I will use a simple logic to add services.
-                        for (const row of data) {
-                            const name = row['servicio'] || row['Servicio'] || row['NAME'];
-                            if (!name) continue;
-                            await addService({
-                                name,
-                                priceA: row['A'] || 0,
-                                priceB: row['B'] || 0,
-                                priceC: row['C'] || 0
-                            });
-                        }
-                    }}
+                    onImport={handleImport}
                 />
             </div>
 
-            <div className={styles.tableContainer}>
-                {/* Desktop Table - Grid Style */}
-                <div className={styles.desktopView}>
-                    <table className={styles.table}>
-                        <thead>
-                            <tr>
-                                <th onClick={() => handleSort('name')}>
-                                    <div className={styles.thContent}>Servicio <SortIcon columnKey="name" /></div>
-                                </th>
-                                <th className={styles.colPrice} onClick={() => handleSort('priceA')}>
-                                    <div className={styles.thContent} style={{ justifyContent: 'flex-end' }}>Tarifa A <SortIcon columnKey="priceA" /></div>
-                                </th>
-                                <th className={styles.colPrice} onClick={() => handleSort('priceB')}>
-                                    <div className={styles.thContent} style={{ justifyContent: 'flex-end' }}>Tarifa B <SortIcon columnKey="priceB" /></div>
-                                </th>
-                                <th className={styles.colPrice} onClick={() => handleSort('priceC')}>
-                                    <div className={styles.thContent} style={{ justifyContent: 'flex-end' }}>Tarifa C <SortIcon columnKey="priceC" /></div>
-                                </th>
-                                <th className={styles.colActions}>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {sortedServices.length === 0 ? (
-                                <tr>
-                                    <td colSpan="5" className="text-center p-8 text-slate-500">
-                                        No hay servicios registrados.
-                                    </td>
-                                </tr>
-                            ) : (
-                                sortedServices.map(service => (
-                                    <tr key={service.id}>
-                                        <td className="font-medium text-slate-900 border-r">{service.name}</td>
-                                        <td className="text-emerald-600 font-mono font-bold text-right border-r px-4">{Number(service.priceA).toFixed(2)} €</td>
-                                        <td className="text-amber-600 font-mono font-bold text-right border-r px-4">{Number(service.priceB).toFixed(2)} €</td>
-                                        <td className="text-rose-600 font-mono font-bold text-right border-r px-4">{Number(service.priceC).toFixed(2)} €</td>
-                                        <td className={styles.colActions}>
-                                            <div className="flex justify-center gap-1">
-                                                <button onClick={() => openEditModal(service)} title="Editar" className="text-slate-500 hover:text-blue-600 hover:bg-slate-100 p-0.5 rounded"><FilePenLine size={14} /></button>
-                                                <button onClick={() => deleteService(service.id)} title="Eliminar" className="text-slate-400 hover:text-red-500 hover:bg-red-50 p-0.5 rounded"><Trash2 size={14} /></button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))
-                            )}
-                        </tbody>
-                    </table>
-                </div>
+            {/* Professional Data Table */}
+            <DataTable
+                columns={columns}
+                data={services}
+                globalFilter={globalFilter}
+                onGlobalFilterChange={setGlobalFilter}
+                pageSize={15}
+            />
 
-                {/* Mobile Cards */}
-                <div className={cn(styles.mobileView, "space-y-4 p-4")}>
-                    {filteredServices.length === 0 ? (
-                        <div className="text-center p-8 text-slate-500 border-2 border-dashed border-slate-200 rounded-xl">
-                            No hay servicios registrados.
-                        </div>
-                    ) : (
-                        filteredServices.map(service => (
-                            <div key={service.id} className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col gap-3">
-                                <div className="flex justify-between items-start">
-                                    <h3 className="font-bold text-slate-800 text-lg">{service.name}</h3>
-                                    <div className="flex gap-1">
-                                        <button onClick={() => openEditModal(service)} className="p-2 text-slate-500 hover:text-blue-600 bg-slate-50 rounded-full"><FilePenLine size={18} /></button>
-                                        <button onClick={() => deleteService(service.id)} className="p-2 text-slate-500 hover:text-red-600 bg-slate-50 rounded-full"><Trash2 size={18} /></button>
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-3 gap-2 bg-slate-50 p-3 rounded-lg border border-slate-100">
-                                    <div className="text-center">
-                                        <div className="text-xs text-slate-500 uppercase tracking-wider mb-1">Tarifa A</div>
-                                        <div className="text-emerald-600 font-mono font-bold text-sm">{Number(service.priceA).toFixed(2)} €</div>
-                                    </div>
-                                    <div className="text-center border-l border-slate-200">
-                                        <div className="text-xs text-slate-500 uppercase tracking-wider mb-1">Tarifa B</div>
-                                        <div className="text-amber-600 font-mono font-bold text-sm">{Number(service.priceB).toFixed(2)} €</div>
-                                    </div>
-                                    <div className="text-center border-l border-slate-200">
-                                        <div className="text-xs text-slate-500 uppercase tracking-wider mb-1">Tarifa C</div>
-                                        <div className="text-rose-600 font-mono font-bold text-sm">{Number(service.priceC).toFixed(2)} €</div>
-                                    </div>
-                                </div>
-                            </div>
-                        ))
-                    )}
-                </div>
-            </div>
-
+            {/* Modal */}
             {isModalOpen && (
-                <div className={styles.modalOverlay}>
-                    <div className={cn("glass-panel", styles.modalContent)}>
-                        <div className={styles.modalHeader}>
-                            <h2 className={styles.modalTitle}>{editingService ? 'Editar Servicio' : 'Nuevo Servicio'}</h2>
-                            <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-700">
-                                <X size={24} />
+                <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>
+                    <div className="glass-panel modal-content" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h2 className="text-xl font-semibold text-gray-800">
+                                {editingService ? 'Editar Servicio' : 'Nuevo Servicio'}
+                            </h2>
+                            <button
+                                onClick={() => setIsModalOpen(false)}
+                                className="text-gray-400 hover:text-gray-600"
+                            >
+                                ✕
                             </button>
                         </div>
-                        <div className={styles.modalBody}>
+                        <div className="modal-body">
                             <ServiceForm
                                 onSubmit={editingService ? handleUpdate : handleCreate}
                                 onCancel={() => setIsModalOpen(false)}

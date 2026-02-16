@@ -12,6 +12,7 @@ import Billing from './pages/Billing';
 
 import Config from './pages/Configuration';
 import Associates from './pages/Associates';
+import Centers from './pages/Centers';
 import Audit from './pages/Audit';
 
 // Placeholders for other pages
@@ -39,6 +40,7 @@ function App() {
           <Route path="solicitudes" element={<Requests />} />
           <Route path="investigadores" element={<Researchers />} />
           <Route path="usuarios" element={<Associates />} />
+          <Route path="centros" element={<Centers />} />
           <Route path="servicios" element={<Services />} />
           <Route path="facturacion" element={<Billing />} />
           <Route path="auditoria" element={<Audit />} />
