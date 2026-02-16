@@ -1,6 +1,8 @@
 import React, { useState, useMemo, useRef } from 'react';
 import { useAppContext } from '../context/AppContext';
-import { Calendar, Download, DollarSign, FileText, Printer, X, CheckCircle } from 'lucide-react';
+import { Calendar, Download, DollarSign, FileText, Printer, X, CheckCircle, FileDown } from 'lucide-react';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import InvoicePDF from '../components/pdf/InvoicePDF';
 import { generateBillingExcel } from '../lib/excel';
 import { useReactToPrint } from 'react-to-print';
 import InvoiceTemplate from '../components/InvoiceTemplate';
@@ -262,6 +264,18 @@ const Billing = () => {
                         <div className="p-4 border-b flex justify-between items-center bg-slate-100 rounded-t-lg">
                             <h3 className="font-bold text-slate-800">Vista Previa</h3>
                             <div className="flex gap-2">
+                                <PDFDownloadLink
+                                    document={<InvoicePDF
+                                        invoice={selectedInvoice}
+                                        researcher={selectedInvoice.researcher}
+                                        requests={selectedInvoice.items}
+                                        services={services}
+                                    />}
+                                    fileName={`Factura_${selectedInvoice.invoiceNumber}.pdf`}
+                                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded flex items-center gap-2"
+                                >
+                                    {({ loading }) => (loading ? 'Generando...' : <><FileDown size={18} /> PDF</>)}
+                                </PDFDownloadLink>
                                 <button onClick={handlePrint} className="bg-blue-600 text-white px-4 py-2 rounded">Imprimir</button>
                                 <button onClick={() => setSelectedInvoice(null)} className="text-slate-500"><X size={24} /></button>
                             </div>

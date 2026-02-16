@@ -6,25 +6,24 @@ describe('ResearcherForm', () => {
     it('renders correctly', () => {
         render(<ResearcherForm onSubmit={() => { }} onCancel={() => { }} />);
         expect(screen.getByText(/Datos Personales/i)).toBeInTheDocument();
-        expect(screen.getByText(/Institución/i)).toBeInTheDocument();
+        expect(screen.getByText(/Centro/i)).toBeInTheDocument();
     });
 
     it('updates tariff automatically based on institution', () => {
         render(<ResearcherForm onSubmit={() => { }} onCancel={() => { }} />);
 
-        const institutionInput = screen.getByLabelText(/^Institución$/i);
         const tariffSelect = screen.getByRole('combobox', { name: /Tarifa Asignada/i });
 
         // Test UCM -> A
-        fireEvent.change(institutionInput, { target: { value: 'Universidad Complutense de Madrid' } });
+        fireEvent.change(screen.getByLabelText(/Centro/i), { target: { value: 'Universidad Complutense de Madrid' } });
         expect(tariffSelect.value).toBe('A');
 
         // Test Public -> B
-        fireEvent.change(institutionInput, { target: { value: 'Hospital Gregorio Marañón' } });
+        fireEvent.change(screen.getByLabelText(/Centro/i), { target: { value: 'Hospital Gregorio Marañón' } });
         expect(tariffSelect.value).toBe('B');
 
         // Test Private -> C
-        fireEvent.change(institutionInput, { target: { value: 'Empresa Privada S.L.' } });
+        fireEvent.change(screen.getByLabelText(/Centro/i), { target: { value: 'Empresa Privada S.L.' } });
         expect(tariffSelect.value).toBe('C');
     });
 
@@ -36,8 +35,8 @@ describe('ResearcherForm', () => {
         fireEvent.change(screen.getByLabelText(/Email/i), { target: { value: 'john@example.com' } });
         fireEvent.change(screen.getByLabelText(/Teléfono/i), { target: { value: '123456789' } });
         fireEvent.change(screen.getByLabelText(/CIF \/ NIF/i), { target: { value: '12345678A' } });
-        fireEvent.change(screen.getByLabelText(/^Institución$/i), { target: { value: 'UCM' } });
-        fireEvent.change(screen.getByLabelText(/Centro de Investigación/i), { target: { value: 'Bio Lab' } });
+        fireEvent.change(screen.getByLabelText(/Centro/i), { target: { value: 'UCM' } });
+
         fireEvent.change(screen.getByLabelText(/Dirección Fiscal/i), { target: { value: 'Street 1' } });
         fireEvent.change(screen.getByLabelText(/Dirección Envío/i), { target: { value: 'Street 2' } });
 

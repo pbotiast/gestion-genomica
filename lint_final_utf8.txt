@@ -1,0 +1,42 @@
+﻿
+> gestion-genomica@0.0.0 lint
+> eslint .
+
+
+E:\gestion-genomica\gestion-genomica\src\components\RequestForm.jsx
+  4:10  error  'cn' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+E:\gestion-genomica\gestion-genomica\src\components\ResearcherForm.jsx
+  53:8  warning  React Hook useEffect has a missing dependency: 'initialData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+E:\gestion-genomica\gestion-genomica\src\components\ServiceForm.jsx
+  4:10  error  'cn' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+E:\gestion-genomica\gestion-genomica\src\context\AppContext.jsx
+  5:14  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+E:\gestion-genomica\gestion-genomica\src\context\AuthContext.jsx
+  1:54  error    'useEffect' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                no-unused-vars
+  5:14  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+E:\gestion-genomica\gestion-genomica\src\pages\Billing.jsx
+  7:46  error  'updateRequestStatus' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+E:\gestion-genomica\scripts\generate_sample_excel.js
+  2:8  error  Parsing error: Identifier 'XLSX' has already been declared
+
+E:\gestion-genomica\server\index.js
+  35:21  error  'password' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+E:\gestion-genomica\src\context\AppContext.jsx
+  3:14  warning  Fast refresh only works when a file only exports components. Move your React context(s) to a separate file                      react-refresh/only-export-components
+  5:14  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+E:\gestion-genomica\src\context\AuthContext.jsx
+  5:14  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+E:\gestion-genomica\src\test\Requests.test.jsx
+  2:37  error  'waitFor' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+Ô£û 13 problems (7 errors, 6 warnings)
+

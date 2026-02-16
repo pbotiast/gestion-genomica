@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useAppContext } from '../context/AppContext';
-import { cn } from '../lib/utils';
 import ExcelImporter from '../components/ExcelImporter';
 import { Settings as SettingsIcon, Database, Users, Building, Trash2, FilePenLine, Plus, Save, X } from 'lucide-react';
 

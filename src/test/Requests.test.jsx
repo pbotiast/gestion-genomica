@@ -1,30 +1,36 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import Requests from '../pages/Requests';
-import * as AppContextModule from '../context/AppContext';
 
 // Mock AppContext
+vi.mock('../context/AppContext', () => ({
+    useAppContext: vi.fn(),
+}));
+
+import { useAppContext } from '../context/AppContext';
+
+// Mock data
 const mockAppContext = {
     requests: [],
     updateRequestStatus: vi.fn(),
     createRequest: vi.fn(),
     updateRequest: vi.fn(),
+    deleteRequest: vi.fn(),
     researchers: [],
     services: [],
-    technicians: []
+    technicians: [],
+    associates: [],
+    formats: []
 };
-
-vi.mock('../context/AppContext', () => ({
-    useAppContext: () => mockAppContext
-}));
 
 describe('Requests Page Actions', () => {
     beforeEach(() => {
         vi.clearAllMocks();
-        vi.spyOn(AppContextModule, 'useAppContext').mockReturnValue(mockAppContext);
+        // Setup default mock return
+        useAppContext.mockReturnValue(mockAppContext);
         // Mock confirm
-        global.confirm = vi.fn(() => true);
+        window.confirm = vi.fn(() => true);
     });
 
     it('renders list of requests', () => {
@@ -34,33 +40,35 @@ describe('Requests Page Actions', () => {
 
         render(<Requests />);
 
-        expect(screen.getByText('2024-00001')).toBeInTheDocument();
-        expect(screen.getByText('Dr. House')).toBeInTheDocument();
+        // Handle possible duplicate renders (desktop/mobile)
+        expect(screen.getAllByText('2024-00001')[0]).toBeInTheDocument();
+        expect(screen.getAllByText('Dr. House')[0]).toBeInTheDocument();
     });
 
-    it('shows finalize button for pending requests', () => {
+
+    it('shows finalize button for completed requests', () => {
         mockAppContext.requests = [
-            { id: 1, registrationNumber: '2024-00001', status: 'pending' }
+            { id: 1, registrationNumber: '2024-00001', status: 'completed' }
         ];
 
         render(<Requests />);
 
-        // Check for Send icon button (title "Finalizar y Enviar a Facturación")
-        const finalizeBtn = screen.getByTitle('Finalizar y Enviar a Facturación');
+        // Check for Send icon button (title "Facturar")
+        const finalizeBtn = screen.getAllByTitle('Facturar')[0];
         expect(finalizeBtn).toBeInTheDocument();
     });
 
     it('calls updateRequestStatus when finalizing', async () => {
         mockAppContext.requests = [
-            { id: 1, registrationNumber: '2024-00001', status: 'pending' }
+            { id: 1, registrationNumber: '2024-00001', status: 'completed' }
         ];
 
         render(<Requests />);
 
-        const finalizeBtn = screen.getByTitle('Finalizar y Enviar a Facturación');
+        const finalizeBtn = screen.getAllByTitle('Facturar')[0];
         fireEvent.click(finalizeBtn);
 
-        expect(global.confirm).toHaveBeenCalled();
+        expect(window.confirm).toHaveBeenCalled();
         expect(mockAppContext.updateRequestStatus).toHaveBeenCalledWith(1, 'processed');
     });
 
@@ -77,9 +85,10 @@ describe('Requests Page Actions', () => {
 
         render(<Requests />);
 
-        const editBtn = screen.getByTitle('Editar Solicitud');
+        const editBtn = screen.getByTitle('Editar');
         fireEvent.click(editBtn);
 
         expect(screen.getByText('Editar Solicitud')).toBeInTheDocument();
     });
 });
+

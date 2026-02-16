@@ -5,7 +5,7 @@ import { Lock, User } from 'lucide-react';
 
 const Login = () => {
     const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [password, setPassword] = useState(''); // eslint-disable-line no-unused-vars
     const [error, setError] = useState('');
     const { login } = useAuth();
     const navigate = useNavigate();

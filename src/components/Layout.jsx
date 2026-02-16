@@ -1,17 +1,31 @@
 import { useNavigate, NavLink, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LogOut, LayoutDashboard, Users, FileText, Settings, Database, TestTube, DollarSign, ClipboardList } from 'lucide-react';
+import { useAppContext } from '../context/AppContext';
+import { LogOut, LayoutDashboard, Users, FileText, Settings, Database, TestTube, DollarSign, ClipboardList, Loader2 } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { Toaster } from 'sonner';
 import styles from './Layout.module.css';
 
 const Layout = () => {
     const { user, logout } = useAuth();
+    const { loading } = useAppContext();
     const navigate = useNavigate();
 
     const handleLogout = () => {
         logout();
         navigate('/login');
     };
+
+    if (loading) {
+        return (
+            <div className="h-screen w-full flex items-center justify-center bg-slate-50 dark:bg-slate-900">
+                <div className="flex flex-col items-center gap-4">
+                    <Loader2 className="h-10 w-10 animate-spin text-blue-600" />
+                    <p className="text-slate-500 font-medium animate-pulse">Cargando...</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className={styles.container}>
@@ -63,6 +77,7 @@ const Layout = () => {
                     <Outlet />
                 </div>
             </main>
+            <Toaster position="top-right" richColors />
         </div>
     );
 };

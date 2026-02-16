@@ -1,8 +1,7 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from 'react';
+import { api } from '../lib/api';
 
 const AuthContext = createContext();
-
-export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(() => {
@@ -12,30 +11,28 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (username, password) => {
         try {
-            const response = await fetch('http://localhost:3000/api/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
-            });
-
-            const data = await response.json();
+            const data = await api.post('/login', { username, password });
 
             if (data.success) {
                 setUser(data.user);
                 localStorage.setItem('user', JSON.stringify(data.user));
-                return { success: true };
-            } else {
-                return { success: false, message: data.message || 'Error de autenticación' };
+                if (data.token) {
+                    localStorage.setItem('token', data.token);
+                }
+                return true;
             }
+            return false;
         } catch (error) {
-            console.error('Login error:', error);
-            return { success: false, message: 'Error de conexión con el servidor' };
+            console.error("Login error:", error);
+            // Optional: throw error to be handled by UI
+            return false;
         }
     };
 
     const logout = () => {
         setUser(null);
         localStorage.removeItem('user');
+        localStorage.removeItem('token');
     };
 
     return (
@@ -44,3 +41,5 @@ export const AuthProvider = ({ children }) => {
         </AuthContext.Provider>
     );
 };
+
+export const useAuth = () => useContext(AuthContext);

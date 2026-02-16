@@ -184,11 +184,35 @@ const Associates = () => {
                         type="Vinculaciones"
                         templateHeaders={['InvestigadorPrincipal', 'UsuarioAutorizado']}
                         onImport={async (data) => {
+                            let addedCount = 0;
+                            let errors = [];
+
                             for (const row of data) {
-                                // Basic logic to find researcher by name?
-                                // This requires fuzzy matching or exact matching.
-                                // I'll skip complex logic here for now as user just wants UI fix.
+                                const researcherName = row['InvestigadorPrincipal'];
+                                const associateName = row['UsuarioAutorizado'];
+                                const email = row['Email'] || ''; // Optional
+
+                                if (!researcherName || !associateName) continue;
+
+                                const researcher = researchers.find(r =>
+                                    r.fullName.toLowerCase() === researcherName.toLowerCase() ||
+                                    (r.fullName + " " + (r.institution || "")).toLowerCase().includes(researcherName.toLowerCase())
+                                );
+
+                                if (researcher) {
+                                    try {
+                                        await addAssociate(researcher.id, associateName, email);
+                                        addedCount++;
+                                    } catch (e) {
+                                        errors.push(`Error al añadir ${associateName}: ${e.message}`);
+                                    }
+                                } else {
+                                    errors.push(`Investigador no encontrado: ${researcherName}`);
+                                }
                             }
+
+                            if (addedCount > 0) alert(`Se han importado ${addedCount} vinculaciones correctamente.`);
+                            if (errors.length > 0) alert(`Errores:\n${errors.join('\n')}`);
                         }}
                     />
                 </div>

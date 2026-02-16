@@ -1,23 +1,5 @@
 import XLSX from 'xlsx';
-import fs from 'fs';
-
-const headers = [
-    'InvestigadorPrincipal',
-    'Departamento',
-    'Facultad',
-    'Ciudad',
-    'Telefono',
-    'FAX',
-    'e-mail',
-    'CIF',
-    'Direiion Fiscal', // Intentional typo matching common variations or just literal
-    'Direccion Factura',
-    'Oficina Contable',
-    'Organo Gestor',
-    'Unidad Tramitadora',
-    'Organo Proponente',
-    'Tarifa'
-];
+import XLSX from 'xlsx';
 
 // Correcting key mapping in my head: "Direccion Fiscal"
 // The script should use the exact headers the user asked for.

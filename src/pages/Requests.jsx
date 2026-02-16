@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
-import { Plus, Search, CheckCircle, X, FilePenLine, Send, RotateCcw, Trash2, DollarSign } from 'lucide-react';
+import { Plus, Search, CheckCircle, X, FilePenLine, Send, RotateCcw, Trash2, DollarSign, FileDown } from 'lucide-react';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import RequestPDF from '../components/pdf/RequestPDF';
 import { useAppContext } from '../context/AppContext';
 import { cn } from '../lib/utils';
 import RequestForm from '../components/RequestForm';
 import styles from './Requests.module.css';
 
 const Requests = () => {
-    const { requests, researchers, services, updateRequestStatus, createRequest, updateRequest, deleteRequest } = useAppContext();
+    const context = useAppContext();
+    console.log('Requests context:', context);
+    const { requests, researchers, services, updateRequestStatus, createRequest, updateRequest, deleteRequest } = context;
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const [currentRequest, setCurrentRequest] = useState(null);
@@ -320,7 +324,22 @@ const Requests = () => {
                 <div className={styles.modalOverlay}>
                     <div className={cn("glass-panel", styles.modalContent)}>
                         <div className={styles.modalHeader}>
-                            <h2 className={styles.modalTitle}>{isEditMode ? 'Editar Solicitud' : 'Registrar Solicitud'}</h2>
+                            <div className="flex items-center gap-3">
+                                <h2 className={styles.modalTitle}>{isEditMode ? 'Editar Solicitud' : 'Registrar Solicitud'}</h2>
+                                {isEditMode && currentRequest && (
+                                    <PDFDownloadLink
+                                        document={<RequestPDF
+                                            request={currentRequest}
+                                            researcher={researchers.find(r => r.id == currentRequest.researcherId)}
+                                            service={services.find(s => s.id == currentRequest.serviceId)}
+                                        />}
+                                        fileName={`Solicitud_${currentRequest.registrationNumber}.pdf`}
+                                        className="text-xs bg-red-50 text-red-600 px-2 py-1 rounded border border-red-100 hover:bg-red-100 flex items-center gap-1 font-medium"
+                                    >
+                                        {({ loading }) => (loading ? 'Generando...' : <><FileDown size={14} /> PDF</>)}
+                                    </PDFDownloadLink>
+                                )}
+                            </div>
                             <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-700">
                                 <X size={24} />
                             </button>

@@ -4,6 +4,18 @@ import { cn } from '../lib/utils';
 import ExcelImporter from './ExcelImporter';
 import styles from './ResearcherModal.module.css';
 
+const institutions = [
+    'Universidad Complutense de Madrid',
+    'Hospital Gregorio Marañón',
+    'Hospital 12 de Octubre',
+    'Centro Nacional de Biotecnología (CNB)',
+    'Consejo Superior de Investigaciones Científicas (CSIC)',
+    'Centro de Investigaciones Energéticas, Medioambientales y Tecnológicas (CIEMAT)',
+    'Empresa Privada S.L.',
+    'Fundación Jiménez Díaz',
+    'Hospital La Paz'
+];
+
 const ResearcherForm = ({ onSubmit, onCancel, initialData }) => {
     console.log("DEBUG: FILE LOADED");
     const [formData, setFormData] = useState({
@@ -31,7 +43,6 @@ const ResearcherForm = ({ onSubmit, onCancel, initialData }) => {
     // Authorized Users State
     const [associates, setAssociates] = useState([]);
     const [newAssociate, setNewAssociate] = useState({ name: '', email: '' });
-    const [showAssociates, setShowAssociates] = useState(false); // Toggle explanation
 
     // Load initial data
     useEffect(() => {
@@ -62,6 +73,17 @@ const ResearcherForm = ({ onSubmit, onCancel, initialData }) => {
                 .catch(err => console.error("Error loading associates:", err));
         }
     }, [initialData]);
+
+    useEffect(() => {
+        const inst = (formData.institution || '').toLowerCase();
+        if (inst.includes('complutense') || inst.includes('ucm')) {
+            setFormData(prev => ({ ...prev, tariff: 'A' }));
+        } else if (inst.includes('hospital') || inst.includes('fundación') || inst.includes('csic') || inst.includes('cnb') || inst.includes('ciemat')) {
+            setFormData(prev => ({ ...prev, tariff: 'B' }));
+        } else if (inst.includes('privad') || inst.includes('s.l.') || inst.includes('s.a.') || inst.includes('pharma')) {
+            setFormData(prev => ({ ...prev, tariff: 'C' }));
+        }
+    }, [formData.institution]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -225,7 +247,6 @@ const ResearcherForm = ({ onSubmit, onCancel, initialData }) => {
                             </div>
                         </div>
                     </div>
-
                 </div>
 
                 <div className={styles.actions}>

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Save } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
-import { cn } from '../lib/utils';
 import styles from './ServiceForm.module.css'; // Reusing similar styles
 
 const RequestForm = ({ onSubmit, onCancel, initialData }) => {
@@ -169,8 +168,8 @@ const RequestForm = ({ onSubmit, onCancel, initialData }) => {
                 </div>
 
                 <div className={styles.inputGroup}>
-                    <label>Investigador Principal</label>
-                    <select required name="researcherId" value={formData.researcherId} onChange={handleChange} className={styles.select}>
+                    <label htmlFor="researcherId">Investigador Principal</label>
+                    <select id="researcherId" required name="researcherId" value={formData.researcherId} onChange={handleChange} className={styles.select}>
                         <option value="">Seleccionar Investigador...</option>
                         {filteredResearchers.map(r => (
                             <option key={r.id} value={r.id}>{r.fullName} - {r.institution}</option>
@@ -193,8 +192,8 @@ const RequestForm = ({ onSubmit, onCancel, initialData }) => {
             <div className={styles.section}>
                 <h3 className={styles.sectionTitle}>Datos del Servicio</h3>
                 <div className={styles.inputGroup}>
-                    <label>Servicio Solicitado</label>
-                    <select required name="serviceId" value={formData.serviceId} onChange={handleChange} className={styles.select}>
+                    <label htmlFor="serviceId">Servicio Solicitado</label>
+                    <select id="serviceId" required name="serviceId" value={formData.serviceId} onChange={handleChange} className={styles.select}>
                         <option value="">Seleccionar Servicio...</option>
                         {services.map(s => (
                             <option key={s.id} value={s.id}>{s.name} ({s.format})</option>
@@ -203,8 +202,8 @@ const RequestForm = ({ onSubmit, onCancel, initialData }) => {
                 </div>
                 <div className={styles.grid3}>
                     <div className={styles.inputGroup}>
-                        <label>Nº Muestras</label>
-                        <input required type="number" name="samplesCount" value={formData.samplesCount} onChange={handleChange} />
+                        <label htmlFor="samplesCount">Nº Muestras</label>
+                        <input id="samplesCount" required type="number" name="samplesCount" value={formData.samplesCount} onChange={handleChange} />
                     </div>
                     <div className={styles.inputGroup}>
                         <label>Formato</label>

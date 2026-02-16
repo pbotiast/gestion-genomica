@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Save } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
-import { cn } from '../lib/utils';
 import styles from './ServiceForm.module.css';
 
 const ServiceForm = ({ onSubmit, onCancel, initialData }) => {

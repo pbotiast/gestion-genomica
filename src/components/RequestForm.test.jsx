@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import RequestForm from './RequestForm';
-import { AppContext } from '../context/AppContext';
+import * as AppContextModule from '../context/AppContext';
 
 // Mock context value
 const mockContextValue = {
@@ -14,20 +14,23 @@ const mockContextValue = {
         { id: 's2', name: 'Analysis', format: 'Digital' }
     ],
     technicians: ['Tech 1', 'Tech 2'],
-    requests: []
+    requests: [],
+    associates: [],
+    formats: ['Tube', 'Plate']
 };
 
-const renderWithContext = (component) => {
-    return render(
-        <AppContext.Provider value={mockContextValue}>
-            {component}
-        </AppContext.Provider>
-    );
-};
+// Mock the hook
+vi.mock('../context/AppContext', () => ({
+    useAppContext: () => mockContextValue
+}));
 
 describe('RequestForm', () => {
+    beforeEach(() => {
+        vi.clearAllMocks();
+    });
+
     it('renders all form sections', () => {
-        renderWithContext(<RequestForm onSubmit={() => { }} onCancel={() => { }} />);
+        render(<RequestForm onSubmit={() => { }} onCancel={() => { }} />);
 
         expect(screen.getByText(/Nº Registro/i)).toBeInTheDocument();
         expect(screen.getByText(/Datos del Investigador/i)).toBeInTheDocument();
@@ -35,7 +38,7 @@ describe('RequestForm', () => {
     });
 
     it('populates researcher dropdown', () => {
-        renderWithContext(<RequestForm onSubmit={() => { }} onCancel={() => { }} />);
+        render(<RequestForm onSubmit={() => { }} onCancel={() => { }} />);
 
         const researcherSelect = screen.getByRole('combobox', { name: /Investigador/i });
         expect(researcherSelect).toBeInTheDocument();
@@ -43,7 +46,7 @@ describe('RequestForm', () => {
     });
 
     it('autofills institution and tariff when researcher is selected', () => {
-        renderWithContext(<RequestForm onSubmit={() => { }} onCancel={() => { }} />);
+        render(<RequestForm onSubmit={() => { }} onCancel={() => { }} />);
 
         const researcherSelect = screen.getByRole('combobox', { name: /Investigador/i });
         fireEvent.change(researcherSelect, { target: { value: '1' } });
@@ -54,7 +57,7 @@ describe('RequestForm', () => {
 
     it('calls onSubmit with form data', () => {
         const handleSubmit = vi.fn();
-        renderWithContext(<RequestForm onSubmit={handleSubmit} onCancel={() => { }} />);
+        render(<RequestForm onSubmit={handleSubmit} onCancel={() => { }} />);
 
         // Fill required fields
         fireEvent.change(screen.getByRole('combobox', { name: /Investigador/i }), { target: { value: '1' } });
