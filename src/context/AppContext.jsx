@@ -100,9 +100,14 @@ export const AppProvider = ({ children }) => {
     };
 
     const deleteResearcher = async (id) => {
-        // Backend TODO: Implement delete
-        setResearchers(prev => prev.filter(item => item.id !== id));
-        toast.info('Investigador eliminado (Localmente, Backend no implementado)');
+        try {
+            await api.delete(`/researchers/${id}`);
+            setResearchers(prev => prev.filter(item => item.id !== id));
+            toast.success('Investigador eliminado');
+        } catch (error) {
+            console.error(error);
+            toast.error(error.response?.data?.error || 'Error al eliminar investigador');
+        }
     };
 
     // Services
@@ -121,15 +126,20 @@ export const AppProvider = ({ children }) => {
     };
 
     const updateService = async (id, data) => {
-        // Backend TODO
+        // Backend TODO: Implement PUT
         setServices(prev => prev.map(item => item.id === id ? { ...item, ...data } : item));
         toast.info('Servicio actualizado (Localmente)');
     };
 
     const deleteService = async (id) => {
-        // Backend TODO
-        setServices(prev => prev.filter(item => item.id !== id));
-        toast.info('Servicio eliminado (Localmente)');
+        try {
+            await api.delete(`/services/${id}`);
+            setServices(prev => prev.filter(item => item.id !== id));
+            toast.success('Servicio eliminado');
+        } catch (error) {
+            console.error(error);
+            toast.error(error.response?.data?.error || 'Error al eliminar servicio');
+        }
     };
 
     // Requests
@@ -165,9 +175,14 @@ export const AppProvider = ({ children }) => {
     };
 
     const deleteRequest = async (id) => {
-        // Backend TODO
-        setRequests(prev => prev.filter(item => item.id !== id));
-        toast.info('Solicitud eliminada (Localmente)');
+        try {
+            await api.delete(`/requests/${id}`);
+            setRequests(prev => prev.filter(item => item.id !== id));
+            toast.success('Solicitud eliminada');
+        } catch (error) {
+            console.error(error);
+            toast.error('Error al eliminar solicitud');
+        }
     };
 
     // Invoices
@@ -219,9 +234,15 @@ export const AppProvider = ({ children }) => {
         }
     };
 
-    const deleteTechnician = (name) => {
-        // Backend TODO
-        setTechnicians(prev => prev.filter(t => t !== name));
+    const deleteTechnician = async (name) => {
+        try {
+            await api.delete(`/technicians/${encodeURIComponent(name)}`);
+            setTechnicians(prev => prev.filter(t => t !== name));
+            toast.success('Técnico eliminado');
+        } catch (error) {
+            console.error(error);
+            toast.error('Error al eliminar técnico');
+        }
     };
 
     const updateTechnician = (oldName, newName) => {

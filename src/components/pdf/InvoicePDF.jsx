@@ -148,17 +148,33 @@ const InvoicePDF = ({ invoice, researcher, requests, services }) => {
                     </View>
 
                     {/* Table Rows (Requests) */}
-                    {requests.map((req, index) => (
-                        <View style={styles.tableRow} key={index}>
-                            <Text style={styles.tableCol}>
-                                Solicitud {req.registrationNumber} - {getServiceName(req.serviceId)} ({req.finalSamplesCount || req.samplesCount} muestras)
-                            </Text>
-                            <Text style={styles.tableColAmount}>
-                                {/* TODO: Calculate individual request cost if available, otherwise just total */}
-                                -
-                            </Text>
-                        </View>
-                    ))}
+                    {requests.map((req, index) => {
+                        // Logic to calculate price
+                        const service = services.find(s => s.id === req.serviceId);
+                        const tariff = researcher?.tariff || 'C'; // Default to C if unknown
+                        let unitPrice = 0;
+                        if (service) {
+                            switch (tariff) {
+                                case 'A': unitPrice = service.priceA; break;
+                                case 'B': unitPrice = service.priceB; break;
+                                case 'C': unitPrice = service.priceC; break;
+                                default: unitPrice = service.priceC;
+                            }
+                        }
+                        const count = req.finalSamplesCount || req.samplesCount || 0;
+                        const totalCost = unitPrice * count;
+
+                        return (
+                            <View style={styles.tableRow} key={index}>
+                                <Text style={styles.tableCol}>
+                                    Solicitud {req.registrationNumber} - {getServiceName(req.serviceId)} ({count} muestras)
+                                </Text>
+                                <Text style={styles.tableColAmount}>
+                                    {totalCost.toFixed(2)} €
+                                </Text>
+                            </View>
+                        );
+                    })}
                 </View>
 
                 {/* Total */}

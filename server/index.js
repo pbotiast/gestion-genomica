@@ -180,6 +180,22 @@ app.post('/api/researchers', authenticateToken, [
     stmt.finalize();
 });
 
+app.delete('/api/researchers/:id', authenticateToken, (req, res) => {
+    const { id } = req.params;
+    // Check constraints if needed (e.g. has requests?)
+    db.get("SELECT count(*) as count FROM requests WHERE researcherId = ?", [id], (err, row) => {
+        if (err) return res.status(500).json({ error: err.message });
+        if (row.count > 0) return res.status(400).json({ error: "Cannot delete researcher with existing requests" });
+
+        db.run("DELETE FROM researchers WHERE id = ?", [id], function (err) {
+            if (err) return res.status(500).json({ error: err.message });
+            if (this.changes === 0) return res.status(404).json({ error: "Researcher not found" });
+            logAudit('DELETE', 'RESEARCHER', id, {}, req.user.username);
+            res.json({ success: true, deleted: this.changes });
+        });
+    });
+});
+
 // --- Research Centers Routes ---
 app.get('/api/centers', authenticateToken, (req, res) => {
     db.all("SELECT * FROM research_centers ORDER BY name ASC", [], (err, rows) => {
@@ -299,6 +315,21 @@ app.post('/api/services', authenticateToken, (req, res) => {
         res.json({ id: this.lastID, ...req.body });
     });
     stmt.finalize();
+});
+
+app.delete('/api/services/:id', authenticateToken, (req, res) => {
+    const { id } = req.params;
+    // Check constraints
+    db.get("SELECT count(*) as count FROM requests WHERE serviceId = ?", [id], (err, row) => {
+        if (err) return res.status(500).json({ error: err.message });
+        if (row.count > 0) return res.status(400).json({ error: "Cannot delete service with existing requests" });
+
+        db.run("DELETE FROM services WHERE id = ?", [id], function (err) {
+            if (err) return res.status(500).json({ error: err.message });
+            if (this.changes === 0) return res.status(404).json({ error: "Service not found" });
+            res.json({ success: true, deleted: this.changes });
+        });
+    });
 });
 
 // --- Institutions Routes ---
@@ -434,7 +465,26 @@ app.put('/api/associates/:id', authenticateToken, (req, res) => {
     });
 });
 
+app.delete('/api/technicians/:name', authenticateToken, (req, res) => {
+    const { name } = req.params;
+    db.run("DELETE FROM technicians WHERE name = ?", [name], function (err) {
+        if (err) return res.status(500).json({ error: err.message });
+        if (this.changes === 0) return res.status(404).json({ error: "Technician not found" });
+        res.json({ success: true, deleted: this.changes });
+    });
+});
+
 // --- Requests Routes ---
+app.delete('/api/requests/:id', authenticateToken, (req, res) => {
+    const { id } = req.params;
+    db.run("DELETE FROM requests WHERE id = ?", [id], function (err) {
+        if (err) return res.status(500).json({ error: err.message });
+        if (this.changes === 0) return res.status(404).json({ error: "Request not found" });
+        logAudit('DELETE', 'REQUEST', id, {}, req.user.username);
+        res.json({ success: true, deleted: this.changes });
+    });
+});
+
 app.get('/api/requests', authenticateToken, (req, res) => {
     db.all("SELECT * FROM requests", [], (err, rows) => {
         if (err) return res.status(500).json({ error: err.message });

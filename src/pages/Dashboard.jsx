@@ -86,11 +86,6 @@ const Dashboard = () => {
 
     const inProcessCount = stats.totalRequests - stats.pendingRequests - stats.invoicedRequests;
 
-    const handleExport = () => {
-        // TODO: Implement export functionality
-        alert('Funcionalidad de exportación en desarrollo');
-    };
-
     const getPeriodLabel = () => {
         const labels = {
             week: 'Última Semana',
@@ -103,7 +98,7 @@ const Dashboard = () => {
     };
 
     return (
-        <div className="space-y-6 fade-in">
+        <div className="space-y-6 fade-in pb-8">
             {/* Header with Period Filter */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
@@ -209,17 +204,18 @@ const Dashboard = () => {
                                             backgroundColor: 'rgba(255, 255, 255, 0.95)',
                                             backdropFilter: 'blur(10px)',
                                             border: '1px solid #e2e8f0',
-                                            borderRadius: '8px',
-                                            boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+                                            borderRadius: '12px',
+                                            boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)'
                                         }}
                                     />
                                     <Line
                                         type="monotone"
                                         dataKey="Solicitudes"
                                         stroke="#6366f1"
-                                        strokeWidth={2}
-                                        dot={{ fill: '#6366f1', r: 4 }}
-                                        activeDot={{ r: 6 }}
+                                        strokeWidth={3}
+                                        dot={{ fill: '#6366f1', r: 4, strokeWidth: 2, stroke: '#fff' }}
+                                        activeDot={{ r: 8, strokeWidth: 0 }}
+                                        animationDuration={2000}
                                     />
                                 </LineChart>
                             </ResponsiveContainer>
@@ -308,17 +304,19 @@ const Dashboard = () => {
                                         }}
                                         formatter={(value) => [`€${value.toFixed(2)}`, 'Ingresos']}
                                     />
+                                    <defs>
+                                        <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="5%" stopColor="#6366f1" stopOpacity={0.8} />
+                                            <stop offset="95%" stopColor="#6366f1" stopOpacity={0.1} />
+                                        </linearGradient>
+                                    </defs>
                                     <Bar
                                         dataKey="Ingresos"
                                         fill="url(#colorRevenue)"
-                                        radius={[8, 8, 0, 0]}
+                                        radius={[6, 6, 0, 0]}
+                                        barSize={40}
+                                        animationDuration={1500}
                                     />
-                                    <defs>
-                                        <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="0%" stopColor="#6366f1" stopOpacity={1} />
-                                            <stop offset="100%" stopColor="#8b5cf6" stopOpacity={0.8} />
-                                        </linearGradient>
-                                    </defs>
                                 </BarChart>
                             </ResponsiveContainer>
                         ) : (
@@ -357,17 +355,19 @@ const Dashboard = () => {
                                             boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
                                         }}
                                     />
+                                    <defs>
+                                        <linearGradient id="colorRequests" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.8} />
+                                            <stop offset="95%" stopColor="#06b6d4" stopOpacity={0.1} />
+                                        </linearGradient>
+                                    </defs>
                                     <Bar
                                         dataKey="Solicitudes"
                                         fill="url(#colorRequests)"
-                                        radius={[8, 8, 0, 0]}
+                                        radius={[6, 6, 0, 0]}
+                                        barSize={40}
+                                        animationDuration={1500}
                                     />
-                                    <defs>
-                                        <linearGradient id="colorRequests" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="0%" stopColor="#06b6d4" stopOpacity={1} />
-                                            <stop offset="100%" stopColor="#0891b2" stopOpacity={0.8} />
-                                        </linearGradient>
-                                    </defs>
                                 </BarChart>
                             </ResponsiveContainer>
                         ) : (
@@ -409,8 +409,8 @@ const Dashboard = () => {
                                             backgroundColor: 'rgba(255, 255, 255, 0.95)',
                                             backdropFilter: 'blur(10px)',
                                             border: '1px solid #e2e8f0',
-                                            borderRadius: '8px',
-                                            boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+                                            borderRadius: '12px',
+                                            boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)'
                                         }}
                                     />
                                 </PieChart>
