@@ -15,11 +15,14 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const result = await login(username, password);
-        if (result && result.success) {
-            navigate(from, { replace: true });
+        const success = await login(username, password);
+        console.log("Login success:", success);
+
+        if (success) {
+            // Force a hard reload to ensure all context and states are clean
+            window.location.href = from;
         } else {
-            setError(result?.message || 'Error al iniciar sesión');
+            setError('Usuario o contraseña incorrectos');
         }
     };
 

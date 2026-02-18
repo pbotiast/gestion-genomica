@@ -8,6 +8,19 @@ vi.mock('../context/AppContext', () => ({
     useAppContext: vi.fn(),
 }));
 
+vi.mock('@react-pdf/renderer', () => ({
+    PDFDownloadLink: vi.fn(({ children }) => <div>{children({ loading: false })}</div>),
+    Document: vi.fn(({ children }) => <div>{children}</div>),
+    Page: vi.fn(({ children }) => <div>{children}</div>),
+    Text: vi.fn(({ children }) => <div>{children}</div>),
+    View: vi.fn(({ children }) => <div>{children}</div>),
+    StyleSheet: { create: vi.fn() },
+}));
+
+vi.mock('../components/pdf/RequestPDF', () => ({
+    default: () => <div>PDF Content</div>
+}));
+
 import { useAppContext } from '../context/AppContext';
 
 // Mock data

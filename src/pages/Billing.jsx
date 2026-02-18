@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useRef } from 'react';
 import { useAppContext } from '../context/AppContext';
-import { Calendar, Download, DollarSign, FileText, Printer, X, CheckCircle, FileDown } from 'lucide-react';
+import DataTable from '../components/DataTable';
+import { Calendar, Download, DollarSign, FileText, Printer, X, CheckCircle, FileDown, FileCheck } from 'lucide-react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import InvoicePDF from '../components/pdf/InvoicePDF';
 import { generateBillingExcel } from '../lib/excel';
@@ -14,10 +15,8 @@ const Billing = () => {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [selectedInvoice, setSelectedInvoice] = useState(null);
+    const [globalFilter, setGlobalFilter] = useState('');
     const invoiceRef = useRef();
-
-    // Sort config for History Table
-    const [sortConfig, setSortConfig] = useState({ key: 'invoiceNumber', direction: 'desc' });
 
     const handlePrint = useReactToPrint({
         content: () => invoiceRef.current,
@@ -92,38 +91,168 @@ const Billing = () => {
         });
     };
 
-    // Sort Logic for History
-    const handleSort = (key) => {
-        let direction = 'asc';
-        if (sortConfig.key === key && sortConfig.direction === 'asc') {
-            direction = 'desc';
+    const updateStatus = async (id, newStatus) => {
+        try {
+            const response = await fetch(`/api/invoices/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify({ payment_status: newStatus })
+            });
+
+            if (response.ok) {
+                // Update local state to reflect change immediately without refetch
+                const updatedInvoices = invoices.map(inv =>
+                    inv.id === id ? { ...inv, payment_status: newStatus } : inv
+                );
+                // Ideally we should update the context, but for MVP we might need to force a reload or use a setter from context if available.
+                // Assuming AppContext has setInvoices or we trigger a refetch. 
+                // Since createInvoice is from context, maybe there is a refresh method? 
+                // For now, let's reload the page to see changes or just let the user know.
+                // actually, invoices comes from context. We should probably add a refresh method to context.
+                // But for now, let's just alert.
+                window.location.reload(); // Simple refresh to get new state
+            }
+        } catch (error) {
+            console.error("Error updating status:", error);
+            alert("Error al actualizar estado");
         }
-        setSortConfig({ key, direction });
     };
 
-    const sortedInvoices = [...invoices].map(inv => {
-        const researcher = researchers.find(r => r.id === inv.researcherId);
-        return { ...inv, researcherName: researcher?.fullName || '' };
-    }).sort((a, b) => {
-        if (!sortConfig.key) return 0;
-        let aValue = a[sortConfig.key];
-        let bValue = b[sortConfig.key];
+    const markAsDispatched = async (invoice) => {
+        if (!confirm(`¿Marcar factura ${invoice.invoiceNumber} como tramitada a Gestión Económica?`)) return;
 
-        if (typeof aValue === 'string') aValue = aValue.toLowerCase();
-        if (typeof bValue === 'string') bValue = bValue.toLowerCase();
+        try {
+            console.log("Attempting to dispatch invoice:", invoice.id);
+            const url = `/api/invoices/${invoice.id}/email`;
+            console.log("Dispatching to URL:", url);
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify({
+                    email: 'gestion.economica@ucm.es', // Dummy email or system identifier
+                    subject: 'Tramitado a Gestión Económica'
+                })
+            });
 
-        if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
-        if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
-        return 0;
-    });
-
-    const SortIcon = ({ columnKey }) => {
-        if (sortConfig.key !== columnKey) return <span className="text-slate-300 ml-1 text-[10px]">▼</span>;
-        return <span className="text-blue-600 ml-1 font-bold text-[10px]">{sortConfig.direction === 'asc' ? '▲' : '▼'}</span>;
+            if (response.ok) {
+                alert("Factura marcada como tramitada correctamente");
+            } else {
+                const errorText = await response.text();
+                console.error("Dispatch failed:", response.status, errorText);
+                alert(`Error al tramitar la factura: ${response.status} ${errorText}`);
+            }
+        } catch (error) {
+            console.error("Error dispatching invoice (network/code):", error);
+            alert(`Error de conexión al tramitar: ${error.message}`);
+        }
     };
+
+    // Enrich invoices with researcher name
+    const enrichedInvoices = useMemo(() => {
+        return invoices.map(inv => {
+            const researcher = researchers.find(r => r.id === inv.researcherId);
+            return {
+                ...inv,
+                researcherName: researcher?.fullName || 'Sin asignar',
+                formattedDate: new Date(inv.createdAt).toLocaleDateString('es-ES')
+            };
+        });
+    }, [invoices, researchers]);
+
+    // Define columns for invoice history DataTable
+    const columns = useMemo(() => [
+        {
+            accessorKey: 'invoiceNumber',
+            header: 'Nº Factura',
+            cell: ({ getValue }) => (
+                <span className="font-mono font-semibold text-indigo-600">
+                    {getValue()}
+                </span>
+            ),
+        },
+        {
+            accessorKey: 'formattedDate',
+            header: 'Fecha',
+            cell: ({ getValue }) => (
+                <span className="text-slate-700">{getValue()}</span>
+            ),
+        },
+        {
+            accessorKey: 'researcherName',
+            header: 'Investigador',
+            cell: ({ getValue }) => (
+                <span className="text-slate-800">{getValue()}</span>
+            ),
+        },
+        {
+            accessorKey: 'amount',
+            header: 'Importe',
+            cell: ({ getValue }) => {
+                const val = getValue();
+                const amount = val !== undefined && val !== null ? val : 0;
+                return (
+                    <span className="font-bold text-green-600">
+                        {amount.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}
+                    </span>
+                );
+            },
+        },
+        {
+            accessorKey: 'payment_status',
+            header: 'Estado Pago',
+            cell: ({ getValue, row, table }) => {
+                const status = getValue() || 'Pending';
+                const color = status === 'Paid' ? 'text-green-600 bg-green-100' : status === 'Overdue' ? 'text-red-600 bg-red-100' : 'text-yellow-600 bg-yellow-100';
+
+                return (
+                    <select
+                        value={status}
+                        onChange={(e) => table.options.meta?.updateStatus(row.original.id, e.target.value)}
+                        className={`text-xs font-semibold px-2 py-1 rounded-full border-0 cursor-pointer ${color}`}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <option value="Pending">Pendiente</option>
+                        <option value="Paid">Pagado</option>
+                        <option value="Overdue">Vencido</option>
+                    </select>
+                );
+            },
+        },
+        {
+            id: 'actions',
+            header: 'Acciones',
+            cell: ({ row, table }) => {
+                const invoice = row.original;
+                return (
+                    <div className="flex items-center justify-center gap-2">
+                        <button
+                            onClick={() => table.options.meta?.markAsDispatched(invoice)}
+                            className="btn-icon-sm text-indigo-600 hover:text-indigo-800"
+                            title="Tramitar a Gestión Económica"
+                        >
+                            <FileCheck size={16} />
+                        </button>
+                        <button
+                            onClick={() => openPrintPreview(invoice)}
+                            className="btn-icon-sm text-blue-600 hover:text-blue-800"
+                            title="Vista previa / Imprimir"
+                        >
+                            <Printer size={16} />
+                        </button>
+                    </div>
+                );
+            },
+        },
+    ], [openPrintPreview]);
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 fade-in">
             <header className={styles.header}>
                 <div>
                     <h1 className={cn(styles.title, "text-gradient")}>Facturación</h1>
@@ -194,68 +323,15 @@ const Billing = () => {
                     Historial de Facturas
                 </h3>
 
-                <div className={styles.tableContainer}>
-                    <div className="hidden md:block">
-                        <table className={styles.table}>
-                            <thead>
-                                <tr>
-                                    <th onClick={() => handleSort('invoiceNumber')}>
-                                        <div className={styles.thContent}>Nº Factura <SortIcon columnKey="invoiceNumber" /></div>
-                                    </th>
-                                    <th onClick={() => handleSort('createdAt')}>
-                                        <div className={styles.thContent}>Fecha <SortIcon columnKey="createdAt" /></div>
-                                    </th>
-                                    <th onClick={() => handleSort('researcherName')}>
-                                        <div className={styles.thContent}>Investigador <SortIcon columnKey="researcherName" /></div>
-                                    </th>
-                                    <th onClick={() => handleSort('amount')}>
-                                        <div className={styles.thContent} style={{ justifyContent: 'flex-end' }}>Importe <SortIcon columnKey="amount" /></div>
-                                    </th>
-                                    <th className={styles.colActions}>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {sortedInvoices.length === 0 ? (
-                                    <tr><td colSpan="5" className="text-center p-8 text-slate-500">No hay facturas.</td></tr>
-                                ) : (
-                                    sortedInvoices.map(inv => (
-                                        <tr key={inv.id}>
-                                            <td className={styles.invoiceNumber + " border-r px-2"}>{inv.invoiceNumber}</td>
-                                            <td className="border-r px-2">{new Date(inv.createdAt).toLocaleDateString()}</td>
-                                            <td className="border-r px-2">{inv.researcherName}</td>
-                                            <td className={styles.amount + " border-r px-2"}>{inv.amount?.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</td>
-                                            <td className={styles.colActions}>
-                                                <div className="flex justify-center">
-                                                    <button onClick={() => openPrintPreview(inv)} className="text-blue-600 hover:bg-blue-50 p-1 rounded"><Printer size={16} /></button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div className="md:hidden space-y-3 p-4">
-                        {sortedInvoices.map(inv => (
-                            <div key={inv.id} className="bg-white p-4 rounded-lg border border-slate-200 shadow-sm flex flex-col gap-2">
-                                <div className="flex justify-between items-start">
-                                    <div>
-                                        <span className="font-mono font-bold text-slate-700 block">{inv.invoiceNumber}</span>
-                                        <span className="text-xs text-slate-500">{new Date(inv.createdAt).toLocaleDateString()}</span>
-                                    </div>
-                                    <span className="font-bold text-green-600">{inv.amount?.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</span>
-                                </div>
-                                <div className="text-sm text-slate-600 border-t border-slate-100 pt-2 mt-1">
-                                    {inv.researcherName}
-                                </div>
-                                <div className="flex justify-end pt-2">
-                                    <button onClick={() => openPrintPreview(inv)} className="text-blue-600 bg-blue-50 px-2 py-1 rounded text-sm flex items-center gap-1"><Printer size={16} /> Imprimir</button>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
+                <DataTable
+                    columns={columns}
+                    data={enrichedInvoices}
+                    globalFilter={globalFilter}
+                    onGlobalFilterChange={setGlobalFilter}
+                    pageSize={15}
+                    meta={{ updateStatus, markAsDispatched }}
+                    emptyMessage="No hay facturas generadas."
+                />
             </div>
 
             {selectedInvoice && (

@@ -58,7 +58,34 @@ function logAudit(action, entity, entityId, details, user = 'system') {
 
 // --- Audit Routes ---
 app.get('/api/audit', authenticateToken, (req, res) => {
-    db.all("SELECT * FROM audit_logs ORDER BY timestamp DESC LIMIT 100", [], (err, rows) => {
+    const { startDate, endDate, action, entity } = req.query;
+
+    let query = "SELECT * FROM audit_logs WHERE 1=1";
+    const params = [];
+
+    if (startDate) {
+        query += " AND timestamp >= ?";
+        params.push(startDate);
+    }
+
+    if (endDate) {
+        query += " AND timestamp <= ?";
+        params.push(endDate + ' 23:59:59');
+    }
+
+    if (action) {
+        query += " AND action = ?";
+        params.push(action);
+    }
+
+    if (entity) {
+        query += " AND entity = ?";
+        params.push(entity);
+    }
+
+    query += " ORDER BY timestamp DESC LIMIT 500";
+
+    db.all(query, params, (err, rows) => {
         if (err) return res.status(500).json({ error: err.message });
         res.json(rows);
     });
@@ -373,16 +400,6 @@ app.get('/api/researchers/:id/associates', authenticateToken, (req, res) => {
     });
 });
 
-app.post('/api/researchers/:id/associates', authenticateToken, (req, res) => {
-    const { id } = req.params;
-    const { name, email } = req.body;
-    const stmt = db.prepare("INSERT INTO researcher_associates (researcherId, name, email) VALUES (?, ?, ?)");
-    stmt.run(id, name, email, function (err) {
-        if (err) return res.status(500).json({ error: err.message });
-        res.json({ id: this.lastID, researcherId: id, name, email });
-    });
-    stmt.finalize();
-});
 
 // Delete Associate
 app.delete('/api/associates/:id', authenticateToken, (req, res) => {
@@ -597,21 +614,52 @@ app.put('/api/requests/:id', authenticateToken, (req, res) => {
 
 // --- Dashboard Routes ---
 app.get('/api/dashboard/stats', authenticateToken, (req, res) => {
+    const { period = 'month' } = req.query;
+
+    // Calculate date filter based on period
+    const getDateFilter = (period) => {
+        const now = new Date();
+        let startDate;
+
+        switch (period) {
+            case 'week':
+                startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                break;
+            case 'month':
+                startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                break;
+            case 'quarter':
+                const quarter = Math.floor(now.getMonth() / 3);
+                startDate = new Date(now.getFullYear(), quarter * 3, 1);
+                break;
+            case 'year':
+                startDate = new Date(now.getFullYear(), 0, 1);
+                break;
+            case 'all':
+            default:
+                startDate = new Date('2000-01-01'); // Far past
+                break;
+        }
+
+        return startDate.toISOString().split('T')[0];
+    };
+
+    const dateFilter = getDateFilter(period);
     const stats = {};
 
     db.serialize(() => {
-        // Total Requests
-        db.get("SELECT count(*) as total FROM requests", (err, row) => {
+        // Total Requests (filtered by period)
+        db.get("SELECT count(*) as total FROM requests WHERE entryDate >= ?", [dateFilter], (err, row) => {
             if (err) return res.status(500).json({ error: err.message });
             stats.totalRequests = row.total;
 
-            // Pending Requests
-            db.get("SELECT count(*) as pending FROM requests WHERE status != 'processed' AND status != 'billed'", (err, row) => {
+            // Pending Requests (filtered)
+            db.get("SELECT count(*) as pending FROM requests WHERE status != 'processed' AND status != 'billed' AND entryDate >= ?", [dateFilter], (err, row) => {
                 if (err) return res.status(500).json({ error: err.message });
                 stats.pendingRequests = row.pending;
 
-                // Processed/Invoiced Requests
-                db.get("SELECT count(*) as invoiced FROM requests WHERE status = 'processed' OR status = 'billed'", (err, row) => {
+                // Processed/Invoiced Requests (filtered)
+                db.get("SELECT count(*) as invoiced FROM requests WHERE (status = 'processed' OR status = 'billed') AND entryDate >= ?", [dateFilter], (err, row) => {
                     if (err) return res.status(500).json({ error: err.message });
                     stats.invoicedRequests = row.invoiced;
 
@@ -625,18 +673,82 @@ app.get('/api/dashboard/stats', authenticateToken, (req, res) => {
                             if (err) return res.status(500).json({ error: err.message });
                             stats.revenuePerMonth = rows.reverse(); // Chronological order
 
-                            // Service Popularity
-                            db.all("SELECT s.name, count(r.id) as count FROM requests r JOIN services s ON r.serviceId = s.id GROUP BY s.name ORDER BY count DESC LIMIT 5", [], (err, rows) => {
+                            // Service Popularity (filtered)
+                            db.all("SELECT s.name, count(r.id) as count FROM requests r JOIN services s ON r.serviceId = s.id WHERE r.entryDate >= ? GROUP BY s.name ORDER BY count DESC LIMIT 5", [dateFilter], (err, rows) => {
                                 if (err) return res.status(500).json({ error: err.message });
                                 stats.servicePopularity = rows;
 
-                                res.json(stats);
+                                // NEW: Trend Data (based on period)
+                                let trendQuery;
+                                if (period === 'week') {
+                                    trendQuery = "SELECT strftime('%Y-%m-%d', entryDate) as period, count(*) as count FROM requests WHERE entryDate >= ? GROUP BY period ORDER BY period";
+                                } else if (period === 'month' || period === 'quarter') {
+                                    trendQuery = "SELECT strftime('%Y-%m-%d', entryDate) as period, count(*) as count FROM requests WHERE entryDate >= ? GROUP BY period ORDER BY period";
+                                } else if (period === 'year') {
+                                    trendQuery = "SELECT strftime('%Y-%m', entryDate) as period, count(*) as count FROM requests WHERE entryDate >= ? GROUP BY period ORDER BY period";
+                                } else {
+                                    trendQuery = "SELECT strftime('%Y', entryDate) as period, count(*) as count FROM requests GROUP BY period ORDER BY period";
+                                }
+
+                                db.all(trendQuery, [dateFilter], (err, rows) => {
+                                    if (err) return res.status(500).json({ error: err.message });
+                                    stats.trendData = rows;
+
+                                    // NEW: Center Statistics (filtered)
+                                    db.all(`
+                                        SELECT 
+                                            c.name as centerName,
+                                            count(r.id) as count,
+                                            SUM(CASE 
+                                                WHEN s.priceA IS NOT NULL AND res.tariff = 'A' THEN s.priceA * r.samplesCount
+                                                WHEN s.priceB IS NOT NULL AND res.tariff = 'B' THEN s.priceB * r.samplesCount
+                                                WHEN s.priceC IS NOT NULL AND res.tariff = 'C' THEN s.priceC * r.samplesCount
+                                                ELSE 0
+                                            END) as revenue
+                                        FROM requests r
+                                        LEFT JOIN researchers res ON r.researcherId = res.id
+                                        LEFT JOIN research_centers c ON res.centerId = c.id
+                                        LEFT JOIN services s ON r.serviceId = s.id
+                                        WHERE r.entryDate >= ?
+                                        GROUP BY c.name
+                                        ORDER BY count DESC
+                                        LIMIT 5
+                                    `, [dateFilter], (err, rows) => {
+                                        if (err) return res.status(500).json({ error: err.message });
+                                        stats.centerStats = rows;
+
+                                        // NEW: Tariff Distribution (filtered)
+                                        db.all(`
+                                            SELECT 
+                                                COALESCE(c.tariff, 'Sin Definir') as tariff,
+                                                count(r.id) as count
+                                            FROM requests r
+                                            LEFT JOIN researchers res ON r.researcherId = res.id
+                                            LEFT JOIN research_centers c ON res.centerId = c.id
+                                            WHERE r.entryDate >= ?
+                                            GROUP BY c.tariff
+                                            ORDER BY count DESC
+                                        `, [dateFilter], (err, rows) => {
+                                            if (err) return res.status(500).json({ error: err.message });
+                                            stats.tariffDistribution = rows;
+
+                                            res.json(stats);
+                                        });
+                                    });
+                                });
                             });
                         });
                     });
                 });
             });
         });
+    });
+});
+
+app.get('/api/emails/history', authenticateToken, (req, res) => {
+    db.all("SELECT * FROM email_history ORDER BY sent_at DESC", [], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows);
     });
 });
 
@@ -681,6 +793,41 @@ app.post('/api/invoices', authenticateToken, (req, res) => {
     });
 });
 
+app.put('/api/invoices/:id', authenticateToken, (req, res) => {
+    const { id } = req.params;
+    const { payment_status } = req.body;
+
+    db.run("UPDATE invoices SET payment_status = ? WHERE id = ?", [payment_status, id], function (err) {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ id, payment_status });
+        // logAudit('UPDATE', 'INVOICE', id, { payment_status }, req.user.username);
+    });
+});
+
+// Email dispatch route - Moved up to avoid conflicts
+app.post('/api/invoices/:id/email', authenticateToken, (req, res) => {
+    const { id } = req.params;
+    const { email, subject } = req.body;
+    console.log(`[POST] /api/invoices/${id}/email`, req.body);
+
+    if (!email) return res.status(400).json({ error: 'Email destination is required' });
+
+    const status = 'sent';
+    const sent_at = new Date().toISOString();
+
+    db.run(`INSERT INTO email_history (invoice_id, recipient_email, subject, sent_at, status) VALUES (?, ?, ?, ?, ?)`,
+        [id, email, subject || 'Factura Genómica UCM', sent_at, status],
+        function (err) {
+            if (err) return res.status(500).json({ error: err.message });
+            res.json({ success: true, message: 'Email registrado correctamente' });
+        });
+});
+
 app.listen(PORT, () => {
+    console.log(`\n\n==================================================`);
+    console.log(`✅ SERVER RESTARTED SUCCESSFULLY AT ${new Date().toISOString()}`);
+    console.log(`Routes loaded:`);
+    console.log(`   - POST /api/invoices/:id/email (DISPATCH)`);
     console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`==================================================\n\n`);
 });

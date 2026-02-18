@@ -1,19 +1,31 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Layout from './components/Layout';
-import Dashboard from './pages/Dashboard';
-import Researchers from './pages/Researchers';
-import Services from './pages/Services';
-import Requests from './pages/Requests';
-import Billing from './pages/Billing';
 
-import Config from './pages/Configuration';
-import Associates from './pages/Associates';
-import Centers from './pages/Centers';
-import Audit from './pages/Audit';
+// Lazy loaded pages for better performance
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Researchers = lazy(() => import('./pages/Researchers'));
+const Services = lazy(() => import('./pages/Services'));
+const Requests = lazy(() => import('./pages/Requests'));
+const Billing = lazy(() => import('./pages/Billing'));
+const Config = lazy(() => import('./pages/Configuration'));
+const Associates = lazy(() => import('./pages/Associates'));
+const Centers = lazy(() => import('./pages/Centers'));
+const Audit = lazy(() => import('./pages/Audit'));
+const EmailHistory = lazy(() => import('./pages/EmailHistory'));
+
+// Loading fallback component
+const LoadingSpinner = () => (
+  <div className="flex items-center justify-center min-h-screen">
+    <div className="text-center">
+      <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-indigo-600 border-t-transparent"></div>
+      <p className="mt-4 text-slate-600">Cargando...</p>
+    </div>
+  </div>
+);
 
 // Placeholders for other pages
 const PlaceholderPage = ({ title }) => (
@@ -36,15 +48,56 @@ function App() {
             <Layout />
           </ProtectedRoute>
         }>
-          <Route index element={<Dashboard />} />
-          <Route path="solicitudes" element={<Requests />} />
-          <Route path="investigadores" element={<Researchers />} />
-          <Route path="usuarios" element={<Associates />} />
-          <Route path="centros" element={<Centers />} />
-          <Route path="servicios" element={<Services />} />
-          <Route path="facturacion" element={<Billing />} />
-          <Route path="auditoria" element={<Audit />} />
-          <Route path="configuracion" element={<Config />} />
+          <Route index element={
+            <Suspense fallback={<LoadingSpinner />}>
+              <Dashboard />
+            </Suspense>
+          } />
+          <Route path="solicitudes" element={
+            <Suspense fallback={<LoadingSpinner />}>
+              <Requests />
+            </Suspense>
+          } />
+          <Route path="investigadores" element={
+            <Suspense fallback={<LoadingSpinner />}>
+              <Researchers />
+            </Suspense>
+          } />
+          <Route path="usuarios" element={
+            <Suspense fallback={<LoadingSpinner />}>
+              <Associates />
+            </Suspense>
+          } />
+          <Route path="centros" element={
+            <Suspense fallback={<LoadingSpinner />}>
+              <Centers />
+            </Suspense>
+          } />
+          <Route path="servicios" element={
+            <Suspense fallback={<LoadingSpinner />}>
+              <Services />
+            </Suspense>
+          } />
+          <Route path="facturacion" element={
+            <Suspense fallback={<LoadingSpinner />}>
+              <Billing />
+            </Suspense>
+          } />
+          <Route path="auditoria" element={
+            <Suspense fallback={<LoadingSpinner />}>
+              <Audit />
+            </Suspense>
+          } />
+          <Route path="historial-emails" element={
+            <Suspense fallback={<LoadingSpinner />}>
+              <EmailHistory />
+            </Suspense>
+          } />
+          <Route path="configuracion" element={
+            <Suspense fallback={<LoadingSpinner />}>
+              <Config />
+            </Suspense>
+          } />
           <Route path="*" element={<PlaceholderPage title="Página no encontrada" />} />
         </Route>
       </Routes>

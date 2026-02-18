@@ -1,7 +1,7 @@
 import React, { forwardRef } from 'react';
 
 const InvoiceTemplate = forwardRef(({ data, invoiceNumber, date }, ref) => {
-    const { researcher, items, total } = data;
+    const { researcher = {}, items = [], total = 0 } = data || {};
 
     // Helper to format currency
     const formatCurrency = (amount) => {
@@ -51,7 +51,7 @@ const InvoiceTemplate = forwardRef(({ data, invoiceNumber, date }, ref) => {
                 </div>
                 <div className="grid grid-cols-[150px_1fr] border-b border-black">
                     <div className="p-1 font-bold border-r border-black">Usuario:</div>
-                    <div className="p-1">{researcher.fullName}</div>
+                    <div className="p-1">{researcher?.fullName || '-'}</div>
                 </div>
                 <div className="grid grid-cols-[150px_1fr] border-b border-black">
                     <div className="p-1 font-bold border-r border-black">Empresa / Organismo:</div>
@@ -121,7 +121,8 @@ const InvoiceTemplate = forwardRef(({ data, invoiceNumber, date }, ref) => {
                         </tr>
                     ))}
                     {/* Empty rows to fill space matching the image style roughly */}
-                    {[...Array(Math.max(0, 10 - items.length))].map((_, i) => (
+                    {/* Empty rows to fill space matching the image style roughly */}
+                    {[...Array(Math.max(0, 5 - items.length))].map((_, i) => (
                         <tr key={`empty-${i}`} className="h-6">
                             <td className="border-r border-black"></td>
                             <td className="border-r border-black"></td>

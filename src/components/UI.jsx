@@ -4,7 +4,7 @@ import { cn } from '../lib/utils';
 /**
  * Card Component - Base container with glass effect
  */
-export const Card = ({ children, className, hover = true, ...props }) => {
+export const Card = React.memo(({ children, className, hover = true, ...props }) => {
     return (
         <div
             className={cn(
@@ -17,7 +17,7 @@ export const Card = ({ children, className, hover = true, ...props }) => {
             {children}
         </div>
     );
-};
+});
 
 /**
  * Button Component - Professional button variants
@@ -99,7 +99,7 @@ export const Skeleton = ({ className, width, height }) => {
 /**
  * KPI Card - Premium dashboard metric card
  */
-export const KPICard = ({
+export const KPICard = React.memo(({
     title,
     value,
     trend,
@@ -146,7 +146,7 @@ export const KPICard = ({
             </div>
         </Card>
     );
-};
+});
 
 /**
  * Empty State - Placeholder for empty data

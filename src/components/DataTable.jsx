@@ -22,6 +22,7 @@ const DataTable = ({
     pageSize = 10,
     className = '',
     onRowClick,
+    meta,
 }) => {
     const [sorting, setSorting] = React.useState([]);
     const [columnFilters, setColumnFilters] = React.useState([]);
@@ -39,6 +40,7 @@ const DataTable = ({
             globalFilter,
             pagination,
         },
+        meta,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
         onGlobalFilterChange,
@@ -189,6 +191,7 @@ const DataTable = ({
             )}
         </div>
     );
-};
+}
 
-export default DataTable;
+// Memoize to prevent unnecessary re-renders
+export default React.memo(DataTable);

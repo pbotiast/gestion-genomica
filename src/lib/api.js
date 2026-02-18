@@ -14,9 +14,10 @@ const getHeaders = () => {
 const handleResponse = async (response) => {
     if (!response.ok) {
         if (response.status === 401 || response.status === 403) {
-            // Optional: Auto logout or redirect
-            // window.location.href = '/login';
-            throw new Error('No autorizado');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/login';
+            throw new Error('Sesión expirada o no autorizada');
         }
         const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.error || errorData.message || 'Error en la petición');

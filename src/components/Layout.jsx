@@ -2,7 +2,7 @@ import { useNavigate, NavLink, Outlet } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useAppContext } from '../context/AppContext';
-import { LogOut, LayoutDashboard, Users, FileText, Settings, Database, TestTube, DollarSign, ClipboardList, Loader2, Menu, X } from 'lucide-react';
+import { LogOut, LayoutDashboard, Users, FileText, Settings, Database, TestTube, DollarSign, ClipboardList, Loader2, Menu, X, Mail } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { Toaster } from 'sonner';
 import styles from './Layout.module.css';
@@ -67,6 +67,7 @@ const Layout = () => {
                     <NavItem to="/centros" icon={<Database size={20} />} label="Centros de Investigación" onClick={closeMobileMenu} />
                     <NavItem to="/servicios" icon={<TestTube size={20} />} label="Catálogo Servicios" onClick={closeMobileMenu} />
                     <NavItem to="/facturacion" icon={<DollarSign size={20} />} label="Facturación" onClick={closeMobileMenu} />
+                    <NavItem to="/historial-emails" icon={<Mail size={20} />} label="Historial Trámites" onClick={closeMobileMenu} />
                     <div className={styles.navSectionTitle}>
                         Configuración
                     </div>

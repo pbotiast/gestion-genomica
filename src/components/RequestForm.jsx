@@ -79,14 +79,9 @@ const RequestForm = ({ onSubmit, onCancel, initialData }) => {
             if (matches.length === 1) {
                 // Exact unique match - auto select
                 newData.researcherId = matches[0].researcherId;
-            } else if (matches.length > 1) {
-                // Multiple matches - clear researcher to force selection from filtered list
-                // Unless current researcher is one of the matches?
-                const currentIsOneOfMatches = matches.some(m => m.researcherId === prev.researcherId);
-                if (!currentIsOneOfMatches) {
-                    newData.researcherId = '';
-                }
             }
+            // Removed the logic that clears researcherId on multiple matches or no matches
+            // to prevent annoying UX where typing clears the researcher field securely.
             return newData;
         });
     };
