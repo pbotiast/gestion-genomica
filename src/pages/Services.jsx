@@ -1,15 +1,17 @@
 import React, { useState, useMemo } from 'react';
-import { Plus, Search, Edit, Trash2 } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, Upload } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 import { cn } from '../lib/utils';
 import DataTable from '../components/DataTable';
 import ExcelImporter from '../components/ExcelImporter';
 import ServiceForm from '../components/ServiceForm';
+import Modal from '../components/Modal';
 import styles from './Services.module.css';
 
 const Services = () => {
     const { services, addService, deleteService, updateService } = useAppContext();
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isImportModalOpen, setIsImportModalOpen] = useState(false);
     const [editingService, setEditingService] = useState(null);
     const [globalFilter, setGlobalFilter] = useState('');
 
@@ -118,11 +120,11 @@ const Services = () => {
     };
 
     const handleImport = async (data) => {
+        let count = 0;
         for (const row of data) {
             const name = row['servicio'] || row['Servicio'] || row['NAME'];
             if (!name) continue;
 
-            // Parse prices, removing currency symbols and converting to number
             const parsePrice = (value) => {
                 if (typeof value === 'number') return value;
                 if (typeof value === 'string') {
@@ -138,7 +140,10 @@ const Services = () => {
                 priceC: parsePrice(row['C']),
                 format: row['formato'] || row['Formato'] || ''
             });
+            count++;
         }
+        alert(`Se han importado ${count} servicios.`);
+        setIsImportModalOpen(false);
     };
 
     return (
@@ -149,31 +154,30 @@ const Services = () => {
                     <h1 className={cn(styles.title, "text-gradient")}>Catálogo de Servicios</h1>
                     <p className={styles.subtitle}>Gestión de servicios y precios</p>
                 </div>
-                <button onClick={openCreateModal} className="btn-primary flex items-center gap-2">
-                    <Plus size={20} />
-                    Nuevo Servicio
-                </button>
+                <div className="flex gap-2">
+                    <button onClick={() => setIsImportModalOpen(true)} className="btn-secondary flex items-center gap-2">
+                        <Upload size={20} />
+                        Importar
+                    </button>
+                    <button onClick={openCreateModal} className="btn-primary flex items-center gap-2">
+                        <Plus size={20} />
+                        Nuevo Servicio
+                    </button>
+                </div>
             </div>
 
-            {/* Toolbar: Search + Import */}
-            <div className="flex gap-4">
-                <div className="flex-1 glass-panel p-4">
-                    <div className="relative">
-                        <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                        <input
-                            type="text"
-                            placeholder="Buscar servicio por nombre..."
-                            value={globalFilter}
-                            onChange={(e) => setGlobalFilter(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                        />
-                    </div>
+            {/* Toolbar: Search */}
+            <div className="glass-panel p-4">
+                <div className="relative">
+                    <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                    <input
+                        type="text"
+                        placeholder="Buscar servicio por nombre..."
+                        value={globalFilter}
+                        onChange={(e) => setGlobalFilter(e.target.value)}
+                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    />
                 </div>
-                <ExcelImporter
-                    type="Servicios"
-                    templateHeaders={['servicio', 'A', 'B', 'C']}
-                    onImport={handleImport}
-                />
             </div>
 
             {/* Professional Data Table */}
@@ -185,31 +189,31 @@ const Services = () => {
                 pageSize={15}
             />
 
-            {/* Modal */}
-            {isModalOpen && (
-                <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>
-                    <div className="glass-panel modal-content" onClick={(e) => e.stopPropagation()}>
-                        <div className="modal-header">
-                            <h2 className="text-xl font-semibold text-gray-800">
-                                {editingService ? 'Editar Servicio' : 'Nuevo Servicio'}
-                            </h2>
-                            <button
-                                onClick={() => setIsModalOpen(false)}
-                                className="text-gray-400 hover:text-gray-600"
-                            >
-                                ✕
-                            </button>
-                        </div>
-                        <div className="modal-body">
-                            <ServiceForm
-                                onSubmit={editingService ? handleUpdate : handleCreate}
-                                onCancel={() => setIsModalOpen(false)}
-                                initialData={editingService}
-                            />
-                        </div>
-                    </div>
-                </div>
-            )}
+            {/* Modal: Form */}
+            <Modal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                title={editingService ? 'Editar Servicio' : 'Nuevo Servicio'}
+            >
+                <ServiceForm
+                    onSubmit={editingService ? handleUpdate : handleCreate}
+                    onCancel={() => setIsModalOpen(false)}
+                    initialData={editingService}
+                />
+            </Modal>
+
+            {/* Modal: Import */}
+            <Modal
+                isOpen={isImportModalOpen}
+                onClose={() => setIsImportModalOpen(false)}
+                title="Importación Masiva de Servicios"
+            >
+                <ExcelImporter
+                    type="Servicios"
+                    templateHeaders={['servicio', 'A', 'B', 'C']}
+                    onImport={handleImport}
+                />
+            </Modal>
         </div>
     );
 };

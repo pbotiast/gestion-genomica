@@ -1,30 +1,20 @@
 import React, { useState, useMemo } from 'react';
-import { Plus, Search, Edit, Trash2 } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, Upload } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 import { cn } from '../lib/utils';
 import { Badge } from '../components/UI';
 import DataTable from '../components/DataTable';
 import ResearcherForm from '../components/ResearcherForm';
 import ExcelImporter from '../components/ExcelImporter';
+import Modal from '../components/Modal';
 import styles from './Researchers.module.css';
 
 const Researchers = () => {
-    const { researchers, centers, addResearcher, deleteResearcher, updateResearcher } = useAppContext();
+    const { researchers, addResearcher, deleteResearcher, updateResearcher } = useAppContext();
     const [selectedResearcher, setSelectedResearcher] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isImportModalOpen, setIsImportModalOpen] = useState(false);
     const [globalFilter, setGlobalFilter] = useState('');
-
-    // Enrich researchers with center name
-    const enrichedResearchers = useMemo(() => {
-        return researchers.map(researcher => {
-            const center = centers.find(c => c.id == researcher.centerId);
-            return {
-                ...researcher,
-                centerName: center?.name || researcher.center || researcher.institution || '-',
-                tariffBadge: researcher.tariff || (center?.tariff) || 'C'
-            };
-        });
-    }, [researchers, centers]);
 
     const getTariffColor = (tariff) => {
         const colors = {
@@ -45,11 +35,11 @@ const Researchers = () => {
             ),
         },
         {
-            accessorKey: 'centerName',
+            accessorKey: 'center',
             header: 'Centro',
-            cell: ({ getValue }) => (
+            cell: ({ getValue, row }) => (
                 <div className="max-w-xs truncate text-gray-600" title={getValue()}>
-                    {getValue()}
+                    {getValue() || row.original.institution || '-'}
                 </div>
             ),
         },
@@ -70,7 +60,7 @@ const Researchers = () => {
             ),
         },
         {
-            accessorKey: 'tariffBadge',
+            accessorKey: 'tariff',
             header: 'Tarifa',
             cell: ({ getValue }) => {
                 const tariff = getValue();
@@ -112,7 +102,7 @@ const Researchers = () => {
                 );
             },
         },
-    ], [centers]);
+    ], []);
 
     const handleCreateOrUpdate = async (data) => {
         if (selectedResearcher) {
@@ -177,37 +167,36 @@ const Researchers = () => {
                     <h1 className={cn(styles.title, "text-gradient")}>Investigadores</h1>
                     <p className={styles.subtitle}>Gestión de usuarios y tarifas</p>
                 </div>
-                <button onClick={openCreateModal} className="btn-primary flex items-center gap-2">
-                    <Plus size={20} />
-                    Nuevo Investigador
-                </button>
+                <div className="flex gap-2">
+                    <button onClick={() => setIsImportModalOpen(true)} className="btn-secondary flex items-center gap-2">
+                        <Upload size={20} />
+                        Importar
+                    </button>
+                    <button onClick={openCreateModal} className="btn-primary flex items-center gap-2">
+                        <Plus size={20} />
+                        Nuevo Investigador
+                    </button>
+                </div>
             </div>
 
-            {/* Toolbar: Search + Import */}
-            <div className="flex gap-4">
-                <div className="flex-1 glass-panel p-4">
-                    <div className="relative">
-                        <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                        <input
-                            type="text"
-                            placeholder="Buscar por nombre, centro, email..."
-                            value={globalFilter}
-                            onChange={(e) => setGlobalFilter(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                        />
-                    </div>
+            {/* Toolbar: Search */}
+            <div className="glass-panel p-4">
+                <div className="relative">
+                    <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                    <input
+                        type="text"
+                        placeholder="Buscar por nombre, centro, email..."
+                        value={globalFilter}
+                        onChange={(e) => setGlobalFilter(e.target.value)}
+                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    />
                 </div>
-                <ExcelImporter
-                    type="Investigadores"
-                    templateHeaders={['InvestigadorPrincipal', 'Institucion', 'e-mail', 'Tarifa']}
-                    onImport={handleImport}
-                />
             </div>
 
             {/* Professional Data Table */}
             <DataTable
                 columns={columns}
-                data={enrichedResearchers}
+                data={researchers}
                 globalFilter={globalFilter}
                 onGlobalFilterChange={setGlobalFilter}
                 pageSize={15}
@@ -238,6 +227,19 @@ const Researchers = () => {
                     </div>
                 </div>
             )}
+
+            {/* Modal Import */}
+            <Modal
+                isOpen={isImportModalOpen}
+                onClose={() => setIsImportModalOpen(false)}
+                title="Importación Masiva de Investigadores"
+            >
+                <ExcelImporter
+                    type="Investigadores"
+                    templateHeaders={['InvestigadorPrincipal', 'Institucion', 'e-mail', 'Tarifa']}
+                    onImport={handleImport}
+                />
+            </Modal>
         </div>
     );
 };

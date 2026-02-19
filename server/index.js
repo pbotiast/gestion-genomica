@@ -167,17 +167,44 @@ app.post('/api/researchers', authenticateToken, [
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
 
-    stmt.run(
-        fullName, institution, department, faculty, city, phone, fax,
-        email, center, fiscalAddress, invoiceAddress, idNumber, tariff,
-        accountingOffice, managementBody, processingUnit, proposingBody,
-        function (err) {
-            if (err) return res.status(500).json({ error: err.message });
-            logAudit('CREATE', 'RESEARCHER', this.lastID, req.body, req.user.username);
-            res.json({ id: this.lastID, ...req.body });
-        }
-    );
-    stmt.finalize();
+    db.serialize(() => {
+        db.run("BEGIN TRANSACTION");
+
+        stmt.run(
+            fullName, institution, department, faculty, city, phone, fax,
+            email, center, fiscalAddress, invoiceAddress, idNumber, tariff,
+            accountingOffice, managementBody, processingUnit, proposingBody,
+            function (err) {
+                if (err) {
+                    console.error("Error inserting researcher:", err);
+                    db.run("ROLLBACK");
+                    return res.status(500).json({ error: err.message });
+                }
+
+                const researcherId = this.lastID;
+                const associates = req.body.associates || [];
+
+                // Insert associates if present
+                if (associates.length > 0) {
+                    const assocStmt = db.prepare("INSERT INTO researcher_associates (researcherId, name, email) VALUES (?, ?, ?)");
+                    for (const assoc of associates) {
+                        assocStmt.run(researcherId, assoc.name, assoc.email);
+                    }
+                    assocStmt.finalize();
+                }
+
+                db.run("COMMIT", (err) => {
+                    if (err) {
+                        console.error("Error committing transaction:", err);
+                        return res.status(500).json({ error: "Transaction commit failed" });
+                    }
+                    logAudit('CREATE', 'RESEARCHER', researcherId, req.body, req.user.username);
+                    res.json({ id: researcherId, ...req.body });
+                });
+            }
+        );
+        stmt.finalize();
+    });
 });
 
 app.delete('/api/researchers/:id', authenticateToken, (req, res) => {
@@ -196,108 +223,7 @@ app.delete('/api/researchers/:id', authenticateToken, (req, res) => {
     });
 });
 
-// --- Research Centers Routes ---
-app.get('/api/centers', authenticateToken, (req, res) => {
-    db.all("SELECT * FROM research_centers ORDER BY name ASC", [], (err, rows) => {
-        if (err) return res.status(500).json({ error: err.message });
-        res.json(rows);
-    });
-});
 
-app.post('/api/centers', authenticateToken, [
-    body('name').notEmpty().trim().escape(),
-    body('centerType').isIn(['UCM', 'PUBLICO', 'PRIVADO'])
-], (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
-
-    const {
-        name, centerType, address, postalCode, city, cif,
-        electronicBillingCode, electronicBillingOffice, electronicBillingAgency
-    } = req.body;
-
-    // Asignar tarifa automáticamente según tipo de centro
-    let tariff;
-    switch (centerType) {
-        case 'UCM': tariff = 'A'; break;
-        case 'PUBLICO': tariff = 'B'; break;
-        case 'PRIVADO': tariff = 'C'; break;
-    }
-
-    const stmt = db.prepare(`
-        INSERT INTO research_centers (
-            name, centerType, tariff, address, postalCode, city, cif,
-            electronicBillingCode, electronicBillingOffice, electronicBillingAgency
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `);
-
-    stmt.run(
-        name, centerType, tariff, address, postalCode, city, cif,
-        electronicBillingCode, electronicBillingOffice, electronicBillingAgency,
-        function (err) {
-            if (err) {
-                if (err.message.includes('UNIQUE')) {
-                    return res.status(400).json({ error: 'Centro ya existe' });
-                }
-                return res.status(500).json({ error: err.message });
-            }
-            logAudit('CREATE', 'CENTER', this.lastID, req.body, req.user.username);
-            res.json({ id: this.lastID, ...req.body, tariff });
-        }
-    );
-    stmt.finalize();
-});
-
-app.put('/api/centers/:id', authenticateToken, (req, res) => {
-    const { id } = req.params;
-    const updates = req.body;
-
-    // Si se actualiza centerType, recalcular tarifa
-    if (updates.centerType) {
-        switch (updates.centerType) {
-            case 'UCM': updates.tariff = 'A'; break;
-            case 'PUBLICO': updates.tariff = 'B'; break;
-            case 'PRIVADO': updates.tariff = 'C'; break;
-        }
-    }
-
-    const keys = Object.keys(updates).filter(k => k !== 'id' && k !== 'createdAt');
-    const values = keys.map(k => updates[k]);
-    const placeholders = keys.map(k => `${k} = ?`).join(', ');
-
-    if (keys.length === 0) return res.status(400).json({ error: "No fields to update" });
-
-    db.run(`UPDATE research_centers SET ${placeholders} WHERE id = ?`, [...values, id], function (err) {
-        if (err) return res.status(500).json({ error: err.message });
-        if (this.changes === 0) return res.status(404).json({ error: "Centro no encontrado" });
-        logAudit('UPDATE', 'CENTER', id, updates, req.user.username);
-        res.json({ success: true, updated: this.changes });
-    });
-});
-
-app.delete('/api/centers/:id', authenticateToken, (req, res) => {
-    const { id } = req.params;
-
-    // Verificar si hay investigadores asociados
-    db.get("SELECT COUNT(*) as count FROM researchers WHERE centerId = ?", [id], (err, row) => {
-        if (err) return res.status(500).json({ error: err.message });
-
-        if (row.count > 0) {
-            return res.status(400).json({
-                error: `No se puede eliminar. Hay ${row.count} investigador(es) asociado(s) a este centro.`
-            });
-        }
-
-        db.run("DELETE FROM research_centers WHERE id = ?", [id], function (err) {
-            if (err) return res.status(500).json({ error: err.message });
-            if (this.changes === 0) return res.status(404).json({ error: "Centro no encontrado" });
-            logAudit('DELETE', 'CENTER', id, {}, req.user.username);
-            res.json({ success: true, deleted: this.changes });
-        });
-    });
-});
 
 // --- Services Routes ---
 app.get('/api/services', authenticateToken, (req, res) => {
@@ -747,7 +673,7 @@ app.get('/api/dashboard/stats', authenticateToken, (req, res) => {
                                     // NEW: Center Statistics (filtered)
                                     db.all(`
                                         SELECT 
-                                            c.name as centerName,
+                                            res.center as centerName,
                                             count(r.id) as count,
                                             SUM(CASE 
                                                 WHEN s.priceA IS NOT NULL AND res.tariff = 'A' THEN s.priceA * r.samplesCount
@@ -757,10 +683,9 @@ app.get('/api/dashboard/stats', authenticateToken, (req, res) => {
                                             END) as revenue
                                         FROM requests r
                                         LEFT JOIN researchers res ON r.researcherId = res.id
-                                        LEFT JOIN research_centers c ON res.centerId = c.id
                                         LEFT JOIN services s ON r.serviceId = s.id
                                         WHERE r.entryDate >= ?
-                                        GROUP BY c.name
+                                        GROUP BY res.center
                                         ORDER BY count DESC
                                         LIMIT 5
                                     `, [dateFilter], (err, rows) => {
@@ -770,13 +695,12 @@ app.get('/api/dashboard/stats', authenticateToken, (req, res) => {
                                         // NEW: Tariff Distribution (filtered)
                                         db.all(`
                                             SELECT 
-                                                COALESCE(c.tariff, 'Sin Definir') as tariff,
+                                                COALESCE(res.tariff, 'Sin Definir') as tariff,
                                                 count(r.id) as count
                                             FROM requests r
                                             LEFT JOIN researchers res ON r.researcherId = res.id
-                                            LEFT JOIN research_centers c ON res.centerId = c.id
                                             WHERE r.entryDate >= ?
-                                            GROUP BY c.tariff
+                                            GROUP BY res.tariff
                                             ORDER BY count DESC
                                         `, [dateFilter], (err, rows) => {
                                             if (err) return res.status(500).json({ error: err.message });

@@ -18,7 +18,6 @@ const institutions = [
 ];
 
 const ResearcherForm = ({ onSubmit, onCancel, initialData }) => {
-    const { centers } = useAppContext(); // Get centers from context
     console.log("DEBUG: FILE LOADED");
     const [formData, setFormData] = useState({
         fullName: '',
@@ -40,7 +39,7 @@ const ResearcherForm = ({ onSubmit, onCancel, initialData }) => {
             proposingBody: ''
         },
         tariff: '',
-        centerId: null // New field for center relationship
+
     });
 
     // Authorized Users State
@@ -70,30 +69,14 @@ const ResearcherForm = ({ onSubmit, onCancel, initialData }) => {
             });
 
             // Fetch associates
-            fetch(`http://localhost:3000/api/researchers/${initialData.id}/associates`)
+            fetch(`/api/researchers/${initialData.id}/associates`, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+            })
                 .then(res => res.json())
                 .then(data => setAssociates(data))
                 .catch(err => console.error("Error loading associates:", err));
         }
     }, [initialData]);
-
-    // Auto-set tariff when center changes
-    const handleCenterChange = (e) => {
-        const centerId = parseInt(e.target.value);
-        const selectedCenter = centers.find(c => c.id === centerId);
-
-        if (selectedCenter) {
-            setFormData(prev => ({
-                ...prev,
-                centerId: centerId,
-                institution: selectedCenter.name, // Keep institution synced for compatibility
-                center: selectedCenter.name,
-                tariff: selectedCenter.tariff
-            }));
-        } else {
-            setFormData(prev => ({ ...prev, centerId: null, tariff: '' }));
-        }
-    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -115,27 +98,86 @@ const ResearcherForm = ({ onSubmit, onCancel, initialData }) => {
             ...formData,
             ...formData.billingData
         };
+        if (!initialData) {
+            payload.associates = associates;
+        }
         delete payload.billingData;
         onSubmit(payload);
     };
 
+    // Auto-add Principal Researcher as first associate in Create Mode
+    useEffect(() => {
+        if (!initialData) {
+            setAssociates(prev => {
+                const principal = {
+                    name: formData.fullName,
+                    email: formData.email,
+                    isPrincipal: true // Flag to identify auto-generated entry
+                };
+
+                // If list is empty, add principal
+                if (prev.length === 0) return [principal];
+
+                // If first item is the auto-generated principal, update it
+                if (prev[0].isPrincipal) {
+                    return [principal, ...prev.slice(1)];
+                }
+
+                // Otherwise (shouldn't happen in this logic flow typically), prepend
+                return [principal, ...prev];
+            });
+        }
+    }, [formData.fullName, formData.email, initialData]);
+
     const handleAddAssociate = async (e) => {
         e.preventDefault();
-        if (!initialData?.id) return; // Can't add associate to non-existent researcher yet
 
-        try {
-            const res = await fetch(`http://localhost:3000/api/researchers/${initialData.id}/associates`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newAssociate)
-            });
-            if (res.ok) {
-                const saved = await res.json();
-                setAssociates(prev => [...prev, saved]);
-                setNewAssociate({ name: '', email: '' });
+        if (!newAssociate.name) return;
+
+        // EDIT MODE: Instant API Call
+        if (initialData?.id) {
+            try {
+                const res = await fetch(`/api/researchers/${initialData.id}/associates`, { // Fixed URL
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}` // Ensure auth
+                    },
+                    body: JSON.stringify(newAssociate)
+                });
+                if (res.ok) {
+                    const saved = await res.json();
+                    setAssociates(prev => [...prev, saved]);
+                    setNewAssociate({ name: '', email: '' });
+                }
+            } catch (error) {
+                console.error("Error adding associate:", error);
             }
-        } catch (error) {
-            console.error("Error adding associate:", error);
+        }
+        // CREATE MODE: Local State Only
+        else {
+            setAssociates(prev => [...prev, { ...newAssociate, id: Date.now() }]); // Temp ID
+            setNewAssociate({ name: '', email: '' });
+        }
+    };
+
+    const handleRemoveAssociate = async (id, isLocal) => {
+        if (initialData?.id && !isLocal) {
+            // API Delete for existing
+            try {
+                const res = await fetch(`/api/associates/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                if (res.ok) {
+                    setAssociates(prev => prev.filter(a => a.id !== id));
+                }
+            } catch (e) { console.error(e); }
+        } else {
+            // Local Delete
+            setAssociates(prev => prev.filter(a => a.id !== id));
         }
     };
 
@@ -178,26 +220,15 @@ const ResearcherForm = ({ onSubmit, onCancel, initialData }) => {
 
                         {/* Centro de Investigación */}
                         <div className={styles.inputGroup}>
-                            <label htmlFor="researcher-center">Centro de Investigación *</label>
-                            <select
+                            <label htmlFor="researcher-center">Centro de Investigación / Institución</label>
+                            <input
                                 id="researcher-center"
                                 required
-                                value={formData.centerId || ''}
-                                onChange={handleCenterChange}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                            >
-                                <option value="">-- Seleccionar Centro --</option>
-                                {centers.map(center => (
-                                    <option key={center.id} value={center.id}>
-                                        {center.name} (Tarifa {center.tariff})
-                                    </option>
-                                ))}
-                            </select>
-                            {formData.centerId && formData.tariff && (
-                                <p className="text-sm text-gray-600 mt-1">
-                                    Tarifa asignada: <strong className="text-indigo-600">Tarifa {formData.tariff}</strong>
-                                </p>
-                            )}
+                                name="center"
+                                value={formData.center || ''}
+                                onChange={handleChange}
+                                placeholder="Ej: Facultad de Medicina UCM"
+                            />
                         </div>
                         <div className={styles.row}>
                             <div className={styles.inputGroup}>
@@ -275,84 +306,96 @@ const ResearcherForm = ({ onSubmit, onCancel, initialData }) => {
                 </div>
             </form>
 
-            {/* Sección: Usuarios Autorizados (Separada del form principal para no anidar submit) */}
-            {initialData && (
-                <div className={cn(styles.section, "mt-8 pt-8 border-t border-slate-700")}>
-                    <h3 className={styles.sectionTitle}>Usuarios Autorizados</h3>
-                    <p className="text-sm text-slate-400 mb-4">Personas autorizadas para solicitar servicios en nombre de este investigador.</p>
+            {/* Sección: Usuarios Autorizados */}
+            <div className={cn(styles.section, "mt-8 pt-8 border-t border-slate-700")}>
+                <h3 className={styles.sectionTitle}>Usuarios Autorizados</h3>
+                <p className="text-sm text-slate-400 mb-4">Personas autorizadas para solicitar servicios en nombre de este investigador.</p>
 
-                    <div className="bg-slate-800/50 rounded-lg p-4 mb-4">
-                        <ul className="space-y-2 mb-4">
-                            {associates.map(assoc => (
-                                <li key={assoc.id} className="flex justify-between items-center text-sm bg-slate-900/50 p-2 rounded border border-slate-700">
-                                    <span>{assoc.name} <span className="text-slate-500">({assoc.email})</span></span>
-                                </li>
-                            ))}
-                            {associates.length === 0 && <li className="text-slate-500 italic">No hay usuarios autorizados.</li>}
-                        </ul>
+                <div className="bg-slate-800/50 rounded-lg p-4 mb-4">
+                    <ul className="space-y-2 mb-4">
+                        {associates.map(assoc => (
+                            <li key={assoc.id || assoc.email} className="flex justify-between items-center text-sm bg-slate-900/50 p-2 rounded border border-slate-700">
+                                <span>
+                                    {assoc.name} <span className="text-slate-500">({assoc.email})</span>
+                                    {assoc.isPrincipal && <span className="ml-2 text-xs bg-indigo-900 text-indigo-200 px-1 rounded">Principal</span>}
+                                </span>
+                                {!assoc.isPrincipal && (
+                                    <button
+                                        type="button"
+                                        onClick={() => handleRemoveAssociate(assoc.id, !initialData)}
+                                        className="text-red-400 hover:text-red-300"
+                                        title="Eliminar"
+                                    >
+                                        <X size={14} />
+                                    </button>
+                                )}
+                            </li>
+                        ))}
+                        {associates.length === 0 && <li className="text-slate-500 italic">No hay usuarios autorizados.</li>}
+                    </ul>
 
-                        <div className="flex gap-2 items-end">
-                            <div className="flex-1">
-                                <input
-                                    placeholder="Nombre completo"
-                                    value={newAssociate.name}
-                                    onChange={e => setNewAssociate({ ...newAssociate, name: e.target.value })}
-                                    className={styles.input}
-                                />
-                            </div>
-                            <div className="flex-1">
-                                <input
-                                    placeholder="Email"
-                                    value={newAssociate.email}
-                                    onChange={e => setNewAssociate({ ...newAssociate, email: e.target.value })}
-                                    className={styles.input}
-                                />
-                            </div>
-                            <button
-                                type="button"
-                                onClick={handleAddAssociate}
-                                disabled={!newAssociate.name}
-                                className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded text-sm transition-colors"
-                            >
-                                Añadir
-                            </button>
-                        </div>
-
-                        <div className="mt-4 pt-4 border-t border-slate-700">
-                            <p className="text-xs text-slate-400 mb-2">O importar masivamente desde Excel:</p>
-                            <ExcelImporter
-                                type="Usuarios Autorizados"
-                                templateHeaders={['Nombre', 'Email']}
-                                onImport={async (data) => {
-                                    let count = 0;
-                                    for (const row of data) {
-                                        if (row.Nombre) {
-                                            try {
-                                                const res = await fetch(`http://localhost:3000/api/researchers/${initialData.id}/associates`, {
-                                                    method: 'POST',
-                                                    headers: { 'Content-Type': 'application/json' },
-                                                    body: JSON.stringify({
-                                                        name: row.Nombre,
-                                                        email: row.Email || ''
-                                                    })
-                                                });
-                                                if (res.ok) {
-                                                    const saved = await res.json();
-                                                    setAssociates(prev => [...prev, saved]);
-                                                    count++;
-                                                }
-                                            } catch (e) {
-                                                console.error("Import error specific row", e);
-                                            }
-                                        }
-                                    }
-                                    console.log(`Imported ${count} associates`);
-                                }}
+                    <div className="flex gap-2 items-end">
+                        <div className="flex-1">
+                            <input
+                                placeholder="Nombre completo"
+                                value={newAssociate.name}
+                                onChange={e => setNewAssociate({ ...newAssociate, name: e.target.value })}
+                                className={styles.input}
                             />
                         </div>
+                        <div className="flex-1">
+                            <input
+                                placeholder="Email"
+                                value={newAssociate.email}
+                                onChange={e => setNewAssociate({ ...newAssociate, email: e.target.value })}
+                                className={styles.input}
+                            />
+                        </div>
+                        <button
+                            type="button"
+                            onClick={handleAddAssociate}
+                            disabled={!newAssociate.name}
+                            className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded text-sm transition-colors"
+                        >
+                            Añadir
+                        </button>
+                    </div>
+
+                    <div className="mt-4 pt-4 border-t border-slate-700">
+                        <p className="text-xs text-slate-400 mb-2">O importar masivamente desde Excel:</p>
+                        <ExcelImporter
+                            type="Usuarios Autorizados"
+                            templateHeaders={['Nombre', 'Email']}
+                            onImport={async (data) => {
+                                let count = 0;
+                                for (const row of data) {
+                                    if (row.Nombre) {
+                                        try {
+                                            const res = await fetch(`/api/researchers/${initialData.id}/associates`, {
+                                                method: 'POST',
+                                                headers: { 'Content-Type': 'application/json' },
+                                                body: JSON.stringify({
+                                                    name: row.Nombre,
+                                                    email: row.Email || ''
+                                                })
+                                            });
+                                            if (res.ok) {
+                                                const saved = await res.json();
+                                                setAssociates(prev => [...prev, saved]);
+                                                count++;
+                                            }
+                                        } catch (e) {
+                                            console.error("Import error specific row", e);
+                                        }
+                                    }
+                                }
+                                console.log(`Imported ${count} associates`);
+                            }}
+                        />
                     </div>
                 </div>
-            )}
+            </div>
+
         </div>
     );
 };

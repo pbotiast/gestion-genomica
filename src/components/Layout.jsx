@@ -64,7 +64,7 @@ const Layout = () => {
                     <NavItem to="/solicitudes" icon={<FileText size={20} />} label="Solicitudes" onClick={closeMobileMenu} />
                     <NavItem to="/investigadores" icon={<Users size={20} />} label="Investigadores" onClick={closeMobileMenu} />
                     <NavItem to="/usuarios" icon={<Users size={20} />} label="Usuarios Autorizados" onClick={closeMobileMenu} />
-                    <NavItem to="/centros" icon={<Database size={20} />} label="Centros de Investigación" onClick={closeMobileMenu} />
+
                     <NavItem to="/servicios" icon={<TestTube size={20} />} label="Catálogo Servicios" onClick={closeMobileMenu} />
                     <NavItem to="/facturacion" icon={<DollarSign size={20} />} label="Facturación" onClick={closeMobileMenu} />
                     <NavItem to="/historial-emails" icon={<Mail size={20} />} label="Historial Trámites" onClick={closeMobileMenu} />

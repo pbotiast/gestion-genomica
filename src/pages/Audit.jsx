@@ -3,6 +3,7 @@ import DataTable from '../components/DataTable';
 import { Badge } from '../components/UI';
 import { cn } from '../lib/utils';
 import { ClipboardList, RefreshCw, Eye, Calendar } from 'lucide-react';
+import { api } from '../lib/api';
 import styles from './Audit.module.css';
 
 const Audit = () => {
@@ -26,8 +27,7 @@ const Audit = () => {
             if (filters.action) params.append('action', filters.action);
             if (filters.entity) params.append('entity', filters.entity);
 
-            const res = await fetch(`http://localhost:3000/api/audit?${params}`);
-            const data = await res.json();
+            const data = await api.get(`/audit?${params}`);
             setLogs(data);
         } catch (error) {
             console.error("Error fetching audit logs:", error);

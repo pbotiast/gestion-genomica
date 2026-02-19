@@ -1,0 +1,12 @@
+.title {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+    font-weight: 700;
+}
+
+.subtitle {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #64748b;
+    margin-top: 0.25rem;
+}

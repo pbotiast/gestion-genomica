@@ -7,6 +7,7 @@ import { cn } from '../lib/utils';
 import { Badge } from '../components/UI';
 import DataTable from '../components/DataTable';
 import RequestForm from '../components/RequestForm';
+import Modal from '../components/Modal';
 import styles from './Requests.module.css';
 
 const Requests = () => {
@@ -274,30 +275,17 @@ const Requests = () => {
             />
 
             {/* Modal */}
-            {isModalOpen && (
-                <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>
-                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                        <div className="modal-header">
-                            <h2 className="text-xl font-semibold text-gray-800">
-                                {isEditMode ? 'Editar Solicitud' : 'Nueva Solicitud'}
-                            </h2>
-                            <button
-                                onClick={() => setIsModalOpen(false)}
-                                className="text-gray-400 hover:text-gray-600"
-                            >
-                                ✕
-                            </button>
-                        </div>
-                        <div className="modal-body">
-                            <RequestForm
-                                onSubmit={isEditMode ? handleUpdate : handleCreate}
-                                onCancel={() => setIsModalOpen(false)}
-                                initialData={currentRequest}
-                            />
-                        </div>
-                    </div>
-                </div>
-            )}
+            <Modal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                title={isEditMode ? 'Editar Solicitud' : 'Nueva Solicitud'}
+            >
+                <RequestForm
+                    onSubmit={isEditMode ? handleUpdate : handleCreate}
+                    onCancel={() => setIsModalOpen(false)}
+                    initialData={currentRequest}
+                />
+            </Modal>
         </div>
     );
 };

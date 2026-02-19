@@ -13,7 +13,7 @@ const Requests = lazy(() => import('./pages/Requests'));
 const Billing = lazy(() => import('./pages/Billing'));
 const Config = lazy(() => import('./pages/Configuration'));
 const Associates = lazy(() => import('./pages/Associates'));
-const Centers = lazy(() => import('./pages/Centers'));
+
 const Audit = lazy(() => import('./pages/Audit'));
 const EmailHistory = lazy(() => import('./pages/EmailHistory'));
 
@@ -68,11 +68,7 @@ function App() {
               <Associates />
             </Suspense>
           } />
-          <Route path="centros" element={
-            <Suspense fallback={<LoadingSpinner />}>
-              <Centers />
-            </Suspense>
-          } />
+
           <Route path="servicios" element={
             <Suspense fallback={<LoadingSpinner />}>
               <Services />

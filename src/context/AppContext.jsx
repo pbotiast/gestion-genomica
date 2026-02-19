@@ -16,8 +16,7 @@ export const AppProvider = ({ children }) => {
     // Associates State
     const [associates, setAssociates] = useState([]);
 
-    // Centers State
-    const [centers, setCenters] = useState([]);
+
 
     // Auxiliary Data State
     const [technicians, setTechnicians] = useState([]);
@@ -37,14 +36,13 @@ export const AppProvider = ({ children }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [resResearchers, resServices, resRequests, resTechnicians, resAssociates, resInvoices, resCenters] = await Promise.all([
+                const [resResearchers, resServices, resRequests, resTechnicians, resAssociates, resInvoices] = await Promise.all([
                     api.get('/researchers'),
                     api.get('/services'),
                     api.get('/requests'),
                     api.get('/technicians'),
                     api.get('/associates'),
-                    api.get('/invoices'),
-                    api.get('/centers')
+                    api.get('/invoices')
                 ]);
 
                 if (resResearchers) setResearchers(resResearchers);
@@ -53,7 +51,6 @@ export const AppProvider = ({ children }) => {
                 if (resTechnicians) setTechnicians(resTechnicians.map(t => t.name));
                 if (resAssociates) setAssociates(resAssociates);
                 if (resInvoices) setInvoices(resInvoices);
-                if (resCenters) setCenters(resCenters);
             } catch (error) {
                 console.error("Error loading data:", error);
                 toast.error("Error cargando datos iniciales");
@@ -290,44 +287,7 @@ export const AppProvider = ({ children }) => {
         }
     };
 
-    // Centers
-    const addCenter = async (data) => {
-        try {
-            const res = await api.post('/centers', data);
-            if (res) {
-                setCenters(prev => [...prev, res]);
-                toast.success('Centro registrado');
-                return res;
-            }
-        } catch (error) {
-            console.error(error);
-            toast.error(error.response?.data?.error || 'Error al registrar centro');
-        }
-    };
 
-    const updateCenter = async (id, data) => {
-        try {
-            const res = await api.put(`/centers/${id}`, data);
-            if (res) {
-                setCenters(prev => prev.map(c => c.id === id ? { ...c, ...data } : c));
-                toast.success('Centro actualizado');
-            }
-        } catch (error) {
-            console.error(error);
-            toast.error('Error al actualizar centro');
-        }
-    };
-
-    const deleteCenter = async (id) => {
-        try {
-            await api.delete(`/centers/${id}`);
-            setCenters(prev => prev.filter(c => c.id !== id));
-            toast.success('Centro eliminado');
-        } catch (error) {
-            console.error(error);
-            toast.error(error.response?.data?.error || 'Error al eliminar centro');
-        }
-    };
 
 
     return (
@@ -341,8 +301,7 @@ export const AppProvider = ({ children }) => {
             requests, setRequests, updateRequestStatus, createRequest, updateRequest, deleteRequest,
             invoices, createInvoice, formats, addFormat, deleteFormat, updateFormat, setFormats,
             technicians, addTechnician, deleteTechnician, updateTechnician,
-            associates, addAssociate, deleteAssociate, updateAssociate,
-            centers, addCenter, updateCenter, deleteCenter
+            associates, addAssociate, deleteAssociate, updateAssociate
         }}>
             {children}
         </AppContext.Provider>
