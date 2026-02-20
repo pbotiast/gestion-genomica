@@ -1,12 +1,15 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { api } from '../lib/api';
 import { toast } from 'sonner';
+import { useAuth } from './AuthContext';
 
 export const AppContext = createContext();
 
 export const useAppContext = () => useContext(AppContext);
 
 export const AppProvider = ({ children }) => {
+    const { user } = useAuth();
+
     // Researchers State
     const [researchers, setResearchers] = useState([]);
     const [services, setServices] = useState([]);
@@ -34,7 +37,19 @@ export const AppProvider = ({ children }) => {
 
     // Load initial data from API
     useEffect(() => {
+        if (!user) {
+            setResearchers([]);
+            setServices([]);
+            setRequests([]);
+            setInvoices([]);
+            setAssociates([]);
+            setTechnicians([]);
+            setLoading(false);
+            return;
+        }
+
         const fetchData = async () => {
+            setLoading(true);
             try {
                 const [resResearchers, resServices, resRequests, resTechnicians, resAssociates, resInvoices] = await Promise.all([
                     api.get('/researchers'),
@@ -53,13 +68,12 @@ export const AppProvider = ({ children }) => {
                 if (resInvoices) setInvoices(resInvoices);
             } catch (error) {
                 console.error("Error loading data:", error);
-                toast.error("Error cargando datos iniciales");
             } finally {
                 setLoading(false);
             }
         };
         fetchData();
-    }, []);
+    }, [user]);
 
     // Persistence for auxiliary data (only formats for now)
     useEffect(() => {

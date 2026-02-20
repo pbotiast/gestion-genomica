@@ -1,0 +1,340 @@
+﻿
+> gestion-genomica@0.0.0 test
+> vitest src/test/Requests.test.jsx --run --reporter=tap
+
+TAP version 13
+1..1
+not ok 1 - src/test/Requests.test.jsx # time=78.00ms {
+    1..1
+    not ok 1 - Requests Page Actions # time=78.00ms {
+        1..4
+        ok 1 - renders list of requests # time=35.00ms
+        not ok 2 - shows finalize button for completed requests # time=13.00ms
+            ---
+            error:
+                name: "TestingLibraryElementError"
+                message: "Unable to find an element with the title: Facturar.
+
+Ignored nodes: comments, script, style
+[36m<body[39m
+  [33mstyle[39m=[32m\"overflow: unset;\"[39m
+[36m>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m\"space-y-6 fade-in\"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m\"flex justify-between items-center\"[39m
+      [36m>[39m
+        [36m<div>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m\"_title_9bcb3a text-gradient\"[39m
+          [36m>[39m
+            [0mSolicitudes[0m
+          [36m</h1>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m\"_subtitle_9bcb3a\"[39m
+          [36m>[39m
+            [0mGesti├│n de trabajo y seguimiento[0m
+          [36m</p>[39m
+        [36m</div>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m\"btn-primary flex items-center gap-2\"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33mclass[39m=[32m\"lucide lucide-plus \"[39m
+            [33mfill[39m=[32m\"none\"[39m
+            [33mheight[39m=[32m\"20\"[39m
+            [33mstroke[39m=[32m\"currentColor\"[39m
+            [33mstroke-linecap[39m=[32m\"round\"[39m
+            [33mstroke-linejoin[39m=[32m\"round\"[39m
+            [33mstroke-width[39m=[32m\"2\"[39m
+            [33mviewBox[39m=[32m\"0 0 24 24\"[39m
+            [33mwidth[39m=[32m\"20\"[39m
+            [33mxmlns[39m=[32m\"http://www.w3.org/2000/svg\"[39m
+          [36m>[39m
+            [36m<path[39m
+              [33md[39m=[32m\"M5 12h14\"[39m
+            [36m/>[39m
+            [36m<path[39m
+              [33md[39m=[32m\"M12 5v14\"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mNueva Solicitud[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m\"glass-panel p-4\"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m\"relative\"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33mclass[39m=[32m\"lucide lucide-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400\"[39m
+            [33mfill[39m=[32m\"none\"[39m
+            [33mheight[39m=[32m\"18\"[39m
+            [33mstroke[39m=[32m\"currentColor\"[39m
+            [33mstroke-linecap[39m=[32m\"round\"[39m
+            [33mstroke-linejoin[39m=[32m\"round\"[39m
+            [33mstroke-width[39m=[32m\"2\"[39m
+            [33mviewBox[39m=[32m\"0 0 24 24\"[39m
+            [33mwidth[39m=[32m\"18\"[39m
+            [33mxmlns[39m=[32m\"http://www.w3.org/2000/svg\"[39m
+          [36m>[39m
+            [36m<circle[39m
+              [33mcx[39m=[32m\"11\"[39m
+              [33mcy[39m=[32m\"11\"[39m
+              [33mr[39m=[32m\"8\"[39m
+            [36m/>[39m
+            [36m<path[39m
+              [33md[39m=[32m\"m21 21-4.3-4.3\"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m\"w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent\"[39m
+            [33mplaceholder[39m=[32m\"Buscar por registro, investigador, servicio, centro...\"[39m
+            [33mtype[39m=[32m\"text\"[39m
+            [33mvalue[39m=[32m\"\"[39m
+          [36m/>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m\"w-full\"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m\"overflow-hidden border border-gray-200 rounded-lg\"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m\"overflow-x-auto\"[39m
+          [36m>[39m
+            [36m<table[39m
+              [33mclass[39m=[32m\"w-full\"[39m
+            [36m>[39m
+              [36m<thead[39m
+                [33mclass[39m=[32m\"bg-gray-50 border-b border-gray-200\"[39m
+              [36m>[39m
+                [36m<tr>[39m
+                  [36m<th[39m
+                    [33mclass[39m=[32m\"px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider\"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m\"flex items-center gap-2 cursor-pointer select-none hover:text-gray-700\"[39m
+                    [36m>[39m
+                      [0mN┬║ Registro[0m
+                      [36m<span[39m
+                        [33mclass[39m=[32m\"ml-auto\"[39m
+                      [36m>[39m
+                        [36m<svg[39m
+                          [33mclass[39m=[32m\"lucide lucide-chevrons-up-down text-gray-400\"[39m
+                          [33mfill[39m=[32m\"none\"[39m
+                          [33mheight[39m=[32m\"16\"[39m
+                          [33mstroke[39m=[32m\"currentColor\"[39m
+                          [33mstroke-linecap[39m=[32m\"round\"[39m
+                          [33mstroke-linejoin[39m=[32m\"round\"[39m
+                          [33mstroke-width[39m=[32m\"2\"[39m
+                          [33mviewBox[39m=[32m\"0 0 24 24\"[39m
+                          [33mwidth[39m=[32m\"16\"[39m
+                          [33mxmlns[39m=[32m\"http://www.w3.org/2000/svg\"[39m
+                        [36m>[39m
+                          [36m<path[39m
+                            [33md[39m=[32m\"m7 15 5 5 5-5\"[39m
+                          [36m/>[39m
+                          [36m<path[39m
+                            [33md[39m=[32m\"m7 9 5-5 5 5\"[39m
+                          [36m/>[39m
+                        [36m</svg>[39m
+                      [36m</span>[39m
+                    [36m</div>[39m
+                  [36m</th>[39m
+                  [36m<th[39m
+                    [33mclass[39m=[32m\"px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider\"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m\"flex items-center gap-2 cursor-pointer select-none hover:text-gray-700\"[39m
+                    [36m>[39m
+                      [0mFecha[0m
+                      [36m<span[39m
+                        [33mclass[39m=[32m\"ml-auto\"[39m
+                      [36m>[39m
+                        [36m<svg[39m
+                          [33mclass[39m=[32m\"lucide lucide-chevrons-up-down text-gray-400\"[39m
+                          [33mfill[39m=[32m\"none\"[39m
+                          [33mheight[39m=[32m\"16\"[39m
+                          [33mstroke[39m=[32m\"currentColor\"[39m
+                          [33mstroke-linecap[39m=[32m\"round\"[39m
+                          [33mstroke-linejoin[39m=[32m\"round\"[39m
+                          [33mstroke-width[39m=[32m\"2\"[39m
+                          [33mviewBox[39m=[32m\"0 0 24 24\"[39m
+                          [33mwidth[39m=[32m\"16\"[39m
+                          [33mxmlns[39m=[32m\"http://www.w3.org/2000/svg\"[39m
+                        [36m>[39m
+                          [36m<path[39m
+                            [33md[39m=[32m\"m7 ..."
+            at: "E:/gestion-genomica/node_modules/@testing-library/dom/dist/config.js:37:19"
+            ...
+        not ok 3 - calls updateRequestStatus when finalizing # time=10.00ms
+            ---
+            error:
+                name: "TestingLibraryElementError"
+                message: "Unable to find an element with the title: Facturar.
+
+Ignored nodes: comments, script, style
+[36m<body[39m
+  [33mstyle[39m=[32m\"overflow: unset;\"[39m
+[36m>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m\"space-y-6 fade-in\"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m\"flex justify-between items-center\"[39m
+      [36m>[39m
+        [36m<div>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m\"_title_9bcb3a text-gradient\"[39m
+          [36m>[39m
+            [0mSolicitudes[0m
+          [36m</h1>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m\"_subtitle_9bcb3a\"[39m
+          [36m>[39m
+            [0mGesti├│n de trabajo y seguimiento[0m
+          [36m</p>[39m
+        [36m</div>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m\"btn-primary flex items-center gap-2\"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33mclass[39m=[32m\"lucide lucide-plus \"[39m
+            [33mfill[39m=[32m\"none\"[39m
+            [33mheight[39m=[32m\"20\"[39m
+            [33mstroke[39m=[32m\"currentColor\"[39m
+            [33mstroke-linecap[39m=[32m\"round\"[39m
+            [33mstroke-linejoin[39m=[32m\"round\"[39m
+            [33mstroke-width[39m=[32m\"2\"[39m
+            [33mviewBox[39m=[32m\"0 0 24 24\"[39m
+            [33mwidth[39m=[32m\"20\"[39m
+            [33mxmlns[39m=[32m\"http://www.w3.org/2000/svg\"[39m
+          [36m>[39m
+            [36m<path[39m
+              [33md[39m=[32m\"M5 12h14\"[39m
+            [36m/>[39m
+            [36m<path[39m
+              [33md[39m=[32m\"M12 5v14\"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mNueva Solicitud[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m\"glass-panel p-4\"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m\"relative\"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33mclass[39m=[32m\"lucide lucide-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400\"[39m
+            [33mfill[39m=[32m\"none\"[39m
+            [33mheight[39m=[32m\"18\"[39m
+            [33mstroke[39m=[32m\"currentColor\"[39m
+            [33mstroke-linecap[39m=[32m\"round\"[39m
+            [33mstroke-linejoin[39m=[32m\"round\"[39m
+            [33mstroke-width[39m=[32m\"2\"[39m
+            [33mviewBox[39m=[32m\"0 0 24 24\"[39m
+            [33mwidth[39m=[32m\"18\"[39m
+            [33mxmlns[39m=[32m\"http://www.w3.org/2000/svg\"[39m
+          [36m>[39m
+            [36m<circle[39m
+              [33mcx[39m=[32m\"11\"[39m
+              [33mcy[39m=[32m\"11\"[39m
+              [33mr[39m=[32m\"8\"[39m
+            [36m/>[39m
+            [36m<path[39m
+              [33md[39m=[32m\"m21 21-4.3-4.3\"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m\"w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent\"[39m
+            [33mplaceholder[39m=[32m\"Buscar por registro, investigador, servicio, centro...\"[39m
+            [33mtype[39m=[32m\"text\"[39m
+            [33mvalue[39m=[32m\"\"[39m
+          [36m/>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m\"w-full\"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m\"overflow-hidden border border-gray-200 rounded-lg\"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m\"overflow-x-auto\"[39m
+          [36m>[39m
+            [36m<table[39m
+              [33mclass[39m=[32m\"w-full\"[39m
+            [36m>[39m
+              [36m<thead[39m
+                [33mclass[39m=[32m\"bg-gray-50 border-b border-gray-200\"[39m
+              [36m>[39m
+                [36m<tr>[39m
+                  [36m<th[39m
+                    [33mclass[39m=[32m\"px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider\"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m\"flex items-center gap-2 cursor-pointer select-none hover:text-gray-700\"[39m
+                    [36m>[39m
+                      [0mN┬║ Registro[0m
+                      [36m<span[39m
+                        [33mclass[39m=[32m\"ml-auto\"[39m
+                      [36m>[39m
+                        [36m<svg[39m
+                          [33mclass[39m=[32m\"lucide lucide-chevrons-up-down text-gray-400\"[39m
+                          [33mfill[39m=[32m\"none\"[39m
+                          [33mheight[39m=[32m\"16\"[39m
+                          [33mstroke[39m=[32m\"currentColor\"[39m
+                          [33mstroke-linecap[39m=[32m\"round\"[39m
+                          [33mstroke-linejoin[39m=[32m\"round\"[39m
+                          [33mstroke-width[39m=[32m\"2\"[39m
+                          [33mviewBox[39m=[32m\"0 0 24 24\"[39m
+                          [33mwidth[39m=[32m\"16\"[39m
+                          [33mxmlns[39m=[32m\"http://www.w3.org/2000/svg\"[39m
+                        [36m>[39m
+                          [36m<path[39m
+                            [33md[39m=[32m\"m7 15 5 5 5-5\"[39m
+                          [36m/>[39m
+                          [36m<path[39m
+                            [33md[39m=[32m\"m7 9 5-5 5 5\"[39m
+                          [36m/>[39m
+                        [36m</svg>[39m
+                      [36m</span>[39m
+                    [36m</div>[39m
+                  [36m</th>[39m
+                  [36m<th[39m
+                    [33mclass[39m=[32m\"px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider\"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m\"flex items-center gap-2 cursor-pointer select-none hover:text-gray-700\"[39m
+                    [36m>[39m
+                      [0mFecha[0m
+                      [36m<span[39m
+                        [33mclass[39m=[32m\"ml-auto\"[39m
+                      [36m>[39m
+                        [36m<svg[39m
+                          [33mclass[39m=[32m\"lucide lucide-chevrons-up-down text-gray-400\"[39m
+                          [33mfill[39m=[32m\"none\"[39m
+                          [33mheight[39m=[32m\"16\"[39m
+                          [33mstroke[39m=[32m\"currentColor\"[39m
+                          [33mstroke-linecap[39m=[32m\"round\"[39m
+                          [33mstroke-linejoin[39m=[32m\"round\"[39m
+                          [33mstroke-width[39m=[32m\"2\"[39m
+                          [33mviewBox[39m=[32m\"0 0 24 24\"[39m
+                          [33mwidth[39m=[32m\"16\"[39m
+                          [33mxmlns[39m=[32m\"http://www.w3.org/2000/svg\"[39m
+                        [36m>[39m
+                          [36m<path[39m
+                            [33md[39m=[32m\"m7 ..."
+            at: "E:/gestion-genomica/node_modules/@testing-library/dom/dist/config.js:37:19"
+            ...
+        ok 4 - shows edit modal when edit button clicked # time=19.00ms
+    }
+}

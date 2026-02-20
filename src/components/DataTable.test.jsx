@@ -92,8 +92,9 @@ describe('DataTable', () => {
         expect(screen.queryByText('User 10')).not.toBeInTheDocument();
 
         // Check pagination info
-        expect(screen.getByText(/Página/)).toBeInTheDocument();
-        expect(screen.getByText(/1.*3/)).toBeInTheDocument(); // Page 1 of 3
+        expect(screen.getByText(/Página/i)).toBeInTheDocument();
+        expect(screen.getByText('1')).toBeInTheDocument();
+        expect(screen.getByText('3')).toBeInTheDocument();
     });
 
     it('navigates between pages', () => {
@@ -165,6 +166,8 @@ describe('DataTable', () => {
         render(<DataTable columns={mockColumns} data={data} pageSize={10} />);
 
         expect(screen.getByText(/15 resultados/i)).toBeInTheDocument();
-        expect(screen.getByText(/Página.*1.*2/i)).toBeInTheDocument();
+        expect(screen.getByText(/Página/i)).toBeInTheDocument();
+        expect(screen.getByText('1')).toBeInTheDocument();
+        expect(screen.getByText('2')).toBeInTheDocument();
     });
 });

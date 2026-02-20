@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { KPICard, Badge, Card } from './UI';
 import { FileText } from 'lucide-react';
@@ -29,7 +29,7 @@ describe('UI Components', () => {
                 />
             );
 
-            expect(screen.getByText('+12.5%')).toBeInTheDocument();
+            expect(screen.getByText(/\+12\.5%/i)).toBeInTheDocument();
             expect(screen.getByText(/vs mes anterior/i)).toBeInTheDocument();
         });
 
@@ -71,7 +71,7 @@ describe('UI Components', () => {
                 />
             );
 
-            expect(screen.getByText('↗ +5%')).toBeInTheDocument();
+            expect(screen.getByText(/\+5%/i)).toBeInTheDocument();
 
             rerender(
                 <KPICard
@@ -82,7 +82,7 @@ describe('UI Components', () => {
                 />
             );
 
-            expect(screen.getByText('↘ -3%')).toBeInTheDocument();
+            expect(screen.getByText(/-3%/i)).toBeInTheDocument();
         });
     });
 

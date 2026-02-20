@@ -37,7 +37,7 @@ describe('ResearcherForm', () => {
         expect(handleSubmit).toHaveBeenCalledWith(expect.objectContaining({
             fullName: 'John Doe',
             email: 'john@example.com',
-            institution: 'UCM',
+            center: 'UCM',
             tariff: 'A',
             associates: expect.arrayContaining([
                 expect.objectContaining({

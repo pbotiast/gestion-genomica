@@ -9,7 +9,9 @@ vi.mock('../context/AppContext', () => ({
 }));
 
 vi.mock('@react-pdf/renderer', () => ({
-    PDFDownloadLink: vi.fn(({ children }) => <div>{children({ loading: false })}</div>),
+    PDFDownloadLink: vi.fn(({ children }) => (
+        <div>{typeof children === 'function' ? children({ loading: false }) : children}</div>
+    )),
     Document: vi.fn(({ children }) => <div>{children}</div>),
     Page: vi.fn(({ children }) => <div>{children}</div>),
     Text: vi.fn(({ children }) => <div>{children}</div>),
@@ -59,26 +61,26 @@ describe('Requests Page Actions', () => {
     });
 
 
-    it('shows finalize button for completed requests', () => {
+    it('shows finalize button for pending requests', () => {
         mockAppContext.requests = [
-            { id: 1, registrationNumber: '2024-00001', status: 'completed' }
+            { id: 1, registrationNumber: '2024-00001', status: 'pending' }
         ];
 
         render(<Requests />);
 
-        // Check for Send icon button (title "Facturar")
-        const finalizeBtn = screen.getAllByTitle('Facturar')[0];
+        // Check for Send icon button
+        const finalizeBtn = screen.getByTitle('Finalizar y enviar a facturación');
         expect(finalizeBtn).toBeInTheDocument();
     });
 
     it('calls updateRequestStatus when finalizing', async () => {
         mockAppContext.requests = [
-            { id: 1, registrationNumber: '2024-00001', status: 'completed' }
+            { id: 1, registrationNumber: '2024-00001', status: 'pending' }
         ];
 
         render(<Requests />);
 
-        const finalizeBtn = screen.getAllByTitle('Facturar')[0];
+        const finalizeBtn = screen.getByTitle('Finalizar y enviar a facturación');
         fireEvent.click(finalizeBtn);
 
         expect(window.confirm).toHaveBeenCalled();

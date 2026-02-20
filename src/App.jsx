@@ -1,6 +1,5 @@
 import React, { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Layout from './components/Layout';
@@ -39,65 +38,63 @@ const PlaceholderPage = ({ title }) => (
 
 function App() {
   return (
-    <AuthProvider>
-      <Routes>
-        <Route path="/login" element={<Login />} />
+    <Routes>
+      <Route path="/login" element={<Login />} />
 
-        <Route path="/" element={
-          <ProtectedRoute>
-            <Layout />
-          </ProtectedRoute>
-        }>
-          <Route index element={
-            <Suspense fallback={<LoadingSpinner />}>
-              <Dashboard />
-            </Suspense>
-          } />
-          <Route path="solicitudes" element={
-            <Suspense fallback={<LoadingSpinner />}>
-              <Requests />
-            </Suspense>
-          } />
-          <Route path="investigadores" element={
-            <Suspense fallback={<LoadingSpinner />}>
-              <Researchers />
-            </Suspense>
-          } />
-          <Route path="usuarios" element={
-            <Suspense fallback={<LoadingSpinner />}>
-              <Associates />
-            </Suspense>
-          } />
+      <Route path="/" element={
+        <ProtectedRoute>
+          <Layout />
+        </ProtectedRoute>
+      }>
+        <Route index element={
+          <Suspense fallback={<LoadingSpinner />}>
+            <Dashboard />
+          </Suspense>
+        } />
+        <Route path="solicitudes" element={
+          <Suspense fallback={<LoadingSpinner />}>
+            <Requests />
+          </Suspense>
+        } />
+        <Route path="investigadores" element={
+          <Suspense fallback={<LoadingSpinner />}>
+            <Researchers />
+          </Suspense>
+        } />
+        <Route path="usuarios" element={
+          <Suspense fallback={<LoadingSpinner />}>
+            <Associates />
+          </Suspense>
+        } />
 
-          <Route path="servicios" element={
-            <Suspense fallback={<LoadingSpinner />}>
-              <Services />
-            </Suspense>
-          } />
-          <Route path="facturacion" element={
-            <Suspense fallback={<LoadingSpinner />}>
-              <Billing />
-            </Suspense>
-          } />
-          <Route path="auditoria" element={
-            <Suspense fallback={<LoadingSpinner />}>
-              <Audit />
-            </Suspense>
-          } />
-          <Route path="historial-emails" element={
-            <Suspense fallback={<LoadingSpinner />}>
-              <EmailHistory />
-            </Suspense>
-          } />
-          <Route path="configuracion" element={
-            <Suspense fallback={<LoadingSpinner />}>
-              <Config />
-            </Suspense>
-          } />
-          <Route path="*" element={<PlaceholderPage title="Página no encontrada" />} />
-        </Route>
-      </Routes>
-    </AuthProvider>
+        <Route path="servicios" element={
+          <Suspense fallback={<LoadingSpinner />}>
+            <Services />
+          </Suspense>
+        } />
+        <Route path="facturacion" element={
+          <Suspense fallback={<LoadingSpinner />}>
+            <Billing />
+          </Suspense>
+        } />
+        <Route path="auditoria" element={
+          <Suspense fallback={<LoadingSpinner />}>
+            <Audit />
+          </Suspense>
+        } />
+        <Route path="historial-emails" element={
+          <Suspense fallback={<LoadingSpinner />}>
+            <EmailHistory />
+          </Suspense>
+        } />
+        <Route path="configuracion" element={
+          <Suspense fallback={<LoadingSpinner />}>
+            <Config />
+          </Suspense>
+        } />
+        <Route path="*" element={<PlaceholderPage title="Página no encontrada" />} />
+      </Route>
+    </Routes>
   );
 }
 

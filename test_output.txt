@@ -1,0 +1,442 @@
+﻿
+> gestion-genomica@0.0.0 test
+> vitest src/components/ResearcherForm.test.jsx
+
+
+[7m[1m[34m DEV [39m[22m[27m [34mv1.6.1[39m [90mE:/gestion-genomica[39m
+
+[90mstdout[2m | src/components/ResearcherForm.test.jsx[2m > [22m[2mResearcherForm[2m > [22m[2mrenders correctly[22m[39m
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+
+[90mstdout[2m | src/components/ResearcherForm.test.jsx[2m > [22m[2mResearcherForm[2m > [22m[2msubmits form data with auto-added associate[22m[39m
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+
+[90mstdout[2m | src/components/ResearcherForm.test.jsx[2m > [22m[2mResearcherForm[2m > [22m[2msubmits form data with auto-added associate[22m[39m
+SUBMITTED DATA: {
+  "fullName": "John Doe",
+  "institution": "",
+  "department": "",
+  "faculty": "",
+  "city": "",
+  "center": "UCM",
+  "idNumber": "12345678A",
+  "email": "john@example.com",
+  "phone": "123456789",
+  "fax": "",
+  "fiscalAddress": "Street 1",
+  "invoiceAddress": "Street 2",
+  "tariff": "A",
+  "accountingOffice": "",
+  "managementBody": "",
+  "processingUnit": "",
+  "proposingBody": "",
+  "associates": [
+    {
+      "name": "John Doe",
+      "email": "john@example.com",
+      "isPrincipal": true
+    }
+  ]
+}
+
+ [33mÔØ»[39m src/components/ResearcherForm.test.jsx [2m ([22m[2m2 tests[22m [2m|[22m [31m1 failed[39m[2m)[22m[90m 132[2mms[22m[39m
+[31m   [33mÔØ»[31m src/components/ResearcherForm.test.jsx[2m > [22mResearcherForm[2m > [22msubmits form data with auto-added associate[39m
+[31m     ÔåÆ expected "spy" to be called with arguments: [ ObjectContaining{ÔÇª} ]
+
+Received: 
+
+  1st spy call:
+
+  Array [
+-   ObjectContaining {
+-     "associates": ArrayContaining [
+-       ObjectContaining {
++   Object {
++     "accountingOffice": "",
++     "associates": Array [
++       Object {
+          "email": "john@example.com",
+          "isPrincipal": true,
+          "name": "John Doe",
+        },
+      ],
++     "center": "UCM",
++     "city": "",
++     "department": "",
+      "email": "john@example.com",
++     "faculty": "",
++     "fax": "",
++     "fiscalAddress": "Street 1",
+      "fullName": "John Doe",
+-     "institution": "UCM",
++     "idNumber": "12345678A",
++     "institution": "",
++     "invoiceAddress": "Street 2",
++     "managementBody": "",
++     "phone": "123456789",
++     "processingUnit": "",
++     "proposingBody": "",
+      "tariff": "A",
+    },
+  ]
+
+
+Number of calls: 1
+[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[90m (2)[39m
+[2m   Start at [22m 12:24:27
+[2m   Duration [22m 2.21s[2m (transform 346ms, setup 112ms, collect 821ms, tests 132ms, environment 660ms, prepare 184ms)[22m
+
+
+[1m[7m[31m FAIL [39m[27m[22m[31m Tests failed. Watching for file changes...[39m
+       [2mpress [22m[1mh[22m[2m to show help[22m[2m, [22m[2mpress [22m[1mq[22m[2m to quit[22m
+[3Jc
+[7m[1m[34m RERUN [39m[22m[27m[2m src/components/ResearcherForm.test.jsx[22m [34mx1[39m
+
+[90mstdout[2m | src/components/ResearcherForm.test.jsx[2m > [22m[2mResearcherForm[2m > [22m[2mrenders correctly[22m[39m
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+
+[90mstdout[2m | src/components/ResearcherForm.test.jsx[2m > [22m[2mResearcherForm[2m > [22m[2msubmits form data with auto-added associate[22m[39m
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+
+[90mstdout[2m | src/components/ResearcherForm.test.jsx[2m > [22m[2mResearcherForm[2m > [22m[2msubmits form data with auto-added associate[22m[39m
+SUBMITTED DATA: {
+  "fullName": "John Doe",
+  "institution": "",
+  "department": "",
+  "faculty": "",
+  "city": "",
+  "center": "UCM",
+  "idNumber": "12345678A",
+  "email": "john@example.com",
+  "phone": "123456789",
+  "fax": "",
+  "fiscalAddress": "Street 1",
+  "invoiceAddress": "Street 2",
+  "tariff": "A",
+  "accountingOffice": "",
+  "managementBody": "",
+  "processingUnit": "",
+  "proposingBody": "",
+  "associates": [
+    {
+      "name": "John Doe",
+      "email": "john@example.com",
+      "isPrincipal": true
+    }
+  ]
+}
+
+ [32mÔ£ô[39m src/components/ResearcherForm.test.jsx [2m ([22m[2m2 tests[22m[2m)[22m[90m 274[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+[2m   Start at [22m 12:25:10
+[2m   Duration [22m 1.25s
+
+
+[1m[7m[32m PASS [39m[27m[22m[32m Waiting for file changes...[39m
+       [2mpress [22m[1mh[22m[2m to show help[22m[2m, [22m[2mpress [22m[1mq[22m[2m to quit[22m
+       [34mrerun x1[39m
+[2K[1A[2K[G       [90mrerun x1[39m
+[2K[1A[2K[G       [2m[90mrerun x1[39m[22m
+[2K[1A[2K[G[3Jc
+[7m[1m[34m RERUN [39m[22m[27m[2m src/components/DataTable.test.jsx[22m [34mx1[39m
+
+
+[2m Test Files [22m [2mno tests[22m
+[2m      Tests [22m [2mno tests[22m
+[2m   Start at [22m 12:38:09
+[2m   Duration [22m 0ms
+
+
+[1m[7m[32m PASS [39m[27m[22m[32m Waiting for file changes...[39m
+       [2mpress [22m[1mh[22m[2m to show help[22m[2m, [22m[2mpress [22m[1mq[22m[2m to quit[22m
+       [34mrerun x1[39m
+[2K[1A[2K[G       [90mrerun x1[39m
+[2K[1A[2K[G       [2m[90mrerun x1[39m[22m
+[2K[1A[2K[G[3Jc
+[7m[1m[34m RERUN [39m[22m[27m[2m src/components/DataTable.test.jsx[22m [34mx2[39m
+
+
+[2m Test Files [22m [2mno tests[22m
+[2m      Tests [22m [2mno tests[22m
+[2m   Start at [22m 12:38:55
+[2m   Duration [22m 0ms
+
+
+[1m[7m[32m PASS [39m[27m[22m[32m Waiting for file changes...[39m
+       [2mpress [22m[1mh[22m[2m to show help[22m[2m, [22m[2mpress [22m[1mq[22m[2m to quit[22m
+       [34mrerun x2[39m
+[2K[1A[2K[G       [90mrerun x2[39m
+[2K[1A[2K[G       [2m[90mrerun x2[39m[22m
+[2K[1A[2K[G[3Jc
+[7m[1m[34m RERUN [39m[22m[27m[2m src/test/Associates.test.jsx[22m [34mx1[39m
+
+
+[2m Test Files [22m [2mno tests[22m
+[2m      Tests [22m [2mno tests[22m
+[2m   Start at [22m 12:40:23
+[2m   Duration [22m 0ms
+
+
+[1m[7m[32m PASS [39m[27m[22m[32m Waiting for file changes...[39m
+       [2mpress [22m[1mh[22m[2m to show help[22m[2m, [22m[2mpress [22m[1mq[22m[2m to quit[22m
+       [34mrerun x1[39m
+[2K[1A[2K[G       [90mrerun x1[39m
+[2K[1A[2K[G       [2m[90mrerun x1[39m[22m
+[2K[1A[2K[G[3Jc
+[7m[1m[34m RERUN [39m[22m[27m[2m src/components/UI.test.jsx[22m [34mx1[39m
+
+
+[2m Test Files [22m [2mno tests[22m
+[2m      Tests [22m [2mno tests[22m
+[2m   Start at [22m 12:42:39
+[2m   Duration [22m 0ms
+
+
+[1m[7m[32m PASS [39m[27m[22m[32m Waiting for file changes...[39m
+       [2mpress [22m[1mh[22m[2m to show help[22m[2m, [22m[2mpress [22m[1mq[22m[2m to quit[22m
+       [34mrerun x1[39m
+[2K[1A[2K[G       [90mrerun x1[39m
+[2K[1A[2K[G       [2m[90mrerun x1[39m[22m
+[2K[1A[2K[G[3Jc
+[7m[1m[34m RERUN [39m[22m[27m[2m src/components/UI.test.jsx[22m [34mx2[39m
+
+
+[2m Test Files [22m [2mno tests[22m
+[2m      Tests [22m [2mno tests[22m
+[2m   Start at [22m 13:24:51
+[2m   Duration [22m 0ms
+
+
+[1m[7m[32m PASS [39m[27m[22m[32m Waiting for file changes...[39m
+       [2mpress [22m[1mh[22m[2m to show help[22m[2m, [22m[2mpress [22m[1mq[22m[2m to quit[22m
+       [34mrerun x2[39m
+[2K[1A[2K[G       [90mrerun x2[39m
+[2K[1A[2K[G       [2m[90mrerun x2[39m[22m
+[2K[1A[2K[G[3Jc
+[7m[1m[34m RERUN [39m[22m[27m[2m src/test/Requests.test.jsx[22m [34mx1[39m
+
+
+[2m Test Files [22m [2mno tests[22m
+[2m      Tests [22m [2mno tests[22m
+[2m   Start at [22m 13:57:13
+[2m   Duration [22m 0ms
+
+
+[1m[7m[32m PASS [39m[27m[22m[32m Waiting for file changes...[39m
+       [2mpress [22m[1mh[22m[2m to show help[22m[2m, [22m[2mpress [22m[1mq[22m[2m to quit[22m
+       [34mrerun x1[39m
+[2K[1A[2K[G       [90mrerun x1[39m
+[2K[1A[2K[G       [2m[90mrerun x1[39m[22m
+[2K[1A[2K[G[3Jc
+[7m[1m[34m RERUN [39m[22m[27m[2m src/test/Requests.test.jsx[22m [34mx2[39m
+
+
+[2m Test Files [22m [2mno tests[22m
+[2m      Tests [22m [2mno tests[22m
+[2m   Start at [22m 14:06:19
+[2m   Duration [22m 0ms
+
+
+[1m[7m[32m PASS [39m[27m[22m[32m Waiting for file changes...[39m
+       [2mpress [22m[1mh[22m[2m to show help[22m[2m, [22m[2mpress [22m[1mq[22m[2m to quit[22m
+       [34mrerun x2[39m
+[2K[1A[2K[G       [90mrerun x2[39m
+[2K[1A[2K[G       [2m[90mrerun x2[39m[22m
+[2K[1A[2K[G[3Jc
+[7m[1m[34m RERUN [39m[22m[27m[2m src/test/Requests.test.jsx[22m [34mx3[39m
+
+
+[2m Test Files [22m [2mno tests[22m
+[2m      Tests [22m [2mno tests[22m
+[2m   Start at [22m 14:06:37
+[2m   Duration [22m 0ms
+
+
+[1m[7m[32m PASS [39m[27m[22m[32m Waiting for file changes...[39m
+       [2mpress [22m[1mh[22m[2m to show help[22m[2m, [22m[2mpress [22m[1mq[22m[2m to quit[22m
+       [34mrerun x3[39m
+[2K[1A[2K[G       [90mrerun x3[39m
+[2K[1A[2K[G       [2m[90mrerun x3[39m[22m
+[2K[1A[2K[G[3Jc
+[7m[1m[34m RERUN [39m[22m[27m[2m src/test/Associates.test.jsx[22m [34mx2[39m
+
+
+[2m Test Files [22m [2mno tests[22m
+[2m      Tests [22m [2mno tests[22m
+[2m   Start at [22m 14:07:54
+[2m   Duration [22m 0ms
+
+
+[1m[7m[32m PASS [39m[27m[22m[32m Waiting for file changes...[39m
+       [2mpress [22m[1mh[22m[2m to show help[22m[2m, [22m[2mpress [22m[1mq[22m[2m to quit[22m
+       [34mrerun x2[39m
+[2K[1A[2K[G       [90mrerun x2[39m
+[2K[1A[2K[G       [2m[90mrerun x2[39m[22m
+[2K[1A[2K[G[3Jc
+[7m[1m[34m RERUN [39m[22m[27m[2m src/test/Associates.test.jsx[22m [34mx3[39m
+
+
+[2m Test Files [22m [2mno tests[22m
+[2m      Tests [22m [2mno tests[22m
+[2m   Start at [22m 14:08:49
+[2m   Duration [22m 0ms
+
+
+[1m[7m[32m PASS [39m[27m[22m[32m Waiting for file changes...[39m
+       [2mpress [22m[1mh[22m[2m to show help[22m[2m, [22m[2mpress [22m[1mq[22m[2m to quit[22m
+       [34mrerun x3[39m
+[2K[1A[2K[G       [90mrerun x3[39m
+[2K[1A[2K[G       [2m[90mrerun x3[39m[22m
+[2K[1A[2K[G[3Jc
+[7m[1m[34m RERUN [39m[22m[27m[2m src/context/AppContext.jsx[22m [34mx2[39m
+
+[90mstdout[2m | src/components/ResearcherForm.test.jsx[2m > [22m[2mResearcherForm[2m > [22m[2mrenders correctly[22m[39m
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+
+[90mstdout[2m | src/components/ResearcherForm.test.jsx[2m > [22m[2mResearcherForm[2m > [22m[2msubmits form data with auto-added associate[22m[39m
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+
+[90mstdout[2m | src/components/ResearcherForm.test.jsx[2m > [22m[2mResearcherForm[2m > [22m[2msubmits form data with auto-added associate[22m[39m
+SUBMITTED DATA: {
+  "fullName": "John Doe",
+  "institution": "",
+  "department": "",
+  "faculty": "",
+  "city": "",
+  "center": "UCM",
+  "idNumber": "12345678A",
+  "email": "john@example.com",
+  "phone": "123456789",
+  "fax": "",
+  "fiscalAddress": "Street 1",
+  "invoiceAddress": "Street 2",
+  "tariff": "A",
+  "accountingOffice": "",
+  "managementBody": "",
+  "processingUnit": "",
+  "proposingBody": "",
+  "associates": [
+    {
+      "name": "John Doe",
+      "email": "john@example.com",
+      "isPrincipal": true
+    }
+  ]
+}
+
+ [32mÔ£ô[39m src/components/ResearcherForm.test.jsx [2m ([22m[2m2 tests[22m[2m)[22m[90m 116[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+[2m   Start at [22m 15:41:16
+[2m   Duration [22m 740ms
+
+
+[1m[7m[32m PASS [39m[27m[22m[32m Waiting for file changes...[39m
+       [2mpress [22m[1mh[22m[2m to show help[22m[2m, [22m[2mpress [22m[1mq[22m[2m to quit[22m
+       [34mrerun x2[39m
+[2K[1A[2K[G       [90mrerun x2[39m
+[2K[1A[2K[G       [2m[90mrerun x2[39m[22m
+[2K[1A[2K[G[3Jc
+[7m[1m[34m RERUN [39m[22m[27m[2m src/context/AppContext.jsx[22m [34mx3[39m
+
+[90mstdout[2m | src/components/ResearcherForm.test.jsx[2m > [22m[2mResearcherForm[2m > [22m[2mrenders correctly[22m[39m
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+
+[90mstdout[2m | src/components/ResearcherForm.test.jsx[2m > [22m[2mResearcherForm[2m > [22m[2msubmits form data with auto-added associate[22m[39m
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+DEBUG: FILE LOADED
+
+[90mstdout[2m | src/components/ResearcherForm.test.jsx[2m > [22m[2mResearcherForm[2m > [22m[2msubmits form data with auto-added associate[22m[39m
+SUBMITTED DATA: {
+  "fullName": "John Doe",
+  "institution": "",
+  "department": "",
+  "faculty": "",
+  "city": "",
+  "center": "UCM",
+  "idNumber": "12345678A",
+  "email": "john@example.com",
+  "phone": "123456789",
+  "fax": "",
+  "fiscalAddress": "Street 1",
+  "invoiceAddress": "Street 2",
+  "tariff": "A",
+  "accountingOffice": "",
+  "managementBody": "",
+  "processingUnit": "",
+  "proposingBody": "",
+  "associates": [
+    {
+      "name": "John Doe",
+      "email": "john@example.com",
+      "isPrincipal": true
+    }
+  ]
+}
+
+ [32mÔ£ô[39m src/components/ResearcherForm.test.jsx [2m ([22m[2m2 tests[22m[2m)[22m[90m 129[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+[2m   Start at [22m 15:41:53
+[2m   Duration [22m 614ms
+
+
+[1m[7m[32m PASS [39m[27m[22m[32m Waiting for file changes...[39m
+       [2mpress [22m[1mh[22m[2m to show help[22m[2m, [22m[2mpress [22m[1mq[22m[2m to quit[22m
+       [34mrerun x3[39m
+[2K[1A[2K[G       [90mrerun x3[39m
+[2K[1A[2K[G       [2m[90mrerun x3[39m[22m

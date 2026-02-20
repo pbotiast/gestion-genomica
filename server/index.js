@@ -28,7 +28,7 @@ app.use('/api/', limiter);
 // Login-specific rate limit (stricter)
 const loginLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 20, // Limit login attempts (increased for development/testing)
+    max: 100, // Limit login attempts (increased for development/testing)
     message: 'Too many login attempts, please try again later'
 });
 
@@ -130,6 +130,50 @@ app.post('/api/login', loginLimiter, [
             }
         } else {
             res.status(401).json({ success: false, message: 'Invalid credentials' });
+        }
+    });
+});
+
+// --- Register Route ---
+app.post('/api/register', loginLimiter, [
+    body('username').notEmpty().trim().escape(),
+    body('password').isLength({ min: 6 }),
+    body('name').notEmpty().trim().escape()
+], async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { username, password, name } = req.body;
+
+    // Check if username already exists
+    db.get("SELECT id FROM users WHERE username = ?", [username], async (err, row) => {
+        if (err) return res.status(500).json({ error: err.message });
+        if (row) return res.status(400).json({ success: false, message: 'El usuario ya existe' });
+
+        try {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            const role = 'technician';
+
+            db.run(
+                "INSERT INTO users (username, password, role, name) VALUES (?, ?, ?, ?)",
+                [username, hashedPassword, role, name],
+                function (errInsert) {
+                    if (errInsert) return res.status(500).json({ error: errInsert.message });
+                    const userId = this.lastID;
+
+                    // Also add to technicians table
+                    db.run("INSERT OR IGNORE INTO technicians (name) VALUES (?)", [name], (errTech) => {
+                        if (errTech) console.error("Error adding to technicians:", errTech);
+                    });
+
+                    logAudit('CREATE', 'USER', userId, { username, role, name }, username);
+                    res.json({ success: true, message: 'Usuario registrado correctamente' });
+                }
+            );
+        } catch (hashError) {
+            res.status(500).json({ error: 'Error procesando la contraseña' });
         }
     });
 });

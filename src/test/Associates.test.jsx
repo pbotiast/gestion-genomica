@@ -34,7 +34,7 @@ describe('Associates Page', () => {
 
     it('renders empty state when no associates', () => {
         render(<Associates />);
-        expect(screen.getByText(/No hay usuarios autorizados registrados/i)).toBeInTheDocument();
+        expect(screen.getByText(/No se encontraron resultados/i)).toBeInTheDocument();
     });
 
     it('renders list of associates', () => {
@@ -63,7 +63,7 @@ describe('Associates Page', () => {
         expect(drHouseElements[0]).toBeInTheDocument();
     });
 
-    it('adds a new associate manually', async () => {
+    it('adds a new associate manually via modal', async () => {
         const mockAdd = vi.fn();
         useAppContext.mockReturnValue({
             researchers: mockResearchers,
@@ -77,18 +77,26 @@ describe('Associates Page', () => {
 
         render(<Associates />);
 
-        // Fill form
+        // Open modal
+        const newBtn = screen.getByText('Nueva Vinculación');
+        fireEvent.click(newBtn);
+
+        // Wait for modal to open and find inputs
+        await screen.findByRole('heading', { name: "Nueva Vinculación" });
+
         const inputName = screen.getByPlaceholderText(/Ej: Perez, Juan/i);
-        const selectRes = document.getElementById('link-researcher');
+        const inputEmail = screen.getByPlaceholderText(/usuario@ucm.es/i);
+        const selectRes = screen.getByRole('combobox');
 
         fireEvent.change(inputName, { target: { value: 'Maria Lopez' } });
+        fireEvent.change(inputEmail, { target: { value: 'maria@test.com' } });
         fireEvent.change(selectRes, { target: { value: '2' } });
 
-        const addBtn = screen.getByText('Añadir');
-        fireEvent.click(addBtn);
+        const saveBtn = screen.getByText('Guardar Usuario');
+        fireEvent.click(saveBtn);
 
         await waitFor(() => {
-            expect(mockAdd).toHaveBeenCalledWith("2", "Maria Lopez");
+            expect(mockAdd).toHaveBeenCalledWith("2", "Maria Lopez", "maria@test.com");
         });
     });
 });
